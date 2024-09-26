@@ -3,7 +3,7 @@ import { useState } from 'react';
 export const useForm = <T extends Record<string, unknown>>(initialState: T) => {
     const [formState, setFormState] = useState<T>(initialState);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormState((prevState) => ({
             ...prevState,
@@ -11,10 +11,10 @@ export const useForm = <T extends Record<string, unknown>>(initialState: T) => {
         }));
     };
 
-    const handleFileChange = (file: File | null, name: string) => {
+    const handleFileChange = (files: File[] | null, name: string) => {
         setFormState((prevState) => ({
             ...prevState,
-            [name]: file,
+            [name]: files,
         }));
     };
 

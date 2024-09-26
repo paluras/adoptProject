@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { getAllAnimals, getAnimalById, updateAnimal, addAnimal } from '../controllers/animalController';
+import { upload } from '../middleware/imgUpload';
 
 const router = Router();
 

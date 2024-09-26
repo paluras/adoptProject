@@ -5,6 +5,9 @@ import { useState } from "react";
 import axios from 'axios';
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import SwiperComponent from "./Swipper/Swiper";
+import InfoBox from "./InfoBox";
+import Markdown from 'react-markdown'
 
 const AnimalDetails: React.FC = () => {
     const [animals, setAnimals] = useState<Animal>();
@@ -33,54 +36,59 @@ const AnimalDetails: React.FC = () => {
     useEffect(() => {
         fetchAnimal();
         fetchAnimalHystory();
-    },)
+    }, [id])
 
-
+    if (!animals && !medicalHistory) return (<>...Loading</>)
 
     return (
         <>
-            <section className="flex flex-col items-center">
-                <div className="w-11/12 gap-2 grid grid-cols-[1fr_1fr_1fr] grid-rows-[0.5fr_0.5fr] p-8">
-                    {animals?.image_url && (
-                        <img
-                            className="col-span-1 row-span-2 w-full h-80 object-cover rounded border-2 border-red-400"
-                            width={320}
-                            height={320}
-                            src={`http://localhost:5000/uploads/${animals.image_url}`}
-                            alt={animals.name} />
+            <section className="flex flex-col bg-slate-100 ">
+                <div>  {animals?.image_url && (
+                    <SwiperComponent img={animals.image_url} />
+                )}</div>
+                <div className=" p-4 grid gap-14 grid-cols-2">
+                    {/* Text Description */}
+                    <div>
+                        <h1 className="py-4 text-2xl font-bold" >{animals?.name}</h1>
+                        <Markdown className={"text-balance"}>{`${animals?.description}`}</Markdown>
 
-                    )}
-                    <div className="flex w-full flex-col" >
-                        <div className="flex justify-between p-2 border-2">
-                            <p>Nume: </p> <p>{animals?.name}</p>
-                        </div>
-                        <div className="flex justify-between p-2 border-2">
-                            <p>Specie: </p> <p>{animals?.species}</p>
-                        </div>
-                        <div className="flex justify-between p-2 border-2">
-                            <p>Rasa: </p> <p>{animals?.breed}</p>
-                        </div>
-                        <div className="flex justify-between p-2 border-2">
-                            <p>Varsta: </p> <p>{animals?.age}</p>
-                        </div>
                     </div>
 
-                    <div className="flex w-full flex-col" >
-                        <div className="flex justify-between p-2 border-2">
-                            <p>Vaccinuri:</p>
-                            <p> {medicalHistory?.vaccines}</p>
-                        </div>
-                        <div className="flex justify-between p-2 border-2">
-                            <p>Tratamente: </p> <p> {medicalHistory?.treatments}</p>
-                        </div>
-                        <div className="flex justify-between p-2 border-2">
-                            <p>Note: </p> <p> {medicalHistory?.notes}</p>
-                        </div>
-                        <div className="flex justify-between p-2 border-2">
-                            <p>Deparazitare:</p> <p> {medicalHistory?.dewormings}</p>
+                    {/* Additional detail container */}
+                    <div className="details-container">
+                        <h1 className="text-2xl font-bold py-4">Detali</h1>
+                        <div className="grid gap-2 grid-cols-2 w-full">
+
+                            <InfoBox
+                                imgUrl="/icons/heart-solid.svg"
+                                title={{ prefix: "Specie", value: animals?.species }}
+                            />
+                            <InfoBox
+                                imgUrl="/icons/heart-solid.svg"
+                                title={{ prefix: "Rasa", value: animals?.breed }}
+                            />
+                            <InfoBox
+                                imgUrl="/icons/heart-solid.svg"
+                                title={{ prefix: "Varsta", value: animals?.age }}
+                            />
+                            <InfoBox
+                                imgUrl="/icons/heart-solid.svg"
+                                title={{ prefix: "Vaccinuri", value: medicalHistory?.vaccines }}
+                            />
+                            <InfoBox
+                                imgUrl="/icons/heart-solid.svg"
+                                title={{ prefix: "Note", value: medicalHistory?.notes }}
+                            />
+                            <InfoBox
+                                imgUrl="/icons/heart-solid.svg"
+                                title={{ prefix: "Deparazitare", value: medicalHistory?.dewormings }}
+                            />
+                            <InfoBox
+                                imgUrl="/icons/heart-solid.svg"
+                                title={{ prefix: "Tratamente", value: medicalHistory?.treatments }}
+                            />
                         </div>
                     </div>
-                    <div className="col-span-2 row-span-1">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Porro eum iure ea fuga labore sapiente consectetur cumque quaerat unde consequatur dicta animi dolor, accusantium illum ut aliquid provident deserunt voluptatum?</div>
                 </div>
 
                 <Link to={`/update-form/${id}`}>

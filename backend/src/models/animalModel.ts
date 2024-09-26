@@ -15,10 +15,18 @@ export const getAnimalById = async (id: number) => {
 };
 
 
-export const addAnimal = async (name: string, species: string, age: number, breed: string, status: string, imageUrl: string) => {
+export const addAnimal = async (name: string,
+    species: string,
+    age: number,
+    breed: string,
+    status: string,
+    imageUrls: string[],
+    sex: string,
+    description: string
+) => {
     const result = await pool.query(
-        'INSERT INTO animals (name, species, age, breed, status, image_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-        [name, species, age, breed, status, imageUrl]
+        'INSERT INTO animals (name, species, age, breed, status, image_url, sex, description) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+        [name, species, age, breed, status, imageUrls, sex, description]
     );
     return result.rows[0];
 };

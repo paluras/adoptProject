@@ -15,14 +15,16 @@ export const addAnimal = async (req: Request, res: Response) => {
         }
 
         // Retrieve other data from the request body
-        const { name, species, age, breed, status } = req.body;
+        const { name, species, age, breed, status, sex, description } = req.body;
 
-        // Get the image file path if uploaded
-        const imageUrl = req.file ? req.file.filename : null;
+        // Get the image file paths if uploaded
+        const files = req.files as Express.Multer.File[];
+        const imageUrls = files ? files.map(file => file.filename) : [];
+        console.log(imageUrls);
 
         try {
-            console.log('Animal data:', { name, species, age, breed, status, imageUrl });
-            const animal = await animalModel.addAnimal(name, species, age, breed, status, imageUrl!);
+            console.log('Animal data:', { name, species, age, breed, status, imageUrls });
+            const animal = await animalModel.addAnimal(name, species, age, breed, status, imageUrls, sex, description); // Pass the array
             res.status(201).json(animal);
         } catch (error) {
             console.error('Error inserting animal into database:', error);
@@ -30,6 +32,7 @@ export const addAnimal = async (req: Request, res: Response) => {
         }
     });
 };
+
 
 
 export const updateAnimal = async (req: Request, res: Response) => {

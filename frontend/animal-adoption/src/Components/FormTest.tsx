@@ -18,7 +18,9 @@ const AnimalForm: React.FC<AnimalFormProps> = ({ onSuccess }) => {
         species: '',
         breed: '',
         status: '',
-        imageFile: null as File | null,
+        sex: '',
+        description: '',
+        imageFiles: [] as File[],
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -30,9 +32,17 @@ const AnimalForm: React.FC<AnimalFormProps> = ({ onSuccess }) => {
         formData.append('species', formState.species);
         formData.append('breed', formState.breed);
         formData.append('status', formState.status);
-        if (formState.imageFile) {
-            formData.append('image', formState.imageFile);
+        formData.append('sex', formState.sex);
+        formData.append('description', formState.description);
+
+        if (Array.isArray(formState.imageFiles)) {
+            formState.imageFiles.forEach(file => {
+                formData.append('images', file); // This should match the multer configuration
+            });
         }
+
+        console.log('Files to upload:', formState.imageFiles);
+
 
         try {
             const response = await axios.post('http://localhost:5000/api/animals', formData, {
@@ -79,8 +89,20 @@ const AnimalForm: React.FC<AnimalFormProps> = ({ onSuccess }) => {
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
                 >
                     <option value="">Select species</option>
-                    <option value="cat">Cat</option>
-                    <option value="dog">Dog</option>
+                    <option value="Pisica">Cat</option>
+                    <option value="Caine">Dog</option>
+                </select>
+            </div>
+            <div>
+                <select
+                    name="sex"
+                    value={formState.sex}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
+                >
+                    <option value="">Select sex</option>
+                    <option value="Mascul">Mascul</option>
+                    <option value="Femela">Femela</option>
                 </select>
             </div>
 
@@ -107,10 +129,17 @@ const AnimalForm: React.FC<AnimalFormProps> = ({ onSuccess }) => {
                     <option value="adopted">Adopted</option>
                 </select>
             </div>
+            <div>
+                <label htmlFor="description">Description</label>
+                <textarea className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
+                    onChange={handleInputChange}
+                    value={formState.description}
+                    name="description" id="description"></textarea>
+            </div>
 
             {/* Image Uploader */}
             <div>
-                <ImageUpload onFileChange={(file) => handleFileChange(file, 'imageFile')} />
+                <ImageUpload onFileChange={(files) => handleFileChange(files, 'imageFiles')} />
             </div>
 
             <button

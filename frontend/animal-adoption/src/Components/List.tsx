@@ -29,7 +29,7 @@ const AnimalsList: React.FC = () => {
                             id={animal.id}
                             title={animal.name}
                             description={animal.species}
-                            imageUrl={[`http://localhost:5000/uploads/${animal.image_url}`]}
+                            imageUrl={`http://localhost:5000/uploads/${animal.image_url[0]}`}
                             buttonText={'Click'}
                             onButtonClick={() => navigate(`/${animal.id}`)} />
                     ))

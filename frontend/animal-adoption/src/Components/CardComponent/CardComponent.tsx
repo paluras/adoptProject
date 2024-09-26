@@ -4,7 +4,7 @@ interface CardProps {
     id: number,
     title: string;
     description: string;
-    imageUrl: string[];
+    imageUrl: string;
     buttonText?: string;
     onButtonClick?: () => void;
 }
@@ -24,7 +24,7 @@ const Card: React.FC<CardProps> = ({ id, title, imageUrl, onButtonClick }) => {
             <img width={300}
                 height={300}
                 className="w-full h-80 object-cover"
-                src={imageUrl[0]}
+                src={imageUrl}
                 alt={title} />
             <div className='flex z-0 left-1/2 top-72 transform -translate-x-1/2 absolute w-72 h-72 rounded-full bg-white border-rose-500 border-2'></div>
             <div className="flex z-10  justify-center px-6 py-4  bg-rose-400 ">
