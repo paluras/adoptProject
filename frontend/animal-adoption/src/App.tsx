@@ -6,6 +6,7 @@ import AnimalDetails from './Components/AnimalPage';
 import AnimalsList from './Components/List';
 import FormUpdate from './Components/FormUpdate';
 import Navbar from './Components/Navbar';
+import LoginPage from './Components/Login';
 
 const App = () => (
   <>
@@ -13,6 +14,7 @@ const App = () => (
     <Router>
       <Navbar />
       <Routes>
+        <Route path='/login' element={<LoginPage />} />
         <Route path="/add-animal" element={<AnimalForm onSuccess={() => console.log("Success")} />} />
         <Route path="/animals/:id" element={<MedicalForm onSuccess={() => console.log("Success Medical")} />} />
         <Route path="/" element={<AnimalsList />} />

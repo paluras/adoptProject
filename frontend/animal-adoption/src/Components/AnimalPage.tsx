@@ -46,11 +46,11 @@ const AnimalDetails: React.FC = () => {
                 <div>  {animals?.image_url && (
                     <SwiperComponent img={animals.image_url} />
                 )}</div>
-                <div className=" p-4 grid gap-14 grid-cols-2">
+                <div className=" p-6 grid gap-10 md:grid-cols-2 sm:grid-cols-1">
                     {/* Text Description */}
                     <div>
                         <h1 className="py-4 text-2xl font-bold" >{animals?.name}</h1>
-                        <Markdown className={"text-balance"}>{`${animals?.description}`}</Markdown>
+                        <Markdown className={"text-balance font-light"}>{`${animals?.description}`}</Markdown>
 
                     </div>
 
@@ -69,7 +69,11 @@ const AnimalDetails: React.FC = () => {
                             />
                             <InfoBox
                                 imgUrl="/icons/heart-solid.svg"
-                                title={{ prefix: "Varsta", value: animals?.age }}
+                                title={{ prefix: "Sex", value: animals?.sex }}
+                            />
+                            <InfoBox
+                                imgUrl="/icons/heart-solid.svg"
+                                title={{ prefix: "Varsta", value: animals?.age + ' Ani' }}
                             />
                             <InfoBox
                                 imgUrl="/icons/heart-solid.svg"
@@ -92,7 +96,7 @@ const AnimalDetails: React.FC = () => {
                 </div>
 
                 <Link to={`/update-form/${id}`}>
-                    <button className="bg-lime-300 p-2 rounded-md border-2 border-lime-500 ">Update the form</button></Link>
+                    <button className="w-full bg-rose-500 text-white py-2 rounded-md hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-400">Update the form</button></Link>
             </section>
         </>
     )

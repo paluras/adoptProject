@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Animal } from '../models/AnimalSchema';
 import Card from './CardComponent/CardComponent';
+import axios from 'axios';
 // import axios from 'axios';
 
 
@@ -11,8 +12,8 @@ const AnimalsList: React.FC = () => {
 
     useEffect(() => {
         const fetchAnimals = async () => {
-            const response = await fetch('/api/animals');
-            const data: Animal[] = await response.json();
+            const response = await axios.get('/api/animals');
+            const data: Animal[] = await response.data;
             setAnimals(data);
         };
         fetchAnimals();

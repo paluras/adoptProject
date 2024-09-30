@@ -1,7 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/index";
 
 const Navbar: React.FC = () => {
+
+    const username = useSelector((state: RootState) => state.user.username)
+
+    console.log(username);
     return (
         <>
             {/* Skip Navigation Link */}
@@ -27,6 +33,21 @@ const Navbar: React.FC = () => {
                                 Add a Animal
                             </Link>
                         </li>
+                        {username ?
+                            <li>
+                                <button className=" hover:underline focus:outline-none focus:ring-2 focus:ring-rose-400">Logout</button>
+                            </li> :
+                            <li>
+                                <Link
+                                    to="/login"
+                                    className=" hover:underline focus:outline-none focus:ring-2 focus:ring-rose-400">
+                                    Login
+                                </Link>
+                            </li>}
+                        {username ? <li>
+                            {username}
+                        </li> : null}
+
                     </ul>
                 </nav>
             </header>

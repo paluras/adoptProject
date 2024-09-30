@@ -5,6 +5,11 @@ import multer from "multer";
 import { upload } from "../middleware/imgUpload";
 
 export const addAnimal = async (req: Request, res: Response) => {
+    console.log('Reached addAnimal controller');
+    console.log('Cookies: ', req.cookies);
+    const userId = (req as any).user.id;
+    console.log(userId, "USER IDDDDDDDd");
+
     upload(req, res, async (err) => {
         if (err instanceof multer.MulterError) {
             console.error('Multer error:', err);
@@ -14,17 +19,14 @@ export const addAnimal = async (req: Request, res: Response) => {
             return res.status(500).json({ message: 'Unknown error occurred', error: err });
         }
 
-        // Retrieve other data from the request body
         const { name, species, age, breed, status, sex, description } = req.body;
 
-        // Get the image file paths if uploaded
         const files = req.files as Express.Multer.File[];
         const imageUrls = files ? files.map(file => file.filename) : [];
-        console.log(imageUrls);
 
         try {
-            console.log('Animal data:', { name, species, age, breed, status, imageUrls });
-            const animal = await animalModel.addAnimal(name, species, age, breed, status, imageUrls, sex, description); // Pass the array
+            console.log('Animal data:', { name, species, age, breed, status, imageUrls, userId });
+            const animal = await animalModel.addAnimal(name, species, age, breed, status, imageUrls, sex, description, userId);
             res.status(201).json(animal);
         } catch (error) {
             console.error('Error inserting animal into database:', error);
@@ -46,16 +48,25 @@ export const updateAnimal = async (req: Request, res: Response) => {
         }
 
         const { id } = req.params;
-        const { name, species, age, breed, status } = req.body;
+        const { name, species, age, breed, status, sex, description } = req.body;
+        const userId = (req as any).user.id;
+        const userAdmin = (req as any).user.is_admin;
+        console.log(userAdmin);
+
+
+
 
         const existingAnimal = await animalModel.getAnimalById(parseInt(id, 10));
         if (!existingAnimal) {
             return res.status(404).json({ message: 'Animal not found' });
         }
 
-        const imageUrl = req.file ? req.file.filename : null;
-        const updatedImageUrl = imageUrl || existingAnimal.image_url;
 
+        const files = req.files as Express.Multer.File[];
+        const fileUploadExistAndNotEmpty = files && files.length > 0;
+        const useExistingFiles = Array.isArray(existingAnimal.image_url) ? existingAnimal.image_url : [existingAnimal.image_url];
+
+        const updatedImageUrl = fileUploadExistAndNotEmpty ? files.map(file => file.filename) : useExistingFiles;
 
         try {
             console.log('Updating animal data:', {
@@ -65,7 +76,8 @@ export const updateAnimal = async (req: Request, res: Response) => {
                 age,
                 breed,
                 status,
-                imageUrl
+                files,
+
             });
             const animal = await animalModel.updateAnimal(parseInt(id, 10),
                 name,
@@ -73,10 +85,16 @@ export const updateAnimal = async (req: Request, res: Response) => {
                 parseInt(age, 10),
                 breed,
                 status,
-                updatedImageUrl);
+                updatedImageUrl,
+                sex,
+                description);
 
             if (!animal) {
                 return res.status(404).json({ message: 'Animal not found' });
+            }
+
+            if (!userAdmin || animal.user_id !== userId) {
+                return res.status(403).json({ message: 'Not authorized to update this animal' });
             }
             res.status(200).json(animal);
 
@@ -108,5 +126,29 @@ export const getAnimalById = async (req: Request, res: Response) => {
         res.json(animal)
     } catch (error) {
         res.status(500).json({ message: 'Error fetching the animal by id', error })
+    }
+}
+
+export const deleteAnimalById = async (req: Request, res: Response) => {
+    const { id } = req.params
+    const userId = (req as any).user.id;
+    try {
+
+        const animal = await animalModel.getAnimalById(parseInt(id, 10));
+
+        if (!animal) {
+            return res.status(404).json({ message: 'Animal not found' });
+        }
+
+        if (animal.user_id !== userId) {
+            return res.status(403).json({ message: 'Not authorized to delete this animal' });
+        }
+
+
+        await animalModel.deleteAnimal(parseInt(id, 10))
+        res.status(200).json({ message: 'Deleted succesfuly the', id })
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting the animal by id', error })
+
     }
 }

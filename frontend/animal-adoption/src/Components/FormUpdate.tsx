@@ -17,8 +17,10 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
         species: '',
         breed: '',
         status: '',
-        imageFile: null as File | null,
+        imageFiles: [] as File[],
         imageUrl: '',
+        description: '',
+        sex: ''
     });
 
     const { formState: medicalInfo, handleInputChange: handleMedicalInfoChange, setFormState: setMedicalInfo } = useForm({
@@ -27,6 +29,7 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
         notes: '',
         treatments: '',
     });
+
 
 
     useEffect(() => {
@@ -43,8 +46,10 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
                     species: animal.species,
                     breed: animal.breed,
                     status: animal.status,
-                    imageFile: null,
-                    imageUrl: animal.image_url || '',
+                    imageFiles: [],
+                    imageUrl: animal.image_url || null,
+                    description: animal.description,
+                    sex: animal.sex,
                 });
 
                 setMedicalInfo({
@@ -58,8 +63,10 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
             }
         };
         fetchAnimal();
-    }, [id, setBasicInfo, setMedicalInfo]);
 
+
+
+    }, [id, setBasicInfo, setMedicalInfo]);
 
     const handleSubmitBasicInfo = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -69,18 +76,42 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
         formData.append('species', basicInfo.species);
         formData.append('breed', basicInfo.breed);
         formData.append('status', basicInfo.status);
+        formData.append('description', basicInfo.description);
+        formData.append('sex', basicInfo.sex)
 
-        if (basicInfo.imageFile) {
-            formData.append('image', basicInfo.imageFile);
-        }
-        try {
-            const response = await axios.put(`http://localhost:5000/api/animals/${id}`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
+        // Check if new images were uploaded
+        if (Array.isArray(basicInfo.imageFiles) && basicInfo.imageFiles.length > 0) {
+            // If new images are uploaded, append them
+            basicInfo.imageFiles.forEach(file => {
+                formData.append('images', file);
             });
-            console.log(response.data);
+        } else if (basicInfo.imageUrl) {
+            // No new images, append the existing image URL(s)
+            if (Array.isArray(basicInfo.imageUrl)) {
+                basicInfo.imageUrl.forEach(url => formData.append('imageUrl', url));
+            } else {
+                formData.append('imageUrl', basicInfo.imageUrl);
+            }
+        }
+
+
+        try {
+            await axios.put(
+                `http://localhost:5000/api/animals/${id}`,
+                formData,
+                {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                    withCredentials: true,
+                }
+            );
+
             onSuccess();
         } catch (error) {
             console.error('Error updating animal:', error);
+            if (axios.isAxiosError(error)) {
+                console.error('Axios error message:', error.message);
+                // Handle specific status codes if needed
+            }
         }
     };
 
@@ -99,8 +130,10 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
 
     return (
         <>
-            <form onSubmit={handleSubmitBasicInfo} className="space-y-4 max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">
+            <form onSubmit={handleSubmitBasicInfo} className="space-y-4 max-w-lg mx-auto mt-4 bg-white p-6 rounded-lg shadow-lg">
                 <div>
+                    <label htmlFor="name">Nume</label>
+
                     <input
                         type="text"
                         name="name"
@@ -112,6 +145,8 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
                 </div>
 
                 <div>
+                    <label htmlFor="age">Varsta</label>
+
                     <input
                         type="number"
                         name="age"
@@ -123,6 +158,8 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
                 </div>
 
                 <div>
+                    <label htmlFor="specie">Specie</label>
+
                     <select
                         name="species"
                         value={basicInfo.species}
@@ -136,6 +173,8 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
                 </div>
 
                 <div>
+                    <label htmlFor="rasa">Rasa</label>
+
                     <input
                         type="text"
                         name="breed"
@@ -146,6 +185,20 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
                     />
                 </div>
                 <div>
+                    <label htmlFor="sex">Sex</label>
+                    <select
+                        name="sex"
+                        value={basicInfo.sex}
+                        onChange={handleBasicInfoChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
+                    >
+                        <option value="">Select sex</option>
+                        <option value="Mascul">Mascul</option>
+                        <option value="Femela">Femela</option>
+                    </select>
+                </div>
+                <div>
+                    <label htmlFor="status">Status</label>
                     <select
                         name="status"
                         value={basicInfo.status}
@@ -158,9 +211,17 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
                     </select>
                 </div>
 
+                <div>
+                    <label htmlFor="description">Description</label>
+                    <textarea rows={20} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
+                        onChange={handleBasicInfoChange}
+                        value={basicInfo.description}
+                        name="description" id="description"></textarea>
+                </div>
+
                 {/* Image Uploader */}
                 <div>
-                    <ImageUpload onFileChange={(file) => handleFileChange(file, 'imageFile')} />
+                    <ImageUpload onFileChange={(files) => handleFileChange(files, 'imageFiles')} />
                 </div>
 
                 <button
@@ -173,6 +234,8 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
 
             <form onSubmit={handleSubmitMedicalInfo} className="space-y-4 max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">
                 <div>
+                    <label htmlFor="vaccines">Vaccinuri</label>
+
                     <input
                         type="text"
                         name="vaccines"
@@ -183,6 +246,8 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
                     />
                 </div>
                 <div>
+                    <label htmlFor="dewormings">Deparazitare</label>
+
                     <input
                         type="text"
                         name="dewormings"
@@ -193,6 +258,8 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
                     />
                 </div>
                 <div>
+                    <label htmlFor="notes">Note</label>
+
                     <input
                         type="text"
                         name="notes"
@@ -203,6 +270,7 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
                     />
                 </div>
                 <div>
+                    <label htmlFor="treatments">Tratamente</label>
                     <input
                         type="text"
                         name="treatments"

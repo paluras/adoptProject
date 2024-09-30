@@ -45,14 +45,20 @@ const AnimalForm: React.FC<AnimalFormProps> = ({ onSuccess }) => {
 
 
         try {
-            const response = await axios.post('http://localhost:5000/api/animals', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
+            const response = await axios.post('/api/animals', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    withCredentials: true,
+                },
             });
+            console.log(response);
+
 
             const newAnimalId = response.data.id;
             navigate(`/animals/${newAnimalId}`);
             onSuccess();
         } catch (error) {
+
             console.error('Error adding animal:', error);
         }
     };

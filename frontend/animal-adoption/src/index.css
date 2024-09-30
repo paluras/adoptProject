@@ -7,3 +7,8 @@
 html {
     @apply font-poppins;
 }
+
+h3 {
+    font-size: large;
+    font-weight: bold;
+}
