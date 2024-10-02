@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Animal } from '../models/AnimalSchema';
-import Card from './CardComponent/CardComponent';
-import axios from 'axios';
-// import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { Animal } from "../models/AnimalSchema";
+import axios from "axios";
+import { useNavigate } from "react-router";
+import Card from "../Components/CardComponent/CardComponent";
 
-
-
-const AnimalsList: React.FC = () => {
+const ListPage: React.FC = () => {
     const [animals, setAnimals] = useState<Animal[]>([]);
 
     useEffect(() => {
@@ -42,4 +39,5 @@ const AnimalsList: React.FC = () => {
     );
 };
 
-export default AnimalsList;
+
+export default ListPage

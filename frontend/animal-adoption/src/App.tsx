@@ -1,12 +1,11 @@
 // src/App.tsx or wherever you define your routes
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AnimalForm from './Components/FormTest';
-import MedicalForm from './Components/FormTestMedical';
 import AnimalDetails from './Components/AnimalPage';
-import AnimalsList from './Components/List';
 import FormUpdate from './Components/FormUpdate';
 import Navbar from './Components/Navbar';
 import LoginPage from './Components/Login';
+import ListPage from './pages/ListPage';
 
 const App = () => (
   <>
@@ -15,9 +14,8 @@ const App = () => (
       <Navbar />
       <Routes>
         <Route path='/login' element={<LoginPage />} />
-        <Route path="/add-animal" element={<AnimalForm onSuccess={() => console.log("Success")} />} />
-        <Route path="/animals/:id" element={<MedicalForm onSuccess={() => console.log("Success Medical")} />} />
-        <Route path="/" element={<AnimalsList />} />
+        <Route path="/add-animal" element={<AnimalForm />} />
+        <Route path="/" element={<ListPage />} />
         <Route path='/:id' element={<AnimalDetails />} />
         <Route path='/update-form/:id' element={<FormUpdate onSuccess={() => console.log("Success Update")} />} />
         {/* Other routes */}

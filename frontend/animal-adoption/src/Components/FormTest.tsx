@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { useForm } from '../CustomHooks/useForm';
 import ImageUpload from './ImageUpload';
+import InputForm from './FormComponents/InputForm';
+import SelectForm from './FormComponents/SelectForm';
+import MedicalForm from './FormTestMedical';
 
-interface AnimalFormProps {
-    onSuccess: () => void;
-}
 
-const AnimalForm: React.FC<AnimalFormProps> = ({ onSuccess }) => {
-    const navigate = useNavigate();
+const AnimalForm: React.FC = () => {
 
-    // Use custom hook for form handling
+    const [animalId, setAnimalId] = useState();
+
+
     const { formState, handleInputChange, handleFileChange } = useForm({
         name: '',
         age: '',
@@ -37,12 +37,9 @@ const AnimalForm: React.FC<AnimalFormProps> = ({ onSuccess }) => {
 
         if (Array.isArray(formState.imageFiles)) {
             formState.imageFiles.forEach(file => {
-                formData.append('images', file); // This should match the multer configuration
+                formData.append('images', file);
             });
         }
-
-        console.log('Files to upload:', formState.imageFiles);
-
 
         try {
             const response = await axios.post('/api/animals', formData, {
@@ -51,110 +48,79 @@ const AnimalForm: React.FC<AnimalFormProps> = ({ onSuccess }) => {
                     withCredentials: true,
                 },
             });
-            console.log(response);
-
-
-            const newAnimalId = response.data.id;
-            navigate(`/animals/${newAnimalId}`);
-            onSuccess();
+            setAnimalId(response.data.id)
+            console.log(animalId);
         } catch (error) {
-
             console.error('Error adding animal:', error);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4 max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">
-            <div>
-                <input
-                    type="text"
-                    name="name"
-                    value={formState.name}
-                    onChange={handleInputChange}
-                    placeholder="Animal Name"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
-                />
-            </div>
+        <>
+            <form onSubmit={handleSubmit} className="space-y-4 max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">
 
-            <div>
-                <input
-                    type="number"
-                    name="age"
-                    value={formState.age}
+                <InputForm type={'text'}
+                    name={'name'}
+                    formValue={formState.name}
                     onChange={handleInputChange}
-                    placeholder="Age"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
-                />
-            </div>
+                    placeHolder={'Azorel'} />
 
-            <div>
-                <select
-                    name="species"
+                <InputForm type={'number'}
+                    name={'age'}
+                    formValue={formState.age}
+                    onChange={handleInputChange}
+                    placeHolder={'Varsta'} />
+
+                <SelectForm
+                    name={"species"}
                     value={formState.species}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
-                >
-                    <option value="">Select species</option>
-                    <option value="Pisica">Cat</option>
-                    <option value="Caine">Dog</option>
-                </select>
-            </div>
-            <div>
-                <select
-                    name="sex"
+                    selections={["Pisica", "Caine"]}
+                    placeHolder={'Selecteaza Specie'} />
+
+                <SelectForm
+                    name={"sex"}
                     value={formState.sex}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
-                >
-                    <option value="">Select sex</option>
-                    <option value="Mascul">Mascul</option>
-                    <option value="Femela">Femela</option>
-                </select>
-            </div>
+                    selections={["Femela", "Mascul"]}
+                    placeHolder={'Selecteaza Sexul'} />
 
-            <div>
-                <input
-                    type="text"
-                    name="breed"
-                    value={formState.breed}
-                    onChange={handleInputChange}
-                    placeholder="Breed"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
-                />
-            </div>
+                <InputForm
+                    type={'text'}
+                    name={'breed'}
+                    formValue={formState.breed}
+                    placeHolder={'Rasa'}
+                    onChange={handleInputChange} />
 
-            <div>
-                <select
-                    name="status"
+                <SelectForm
+                    name={"status"}
                     value={formState.status}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
+                    selections={["Adoptat", "Valabil"]}
+                    placeHolder={'Selecteaza Statusul'} />
+
+                <div>
+                    <label htmlFor="description">Description</label>
+                    <textarea className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
+                        onChange={handleInputChange}
+                        value={formState.description}
+                        name="description" id="description"></textarea>
+                </div>
+                <div>
+                    <ImageUpload onFileChange={(files) => handleFileChange(files, 'imageFiles')} />
+                </div>
+                <button
+                    type="submit"
+                    className="w-full bg-rose-500 text-white py-2 rounded-md hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-400"
                 >
-                    <option value="">Select Status</option>
-                    <option value="available">Available</option>
-                    <option value="adopted">Adopted</option>
-                </select>
-            </div>
-            <div>
-                <label htmlFor="description">Description</label>
-                <textarea className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
-                    onChange={handleInputChange}
-                    value={formState.description}
-                    name="description" id="description"></textarea>
-            </div>
+                    Submit
+                </button>
 
-            {/* Image Uploader */}
-            <div>
-                <ImageUpload onFileChange={(files) => handleFileChange(files, 'imageFiles')} />
+            </form>
+            <div className="space-y-4 max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">
+                {animalId ? <MedicalForm animalId={animalId} /> : <div>No id</div>}
             </div>
-
-            <button
-                type="submit"
-                className="w-full bg-rose-500 text-white py-2 rounded-md hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-400"
-            >
-                Submit
-            </button>
-        </form>
+        </>
 
     );
 };

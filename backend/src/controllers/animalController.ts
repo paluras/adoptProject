@@ -93,10 +93,6 @@ export const updateAnimal = async (req: Request, res: Response) => {
                 return res.status(404).json({ message: 'Animal not found' });
             }
 
-            if (!userAdmin || animal.user_id !== userId) {
-                return res.status(403).json({ message: 'Not authorized to update this animal' });
-            }
-            res.status(200).json(animal);
 
         } catch (error) {
             console.error('Error updating animal in the database:', error);
