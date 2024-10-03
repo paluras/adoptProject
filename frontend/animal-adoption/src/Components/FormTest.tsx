@@ -10,8 +10,6 @@ import MedicalForm from './FormTestMedical';
 const AnimalForm: React.FC = () => {
 
     const [animalId, setAnimalId] = useState();
-
-
     const { formState, handleInputChange, handleFileChange } = useForm({
         name: '',
         age: '',

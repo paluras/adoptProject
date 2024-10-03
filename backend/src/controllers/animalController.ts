@@ -8,7 +8,7 @@ export const addAnimal = async (req: Request, res: Response) => {
     console.log('Reached addAnimal controller');
     console.log('Cookies: ', req.cookies);
     const userId = (req as any).user.id;
-    console.log(userId, "USER IDDDDDDDd");
+
 
     upload(req, res, async (err) => {
         if (err instanceof multer.MulterError) {
@@ -127,20 +127,12 @@ export const getAnimalById = async (req: Request, res: Response) => {
 
 export const deleteAnimalById = async (req: Request, res: Response) => {
     const { id } = req.params
-    const userId = (req as any).user.id;
+
     try {
-
         const animal = await animalModel.getAnimalById(parseInt(id, 10));
-
         if (!animal) {
             return res.status(404).json({ message: 'Animal not found' });
         }
-
-        if (animal.user_id !== userId) {
-            return res.status(403).json({ message: 'Not authorized to delete this animal' });
-        }
-
-
         await animalModel.deleteAnimal(parseInt(id, 10))
         res.status(200).json({ message: 'Deleted succesfuly the', id })
     } catch (error) {

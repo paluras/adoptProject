@@ -10,5 +10,6 @@ export interface Animal {
     image_url: string[];
     medicalRecords: MedicalHistory;
     description: string;
-    sex: string
+    sex: string;
+    user_id: number;
 }

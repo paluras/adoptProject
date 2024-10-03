@@ -1,7 +1,7 @@
 // src/App.tsx or wherever you define your routes
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AnimalForm from './Components/FormTest';
-import AnimalDetails from './Components/AnimalPage';
+import AnimalDetails from './pages/AnimalPage';
 import FormUpdate from './Components/FormUpdate';
 import Navbar from './Components/Navbar';
 import LoginPage from './Components/Login';

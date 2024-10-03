@@ -2,12 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/index";
+import LogOutButton from "./NavBarComponents/LogOutButton";
+
 
 const Navbar: React.FC = () => {
 
-    const username = useSelector((state: RootState) => state.user.username)
-
-    console.log(username);
+    const username: string | null = useSelector((state: RootState) => state.user.username);
     return (
         <>
             {/* Skip Navigation Link */}
@@ -34,9 +34,8 @@ const Navbar: React.FC = () => {
                             </Link>
                         </li>
                         {username ?
-                            <li>
-                                <button className=" hover:underline focus:outline-none focus:ring-2 focus:ring-rose-400">Logout</button>
-                            </li> :
+                            <LogOutButton />
+                            :
                             <li>
                                 <Link
                                     to="/login"

@@ -64,8 +64,6 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
         };
         fetchAnimal();
 
-
-
     }, [id, setBasicInfo, setMedicalInfo]);
 
     const handleSubmitBasicInfo = async (e: React.FormEvent) => {
@@ -108,17 +106,14 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
             onSuccess();
         } catch (error) {
             console.error('Error updating animal:', error);
-            if (axios.isAxiosError(error)) {
-                console.error('Axios error message:', error.message);
-                // Handle specific status codes if needed
-            }
+
         }
     };
 
     const handleSubmitMedicalInfo = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`http://localhost:5000/api/medical-history/${id}`, medicalInfo, {
+            const response = await axios.put(`/api/medical-history/${id}`, medicalInfo, {
                 headers: { 'Content-Type': 'application/json' },
             });
             console.log(response.data);

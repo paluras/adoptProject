@@ -13,8 +13,6 @@ const MedicalForm: React.FC<MedicalFormProps> = ({ animalId }) => {
     const [notes, setNotes] = useState("");
     const navigate = useNavigate();
 
-
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {

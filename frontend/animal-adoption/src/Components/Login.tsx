@@ -23,10 +23,11 @@ const LoginPage: React.FC = () => {
                 withCredentials: true,
             });
 
-            console.log(response.data);
             if (response.status === 200) {
-                dispatch(login({ username: response.data.username }));
-                console.log('Logged in successfully:', response.data.username);
+                console.log(response.data);
+
+                dispatch(login({ username: response.data.username, isAdmin: response.data.isAdmin, userId: response.data.id }));
+                console.log('Logged in successfully:', response.data.username, response.data.isAdmin, response.data.id);
             }
 
         } catch (err) {

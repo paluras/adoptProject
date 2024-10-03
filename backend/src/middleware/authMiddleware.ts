@@ -16,7 +16,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
     }
 
     try {
-        const decoded = jwt.verify(token, JWT_SECRET) as { id: number, is_admin: boolean };
+        const decoded = jwt.verify(token, JWT_SECRET) as { id: number, is_admin: boolean, };
         console.log(decoded);
 
         (req as any).user = decoded;

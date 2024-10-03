@@ -34,8 +34,7 @@ export const registerUser = async (req: Request, res: Response) => {
 }
 
 export const loginUser = async (req: Request, res: Response) => {
-    const { username, password } = req.body;
-
+    const { username, password, } = req.body;
     try {
         const user: User = await userModel.findUserByUsername(username);
         if (!user) {
@@ -53,9 +52,28 @@ export const loginUser = async (req: Request, res: Response) => {
             maxAge: 60 * 60 * 1000,
 
         });
-        res.status(200).json({ username });
+
+        res.status(200).json({ username: user.username, isAdmin: user.is_admin, id: user.id });
+
 
     } catch (error) {
         res.status(500).json({ message: "womething wrong loggin", error });
     }
 };
+
+export const logoutUser = async (req: Request, res: Response) => {
+    res.clearCookie('token',
+        {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict'
+        });
+    return res.status(200).json({ message: 'Logged out successfully' });
+}
+
+export const getUser = async (req: Request, res: Response) => {
+    const { username, isAdmin } = req.body;
+    console.log(req.body);
+
+    res.status(200).json({ username, isAdmin });
+}

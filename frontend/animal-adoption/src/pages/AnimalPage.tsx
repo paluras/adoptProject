@@ -5,21 +5,28 @@ import { useState } from "react";
 import axios from 'axios';
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import SwiperComponent from "./Swipper/Swiper";
-import InfoBox from "./InfoBox";
+import SwiperComponent from "../Components/Swipper/Swiper";
+import InfoBox from "../Components/InfoBox";
 import Markdown from 'react-markdown'
+import DeleteAnimalPageButton from "../Components/DeleteAnimalPageButton";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 const AnimalDetails: React.FC = () => {
     const [animals, setAnimals] = useState<Animal>();
     const [medicalHistory, setMedicalHistory] = useState<MedicalHistory>();
     const { id } = useParams()
-
+    const isAdmin: boolean = useSelector((state: RootState) => state.user.isAdmin);
+    const userId: number | null = useSelector((state: RootState) => state.user.userId);
     // refactor this
 
     const fetchAnimal = async () => {
         try {
             const response = await axios.get(`/api/animals/${id}`)
             setAnimals(response.data)
+
+            console.log(animals);
+
         } catch (error) {
             console.log({ error })
         }
@@ -93,10 +100,21 @@ const AnimalDetails: React.FC = () => {
                             />
                         </div>
                     </div>
-                </div>
 
-                <Link to={`/update-form/${id}`}>
-                    <button className="w-full bg-rose-500 text-white py-2 rounded-md hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-400">Update the form</button></Link>
+                </div>
+                {userId === animals?.user_id || isAdmin ?
+                    <div className="w-full gap-4 flex items-center justify-center p-10">
+                        <Link to={`/update-form/${id}`}>
+                            <button className="w-60 p-10 bg-rose-500 text-white py-2 rounded-md hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-400">
+                                Update the form
+                            </button></Link>
+                        <DeleteAnimalPageButton
+                            animalId={parseInt(id!, 10)}
+                        />
+
+                    </div>
+                    : null}
+
             </section>
         </>
     )
