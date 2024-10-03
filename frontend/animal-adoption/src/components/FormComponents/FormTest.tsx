@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useForm } from '../CustomHooks/useForm';
+import { useForm } from '../../hooks/useForm';
 import ImageUpload from './ImageUpload';
-import InputForm from './FormComponents/InputForm';
-import SelectForm from './FormComponents/SelectForm';
+import InputForm from './InputForm';
+import SelectForm from './SelectForm';
 import MedicalForm from './FormTestMedical';
 
 
@@ -47,7 +47,7 @@ const AnimalForm: React.FC = () => {
                 },
             });
             setAnimalId(response.data.id)
-            console.log(animalId);
+
         } catch (error) {
             console.error('Error adding animal:', error);
         }

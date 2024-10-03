@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Animal } from "../models/AnimalSchema";
 import axios from "axios";
 import { useNavigate } from "react-router";
-import Card from "../Components/CardComponent/CardComponent";
+import Card from "../components/CardComponent/CardComponent";
 
 const ListPage: React.FC = () => {
     const [animals, setAnimals] = useState<Animal[]>([]);
@@ -38,6 +38,5 @@ const ListPage: React.FC = () => {
         </div>
     );
 };
-
 
 export default ListPage

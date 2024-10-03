@@ -1,5 +1,5 @@
 import React from "react";
-import AnimalForm from "../Components/FormTest";
+import AnimalForm from "../components/FormComponents/FormTest";
 
 const AddAnimalFormPage: React.FC = () => {
     return (

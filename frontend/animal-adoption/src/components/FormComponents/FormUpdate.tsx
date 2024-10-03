@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { useForm } from '../CustomHooks/useForm';
+import { useForm } from '../../hooks/useForm';
 import ImageUpload from './ImageUpload';
 
 interface AnimalFormProps {
