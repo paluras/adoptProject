@@ -1,8 +1,8 @@
 /backend/node_modules
 /backend/src/uploads
+/backend/.env
 
-backend/.env
+/backend/.env.test
 
 
 /frontend/animal-adoption/node_modules
-backend/.env

@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { Animal } from "../models/AnimalSchema";
 import { useNavigate } from "react-router";
 import Card from "../components/CardComponent/CardComponent";
-import Landing from "../components/Landing";
 import useFetch from "../hooks/useFetch";
 
-const ListPage: React.FC = () => {
+interface ListPageProps {
+    children: ReactNode
+}
+
+const ListPage: React.FC<ListPageProps> = ({ children }) => {
     const [species, setSpecies] = useState<string>('');
     const [ageMax, setAgeMax] = useState<string>('');
     const [status, setStatus] = useState<string>('Valabil');
@@ -15,7 +18,6 @@ const ListPage: React.FC = () => {
     if (ageMax) query.append('ageMax', ageMax);
     if (status) query.append('status', status);
 
-
     const { data: animals, loading: loadingAnimals, error: errorsAnimals } = useFetch<Animal[]>(`/api/animals?${query.toString()}`);
     const navigate = useNavigate();
 
@@ -23,12 +25,21 @@ const ListPage: React.FC = () => {
         e.preventDefault();
     };
 
-    if (animals === null || loadingAnimals === true) return null;
+    if (animals === null || loadingAnimals === true) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-secondary" role="status">
+
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="background-color text-main">
 
-            <Landing />
+            {children}
+
             <h1 className="text-4xl text-center font-bold p-4">Available Animals</h1>
 
             <form onSubmit={handleFilterSubmit} className="flex flex-wrap justify-center gap-4 p-4">

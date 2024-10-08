@@ -215,8 +215,6 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
                     </select>
                 </div>
 
-
-
                 <MDEditor
                     data-color-mode="light"
                     value={basicInfo.description}
@@ -228,7 +226,6 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
 
                 />
 
-                {/* Image Uploader */}
                 <div>
                     <ImageUpload onFileChange={(files) => handleFileChange(files, 'imageFiles')} />
                 </div>

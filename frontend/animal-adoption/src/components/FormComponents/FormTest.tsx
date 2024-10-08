@@ -125,13 +125,7 @@ const AnimalForm: React.FC = () => {
                         rehypePlugins: [[rehypeSanitize]],
                     }}
                 />
-                <div>
-                    <label htmlFor="description">Description</label>
-                    <textarea className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
-                        onChange={handleInputChange}
-                        value={formState.description}
-                        name="description" id="description"></textarea>
-                </div>
+
                 <div>
                     <ImageUpload onFileChange={(files) => handleFileChange(files, 'imageFiles')} />
                 </div>

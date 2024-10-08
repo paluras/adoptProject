@@ -1,15 +1,14 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar'; // Assuming this is your navbar component
+import Navbar from './components/Navbar';
 
-// Lazy load components
 const LoginPage = React.lazy(() => import('./pages/Login'));
 const RegisterPage = React.lazy(() => import('./pages/RegisterPage'));
 const AnimalForm = React.lazy(() => import('./pages/AddAnimalFormPage'));
 const ListPage = React.lazy(() => import('./pages/ListPage'));
 const AnimalDetails = React.lazy(() => import('./pages/AnimalPage'));
 const FormUpdate = React.lazy(() => import('./components/FormComponents/FormUpdate'));
-
+const LandingParallax = React.lazy(() => import('./components/Landing'))
 
 function App() {
   return (
@@ -22,7 +21,9 @@ function App() {
             <Route path='/register' element={<RegisterPage />} />
             <Route path="/add-animal" element={<AnimalForm />} />
 
-            <Route path="/" element={<ListPage />} />
+            <Route path="/" element={<ListPage>
+              <LandingParallax />
+            </ListPage>} />
             <Route path='/:id' element={<AnimalDetails />} />
             <Route
               path='/update-form/:id'
