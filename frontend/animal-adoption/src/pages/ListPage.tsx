@@ -1,35 +1,79 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Animal } from "../models/AnimalSchema";
-import axios from "axios";
 import { useNavigate } from "react-router";
 import Card from "../components/CardComponent/CardComponent";
+import Landing from "../components/Landing";
+import useFetch from "../hooks/useFetch";
 
 const ListPage: React.FC = () => {
-    const [animals, setAnimals] = useState<Animal[]>([]);
+    const [species, setSpecies] = useState<string>('');
+    const [ageMax, setAgeMax] = useState<string>('');
+    const [status, setStatus] = useState<string>('Valabil');
 
-    useEffect(() => {
-        const fetchAnimals = async () => {
-            const response = await axios.get('/api/animals');
-            const data: Animal[] = await response.data;
-            setAnimals(data);
-        };
-        fetchAnimals();
-    }, []);
+    const query = new URLSearchParams();
+    if (species) query.append('species', species);
+    if (ageMax) query.append('ageMax', ageMax);
+    if (status) query.append('status', status);
 
+
+    const { data: animals, loading: loadingAnimals, error: errorsAnimals } = useFetch<Animal[]>(`/api/animals?${query.toString()}`);
     const navigate = useNavigate();
+
+    const handleFilterSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+    };
+
+    if (animals === null || loadingAnimals === true) return null;
+
     return (
-        <div  >
-            <h1 className='text-4xl text-center font-bold p-4'>Available Animals</h1>
-            <div className='p-5 gap-4 flex flex-wrap justify-center '>
-                {animals.length > 0 ? (
+        <div className="background-color text-main">
+
+            <Landing />
+            <h1 className="text-4xl text-center font-bold p-4">Available Animals</h1>
+
+            <form onSubmit={handleFilterSubmit} className="flex flex-wrap justify-center gap-4 p-4">
+                <select
+                    value={species}
+                    onChange={e => setSpecies(e.target.value)}
+                    className="border p-2"
+                >
+                    <option value="">All</option>
+                    <option value="Caine">Caine</option>
+                    <option value="Pisica">Pisica</option>
+                </select>
+
+                <input
+                    type="number"
+                    placeholder="Max Age"
+                    value={ageMax}
+                    onChange={e => setAgeMax(e.target.value)}
+                    className="border p-2"
+                />
+
+                <select
+                    value={status}
+                    onChange={e => setStatus(e.target.value)}
+                    className="border p-2"
+                >
+                    <option value="">All</option>
+                    <option value="Valabil">Available</option>
+                    <option value="Adoptat">Adopted</option>
+                </select>
+                <button type="submit" className="bg-secondary px-4 rounded-md text-white p-2">Filter</button>
+            </form>
+
+            <div className="p-5 gap-4 flex flex-wrap justify-center">
+                {animals.length > 0 && !errorsAnimals ? (
                     animals.map(animal => (
-                        <Card key={animal.id}
+                        <Card
+                            key={animal.id}
                             id={animal.id}
                             title={animal.name}
                             description={animal.species}
-                            imageUrl={`http://localhost:5000/uploads/${animal.image_url[0]}`}
+                            imageUrl={animal.image_url ? `http://localhost:5000/uploads/${animal.image_url[0]}` : undefined}
                             buttonText={'Click'}
-                            onButtonClick={() => navigate(`/${animal.id}`)} />
+                            onButtonClick={() => navigate(`/${animal.id}`)}
+                        />
                     ))
                 ) : (
                     <p>No animals available for adoption at this time.</p>
@@ -39,4 +83,4 @@ const ListPage: React.FC = () => {
     );
 };
 
-export default ListPage
+export default ListPage;

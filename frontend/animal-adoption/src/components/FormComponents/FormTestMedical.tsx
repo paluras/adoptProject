@@ -18,14 +18,18 @@ const MedicalForm: React.FC<MedicalFormProps> = ({ animalId }) => {
         treatments: "",
         notes: ""
     });
+    console.log(formState);
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await axios.post('/api/medical-history', {
+            const response = await axios.post('/api/medical-history', {
                 id: animalId,
                 ...formState
             });
+            console.log(response);
+
             navigate(`/${animalId}`);
         } catch (error) {
             console.error('Error adding medical history:', error);

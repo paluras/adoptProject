@@ -1,6 +1,8 @@
 export interface MedicalHistory {
-    dewormings: string,
-    treatments: string,
-    notes: string,
-    vaccines: string
+    id?: number;
+    animal_id: number;
+    vaccines: string;
+    dewormings: string;
+    treatments: string;
+    notes: string;
 }

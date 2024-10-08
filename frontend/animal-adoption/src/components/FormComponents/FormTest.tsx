@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useForm } from '../../hooks/useForm';
 import ImageUpload from './ImageUpload';
 import InputForm from './InputForm';
 import SelectForm from './SelectForm';
 import MedicalForm from './FormTestMedical';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../store/userSlice';
+import MDEditor from '@uiw/react-md-editor';
+import rehypeSanitize from 'rehype-sanitize';
+
 
 
 const AnimalForm: React.FC = () => {
-
+    const dispatch = useDispatch();
     const [animalId, setAnimalId] = useState();
-    const { formState, handleInputChange, handleFileChange } = useForm({
+    const { formState, handleInputChange, handleFileChange, setFormState } = useForm({
         name: '',
         age: '',
         species: '',
@@ -49,9 +54,22 @@ const AnimalForm: React.FC = () => {
             setAnimalId(response.data.id)
 
         } catch (error) {
+            if (AxiosError.ERR_BAD_REQUEST) {
+                alert("Login in order to add a animal")
+                dispatch(logout())
+            }
             console.error('Error adding animal:', error);
         }
     };
+
+    const handleEditorChange = (value?: string) => {
+        setFormState((prevState) => ({
+            ...prevState,
+            description: value || '',  // Ensures description is never undefined
+        }));
+    };
+
+
 
     return (
         <>
@@ -97,6 +115,16 @@ const AnimalForm: React.FC = () => {
                     selections={["Adoptat", "Valabil"]}
                     placeHolder={'Selecteaza Statusul'} />
 
+
+                <MDEditor
+                    data-color-mode="light"
+                    value={formState.description}
+                    onChange={handleEditorChange}
+                    className="bg-gray-50 border border-gray-300 p-4 text-gray-800"
+                    previewOptions={{
+                        rehypePlugins: [[rehypeSanitize]],
+                    }}
+                />
                 <div>
                     <label htmlFor="description">Description</label>
                     <textarea className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
@@ -115,9 +143,11 @@ const AnimalForm: React.FC = () => {
                 </button>
 
             </form>
-            <div className="space-y-4 max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">
-                {animalId ? <MedicalForm animalId={animalId} /> : <div>No id</div>}
-            </div>
+            {animalId ?
+                <div className="space-y-4 max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">
+                    <MedicalForm animalId={animalId} />
+                </div>
+                : null}
         </>
 
     );

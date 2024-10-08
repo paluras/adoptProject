@@ -4,7 +4,7 @@ export const useForm = <T extends Record<string, unknown>>(initialState: T) => {
     const [formState, setFormState] = useState<T>(initialState);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
+        const { name, value, } = e.target;
         setFormState((prevState) => ({
             ...prevState,
             [name]: value,

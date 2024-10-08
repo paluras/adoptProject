@@ -18,7 +18,6 @@ export const updateMedicalHistory = async (id: number, vaccines: string, dewormi
 }
 
 export const getMedicalHistoryByAnimalId = async (animalId: number) => {
-    // First, fetch the medical history
     const medicalHistoryResult = await pool.query('SELECT * FROM medical_history WHERE animal_id = $1', [animalId]);
     const medicalHistory = medicalHistoryResult.rows[0];
     if (!medicalHistory) {

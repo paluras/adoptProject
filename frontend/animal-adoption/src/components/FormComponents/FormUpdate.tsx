@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useForm } from '../../hooks/useForm';
 import ImageUpload from './ImageUpload';
+import MDEditor from '@uiw/react-md-editor';
+import rehypeSanitize from 'rehype-sanitize';
 
 interface AnimalFormProps {
     onSuccess: () => void;
@@ -95,7 +97,7 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
 
         try {
             await axios.put(
-                `http://localhost:5000/api/animals/${id}`,
+                `/api/animals/${id}`,
                 formData,
                 {
                     headers: { 'Content-Type': 'multipart/form-data' },
@@ -121,6 +123,13 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
         } catch (error) {
             console.error('Error updating medical history:', error);
         }
+    };
+
+    const handleEditorChange = (value?: string) => {
+        setBasicInfo((prevState) => ({
+            ...prevState,
+            description: value || '',  // Ensures description is never undefined
+        }));
     };
 
     return (
@@ -206,13 +215,18 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
                     </select>
                 </div>
 
-                <div>
-                    <label htmlFor="description">Description</label>
-                    <textarea rows={20} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
-                        onChange={handleBasicInfoChange}
-                        value={basicInfo.description}
-                        name="description" id="description"></textarea>
-                </div>
+
+
+                <MDEditor
+                    data-color-mode="light"
+                    value={basicInfo.description}
+                    onChange={handleEditorChange}
+                    className="bg-gray-50 border border-gray-300 p-4 text-gray-800"
+                    previewOptions={{
+                        rehypePlugins: [[rehypeSanitize]],
+                    }}
+
+                />
 
                 {/* Image Uploader */}
                 <div>

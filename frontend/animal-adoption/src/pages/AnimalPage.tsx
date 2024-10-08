@@ -1,16 +1,16 @@
 import React from "react";
 import { Animal } from "../models/AnimalSchema";
 import { MedicalHistory } from "../models/MedicalHistorySchema";
-
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import SwiperComponent from "../components/Swipper/Swiper";
 import InfoBox from "../components/InfoBox";
-import Markdown from 'react-markdown'
 import DeleteAnimalPageButton from "../components/AnimalPageComponents/DeleteAnimalPageButton";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import useFetch from "../hooks/useFetch";
+import MDEditor from "@uiw/react-md-editor";
+import rehypeSanitize from "rehype-sanitize";
 
 const AnimalDetails: React.FC = () => {
 
@@ -50,14 +50,24 @@ const AnimalDetails: React.FC = () => {
 
 
     return (
-        <section className="flex flex-col bg-slate-100">
+        <section className=" flex flex-col background-color text-main">
             <div>
                 {animals?.image_url && <SwiperComponent img={animals.image_url} />}
             </div>
             <div className="p-6 grid gap-10 md:grid-cols-2 sm:grid-cols-1">
-                <div>
+                <div data-color-mode="light">
                     <h1 className="py-4 text-2xl font-bold">{animals?.name}</h1>
-                    <Markdown className="text-balance font-light">{animals?.description || ""}</Markdown>
+                    <MDEditor.Markdown
+
+
+                        source={animals?.description}
+                        style={{
+                            whiteSpace: 'pre-wrap',
+                            color: "#232f61",
+                            backgroundColor: '#f6f3e9'
+                        }}
+                        rehypePlugins={[rehypeSanitize]}
+                    />
                 </div>
 
                 <div className="details-container">

@@ -1,20 +1,12 @@
 import express, { Application } from 'express';
-import { Request, Response } from 'express';
 import animalRoutes from './routes/animalRoutes';
 import medicalHistoryRoutes from './routes/medicalHistoryRoutes';
 import authRoutes from './routes/authRoutes'
 import cors from 'cors';
-import dotenv from 'dotenv';
 import path from 'path';
 import cookieParser from "cookie-parser"
 
-// import animalRoutes from './routes/animalRoutes';
-// import userRoutes from './routes/userRoutes';
-
-dotenv.config();
-
 const app: Application = express();
-
 
 // Middleware
 app.use(cookieParser())

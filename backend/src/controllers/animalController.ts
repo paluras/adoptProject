@@ -104,7 +104,15 @@ export const updateAnimal = async (req: Request, res: Response) => {
 
 export const getAllAnimals = async (req: Request, res: Response) => {
     try {
-        const animals = await animalModel.getAllAnimals();
+        const { species, ageMin, ageMax, breed, status } = req.query;
+
+        const animals = await animalModel.getAllAnimals({
+            species: species as string | undefined,
+            ageMin: ageMin ? parseInt(ageMin as string) : undefined,
+            ageMax: ageMax ? parseInt(ageMax as string) : undefined,
+            breed: breed as string | undefined,
+            status: status as string | undefined,
+        });
         const animalsWithRecords = await Promise.all(animals.map(async (animal: any) => {
             const records = await medicalRecordModel.getMedicalHistoryByAnimalId(animal.id);
             return { ...animal, medicalRecords: records };
