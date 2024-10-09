@@ -1,14 +1,29 @@
 import pool from '../../db'; // Make sure this is connected to the test DB
-import { addAnimal, deleteAnimal, getAllAnimals, getAnimalById, updateAnimal } from '../../models/animalModel';
+import { AnimalModel } from '../../models/animalModel';
+import { AnimalInput } from '../../schemas/animalSchema';
+
+const animalModel = new AnimalModel();
 
 const createTestUser = async (): Promise<number> => {
     const { rows } = await pool.query(`INSERT INTO users (username, password, is_admin) VALUES ($1, $2, $3) RETURNING id`, ['testuser', 'hashedpassword', false]);
     return rows[0].id;
 };
 
+const testAnimalInput = (userId: number): AnimalInput => ({
+    name: 'Luna',
+    species: 'Cat',
+    age: 2,
+    breed: 'Siamese',
+    status: 'Valabil',
+    imageUrls: ['url1', 'url2'],
+    sex: 'Female',
+    description: 'Friendly cat',
+    userId
+});
+
 const createTestAnimal = async (userId: number): Promise<number> => {
-    const { rows } = await pool.query(`INSERT INTO animals (name, species, age, breed, status, image_url, sex, description, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`, ['Luna', 'Cat', 2, 'Siamese', 'Available', ['url1', 'url2'], 'Female', 'Friendly cat', userId]);
-    return rows[0].id;
+    const animal = await animalModel.addAnimal(testAnimalInput(userId));
+    return animal.id;
 };
 
 describe('Animal Model', () => {
@@ -36,7 +51,7 @@ describe('Animal Model', () => {
         const userId = await createTestUser();
         await createTestAnimal(userId);
 
-        const animals = await getAllAnimals();
+        const animals = await animalModel.getAll();
         expect(animals.length).toBe(1);
         expect(animals[0].name).toBe('Luna');
     });
@@ -44,8 +59,8 @@ describe('Animal Model', () => {
         const userId = await createTestUser();
         await createTestAnimal(userId);
 
-        const animals = await getAllAnimals({ species: "Cat" });
-        const animals2 = await getAllAnimals({ species: "Dog" });
+        const animals = await animalModel.getAll({ species: "Cat" });
+        const animals2 = await animalModel.getAll({ species: "Dog" });
 
         expect(animals.length).toBe(1);
         expect(animals2.length).toBe(0);
@@ -56,26 +71,29 @@ describe('Animal Model', () => {
         const userId = await createTestUser();
         const animalId = await createTestAnimal(userId);
 
-        const animal = await getAnimalById(animalId);
+        const animal = await animalModel.getById(animalId);
         expect(animal).toBeDefined();
         expect(animal.name).toBe('Luna');
     });
 
     it('should throw an error for non-existent animal id', async () => {
-        await expect(getAnimalById(99999)).rejects.toThrow('Animal not found');
+        await expect(animalModel.getById(99999)).rejects.toThrow('Animal not found');
     });
     it('should insert a valid animal', async () => {
         const userId = await createTestUser();
-        const createAnimal = await addAnimal(
-            'Test1',
-            'Cat',
-            2,
-            'Siamese',
-            'Available',
-            ['url1', 'url2'],
-            'Female',
-            'Friendly cat',
-            userId)
+
+        const animalInput: AnimalInput = {
+            name: 'Test1',
+            species: 'Cat',
+            age: 2,
+            breed: 'Siamese',
+            status: 'Valabil',
+            imageUrls: ['url1', 'url2'],
+            sex: 'Female',
+            description: 'Friendly cat',
+            userId
+        };
+        const createAnimal = await animalModel.addAnimal(animalInput)
 
 
         expect(createAnimal).toBeDefined;
@@ -83,56 +101,54 @@ describe('Animal Model', () => {
     });
     it("should not insert a invalid animal - negative age", async () => {
         const userId = await createTestUser();
+        const animalInput: AnimalInput = {
+            name: 'Test1',
+            species: 'Cat',
+            age: -2,
+            breed: 'Siamese',
+            status: 'Valabil',
+            imageUrls: ['url1', 'url2'],
+            sex: 'Female',
+            description: 'Friendly cat',
+            userId
+        };
 
-        await expect(addAnimal(
-            '12',
-            'Cat',
-            -1,
-            'Siamese',
-            'Available',
-            ['url1', 'url2'],
-            'Female',
-            'Friendly cat',
-            userId)).rejects.toThrow("Age must be a positive number")
+        await expect(animalModel.addAnimal(animalInput))
+            .rejects.toThrow("Age must be a positive number")
     })
 
 
     it("should update a animal", async () => {
         const userId = await createTestUser();
-        const createAnimal = await addAnimal(
-            'Test1',
-            'Cat',
-            2,
-            'Siamese',
-            'Available',
-            ['url1', 'url2'],
-            'Female',
-            'Friendly cat',
-            userId)
 
-        expect(createAnimal.name).toBe('Test1')
+        const originalAnimal = await animalModel.addAnimal(testAnimalInput(userId));
 
-        const updatedAnimal = await updateAnimal(
-            createAnimal.id,
-            'Nona',
-            'Dog',
-            5,
-            'Siamese',
-            'Available',
-            ['url1', 'url2'],
-            'Mascul',
-            'Friendly cat',
 
-        )
+        expect(originalAnimal.name).toBe('Luna')
+
+        const updateInput: AnimalInput = {
+            name: 'Nona',
+            species: 'Dog',
+            age: 5,
+            breed: 'Siamese',
+            status: 'Valabil',
+            imageUrls: ['url1', 'url2'],
+            sex: 'Mascul',
+            description: 'Friendly cat'
+        };
+
+        const updatedAnimal = await animalModel.
+            updateAnimal(originalAnimal.id, updateInput);
+
 
         expect(updatedAnimal.name).toBe('Nona')
-        expect(updatedAnimal == createAnimal).toBeFalsy
+        expect(updatedAnimal == originalAnimal).toBeFalsy
     })
 
     it('should delete a animal', async () => {
         const userId = await createTestUser();
         const animalId = await createTestAnimal(userId);
-        const deletedReturnValue = await deleteAnimal(animalId)
+        const deletedReturnValue = await animalModel.deleteAnimal(animalId)
 
         expect(deletedReturnValue).toBe("Successfully deleted")
     })

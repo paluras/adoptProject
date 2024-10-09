@@ -30,12 +30,9 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
 export const verifyOwnership = async (req: Request, res: Response, next: NextFunction) => {
     const userId = (req as any).user?.id;
     const isAdmin = (req as any).user?.is_admin;
-    console.log("is admin", isAdmin);
-
     const animalId = req.params.id;
 
     try {
-
         const animal = await animalModel.getById(parseInt(animalId, 10));
 
         if (!animal) {

@@ -1,5 +1,7 @@
 import pool from '../db';
 
+
+
 export const addMedicalHistory = async (id: number, vaccines: string, dewormings: string, treatments: string, notes: string) => {
     const result = await pool.query(
         'INSERT INTO medical_history (animal_id, vaccines, dewormings, treatments, notes) VALUES ($1, $2, $3, $4, $5) RETURNING *',
