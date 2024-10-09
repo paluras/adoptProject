@@ -1,14 +1,9 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../store/userSlice';
-
-
-interface ErrorResponse {
-    message: string;
-    code?: string;
-}
+import { handleAxiosError } from '../utils/handleAxiosError';
 
 const LoginPage: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -16,7 +11,7 @@ const LoginPage: React.FC = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -24,40 +19,13 @@ const LoginPage: React.FC = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post('/api/auth/login',
-                { username, password }, {
-                withCredentials: true,
-            });
-
+            const response = await axios.post('/api/auth/login', { username, password }, { withCredentials: true });
             if (response.status === 200) {
                 dispatch(login({ username: response.data.username, isAdmin: response.data.isAdmin, userId: response.data.id }));
-                console.log('Logged in successfully:', response.data.username, response.data.isAdmin, response.data.id);
-                navigate('/')
+                navigate('/');
             }
-
         } catch (err) {
-
-            // Refactor into a logger util or class
-            if (axios.isAxiosError(err)) {
-                const axiosError = err as AxiosError<ErrorResponse>;
-                if (axiosError.response) {
-                    setError(axiosError.response.data.message)
-                    console.error('Error data:', axiosError.response.data.message);
-                    console.error('Error status:', axiosError.response.status);
-                } else if (axiosError.request) {
-                    setError(axiosError.request)
-                    console.error('No response received:', axiosError.request);
-                } else {
-                    setError(axiosError.message)
-                    console.error('Error message:', axiosError.message);
-                }
-            } else {
-                setError('An error occurred. Please try again.' + err);
-                console.error('Non-Axios error:', error);
-            }
-            throw err;
-
-
+            setError(handleAxiosError(err));
         } finally {
             setLoading(false);
         }
@@ -99,8 +67,7 @@ const LoginPage: React.FC = () => {
 
                     <button
                         type="submit"
-                        className={`w-full bg-secondary text-white py-2 rounded-md ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-indigo-700'
-                            }`}
+                        className={`w-full bg-secondary text-white py-2 rounded-md ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-indigo-700'}`}
                         disabled={loading}
                     >
                         {loading ? 'Logging in...' : 'Login'}

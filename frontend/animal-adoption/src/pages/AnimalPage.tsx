@@ -58,8 +58,6 @@ const AnimalDetails: React.FC = () => {
                 <div data-color-mode="light">
                     <h1 className="py-4 text-2xl font-bold">{animals?.name}</h1>
                     <MDEditor.Markdown
-
-
                         source={animals?.description}
                         style={{
                             whiteSpace: 'pre-wrap',
@@ -94,7 +92,6 @@ const AnimalDetails: React.FC = () => {
                     </div>
                 </div>
             </div>
-
             {(userId === animals?.user_id || isAdmin) && (
                 <div className="w-full gap-4 flex items-center justify-center p-10">
                     <Link to={`/update-form/${id}`}>

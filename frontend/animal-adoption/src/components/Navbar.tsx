@@ -54,7 +54,6 @@ const Navbar: React.FC = () => {
                         {username ? <li>
                             {username}
                         </li> : null}
-
                     </ul>
                 </nav>
             </header>

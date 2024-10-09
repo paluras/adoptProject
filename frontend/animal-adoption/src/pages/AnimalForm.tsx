@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import axios, { AxiosError } from 'axios';
-import { useForm } from '../../hooks/useForm';
-import ImageUpload from './ImageUpload';
-import InputForm from './InputForm';
-import SelectForm from './SelectForm';
-import MedicalForm from './FormTestMedical';
+import { useForm } from '../hooks/useForm';
+import ImageUpload from '../components/FormComponents/ImageUpload';
+import InputForm from '../components/FormComponents/InputForm';
+import SelectForm from '../components/FormComponents/SelectForm';
+import MedicalForm from '../components/FormComponents/FormTestMedical';
 import { useDispatch } from 'react-redux';
-import { logout } from '../../store/userSlice';
+import { logout } from '../store/userSlice';
 import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from 'rehype-sanitize';
-
-
 
 const AnimalForm: React.FC = () => {
     const dispatch = useDispatch();
@@ -68,9 +66,6 @@ const AnimalForm: React.FC = () => {
             description: value || '',  // Ensures description is never undefined
         }));
     };
-
-
-
     return (
         <>
             <form onSubmit={handleSubmit} className="space-y-4 max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">

@@ -6,11 +6,7 @@ import ImageUpload from './ImageUpload';
 import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from 'rehype-sanitize';
 
-interface AnimalFormProps {
-    onSuccess: () => void;
-}
-
-const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
+const FormUpdate: React.FC = () => {
     const { id } = useParams<{ id: string }>();
 
     const { formState: basicInfo, handleInputChange: handleBasicInfoChange, handleFileChange, setFormState: setBasicInfo } = useForm({
@@ -31,8 +27,6 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
         notes: '',
         treatments: '',
     });
-
-
 
     useEffect(() => {
         const fetchAnimal = async () => {
@@ -105,7 +99,6 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
                 }
             );
 
-            onSuccess();
         } catch (error) {
             console.error('Error updating animal:', error);
 
@@ -119,7 +112,6 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
                 headers: { 'Content-Type': 'application/json' },
             });
             console.log(response.data);
-            onSuccess();
         } catch (error) {
             console.error('Error updating medical history:', error);
         }
@@ -128,7 +120,7 @@ const FormUpdate: React.FC<AnimalFormProps> = ({ onSuccess }) => {
     const handleEditorChange = (value?: string) => {
         setBasicInfo((prevState) => ({
             ...prevState,
-            description: value || '',  // Ensures description is never undefined
+            description: value || '',
         }));
     };
 

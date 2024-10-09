@@ -10,15 +10,18 @@ interface ListPageProps {
 
 const ListPage: React.FC<ListPageProps> = ({ children }) => {
     const [species, setSpecies] = useState<string>('');
-    const [ageMax, setAgeMax] = useState<string>('');
     const [status, setStatus] = useState<string>('Valabil');
+    const [sex, setSex] = useState<string>('')
 
     const query = new URLSearchParams();
     if (species) query.append('species', species);
-    if (ageMax) query.append('ageMax', ageMax);
     if (status) query.append('status', status);
+    if (sex) query.append('sex', sex)
+    console.log(query.toString());
 
-    const { data: animals, loading: loadingAnimals, error: errorsAnimals } = useFetch<Animal[]>(`/api/animals?${query.toString()}`);
+    const { data: animals,
+        loading: loadingAnimals,
+        error: errorsAnimals } = useFetch<Animal[]>(`/api/animals?${query.toString()}`);
     const navigate = useNavigate();
 
     const handleFilterSubmit = (e: React.FormEvent) => {
@@ -42,33 +45,44 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
 
             <h1 className="text-4xl text-center font-bold p-4">Available Animals</h1>
 
+            {/* create a filter component  */}
+
             <form onSubmit={handleFilterSubmit} className="flex flex-wrap justify-center gap-4 p-4">
                 <select
                     value={species}
                     onChange={e => setSpecies(e.target.value)}
-                    className="border p-2"
+                    className="border-2 w-1/6  text-secondary active:border-forth  border-forth p-2 rounded-md "
                 >
                     <option value="">All</option>
                     <option value="Caine">Caine</option>
                     <option value="Pisica">Pisica</option>
                 </select>
 
-                <input
+                {/* <input
                     type="number"
                     placeholder="Max Age"
                     value={ageMax}
                     onChange={e => setAgeMax(e.target.value)}
-                    className="border p-2"
-                />
+                    className="border-2 w-1/6  border-forth p-2 rounded-md"
+                /> */}
 
                 <select
                     value={status}
                     onChange={e => setStatus(e.target.value)}
-                    className="border p-2"
+                    className="border-2  w-1/6  border-forth p-2 rounded-md"
                 >
                     <option value="">All</option>
                     <option value="Valabil">Available</option>
                     <option value="Adoptat">Adopted</option>
+                </select>
+                <select
+                    value={sex}
+                    onChange={e => setSex(e.target.value)}
+                    className="border-2 w-1/6   border-forth p-2 rounded-md"
+                >
+                    <option value="">Sex</option>
+                    <option value="Femela">Femela</option>
+                    <option value="Mascul">Mascul</option>
                 </select>
                 <button type="submit" className="bg-secondary px-4 rounded-md text-white p-2">Filter</button>
             </form>

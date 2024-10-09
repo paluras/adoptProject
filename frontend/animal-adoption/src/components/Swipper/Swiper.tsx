@@ -16,8 +16,6 @@ interface SwipperProps {
 }
 const SwiperComponent: React.FC<SwipperProps> = ({ img }) => {
 
-    console.log(img);
-
     if (!img) return (<div>.....</div>)
     return (
         <>

@@ -1,11 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import * as animalModel from '../models/animalModel';
+import { AnimalModel } from '../models/animalModel';
 
 dotenv.config()
 
 const JWT_SECRET = process.env.JWT_SECRET!;
+const animalModel = new AnimalModel()
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     const token = req.cookies.token;
@@ -35,7 +36,7 @@ export const verifyOwnership = async (req: Request, res: Response, next: NextFun
 
     try {
 
-        const animal = await animalModel.getAnimalById(parseInt(animalId, 10));
+        const animal = await animalModel.getById(parseInt(animalId, 10));
 
         if (!animal) {
             return res.status(404).json({ message: 'Animal not found' });
