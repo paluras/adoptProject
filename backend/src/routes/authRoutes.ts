@@ -1,8 +1,9 @@
 import express from 'express';
 import { check } from 'express-validator';
-import * as userAuthController from '../controllers/userController'
+import { UserController } from '../controllers/userController'
 import { verifyToken } from '../middleware/authMiddleware';
 
+const userController = new UserController();
 const router = express.Router();
 
 router.post('/register',
@@ -10,7 +11,7 @@ router.post('/register',
         check('username', 'Username is required').not().isEmpty(),
         check('password', 'Password must be 6 or more characters').isLength({ min: 6 })
     ],
-    userAuthController.registerUser
+    userController.registerUser
 );
 
 router.post('/login',
@@ -18,10 +19,10 @@ router.post('/login',
         check('username', 'Username is required').not().isEmpty(),
         check('password', 'Password is required').exists()
     ],
-    userAuthController.loginUser
+    userController.loginUser
 );
-router.post('/logout', userAuthController.logoutUser);
+router.post('/logout', userController.logoutUser);
 
-router.get('/user', verifyToken, userAuthController.getUser)
+router.get('/user', verifyToken, userController.getUser)
 
 export default router;

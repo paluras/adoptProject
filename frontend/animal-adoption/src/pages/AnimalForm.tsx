@@ -49,12 +49,17 @@ const AnimalForm: React.FC = () => {
                     withCredentials: true,
                 },
             });
-            setAnimalId(response.data.id)
+            console.log(response);
+
+            setAnimalId(response.data.body.id)
 
         } catch (error) {
-            if (AxiosError.ERR_BAD_REQUEST) {
-                alert("Login in order to add a animal")
-                dispatch(logout())
+
+            if (axios.isAxiosError(error)) {
+                alert(error.response?.data.errors[0])
+                console.log('Error response:', error.response?.data.errors[0]);
+                console.log('Error status:', error.response?.status);
+                console.log('Error headers:', error.response?.headers);
             }
             console.error('Error adding animal:', error);
         }

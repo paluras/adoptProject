@@ -1,24 +1,21 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { AnimalModel } from '../models/animalModel';
-import * as medicalRecordModel from '../models/medicalHistoryModel';
-import { ErrorHandler } from "../utils/ErrorHandler";
-import { Animal, AnimalInput, AnimalFilters } from "../schemas/animalSchema";
+import { MedicalHistoryModel } from '../models/medicalHistoryModel';
+import { ErrorHandler, ErrorType } from "../utils/ErrorHandler";
+import { AnimalInput, AnimalFilters } from "../schemas/animalSchema";
+import { MedicalHistorySchema } from "../schemas/medicalHistorySchema";
 
 export class AnimalController {
     private animalModel: AnimalModel;
+    private medicalHistoryModel: MedicalHistoryModel;
 
     constructor() {
         this.animalModel = new AnimalModel();
-
-        // this.updateAnimal = this.updateAnimal.bind(this);
-        // this.getAllAnimals = this.getAllAnimals.bind(this);
-        // this.getAnimalById = this.getAnimalById.bind(this);
-        // this.deleteAnimalById = this.deleteAnimalById.bind(this);
-        // this.extractAnimalInput = this.extractAnimalInput.bind(this);
-        // this.extractFilters = this.extractFilters.bind(this);
+        this.medicalHistoryModel = new MedicalHistoryModel();
     }
 
     private extractAnimalInput(body: any): AnimalInput {
+
         return {
             name: body.name,
             species: body.species,
@@ -43,10 +40,15 @@ export class AnimalController {
         return filters;
     }
 
-    addAnimal = async (req: Request, res: Response) => {
+    addAnimal = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            console.log(typeof (req.body.age));
+
             const userId: number = (req as any).user.id;
+
             const animalInput = this.extractAnimalInput(req.body);
+            console.log(animalInput);
+
             const files = req.files as Express.Multer.File[];
             const imageUrls: string[] = files ? files.map(file => file.filename) : [];
 
@@ -56,19 +58,17 @@ export class AnimalController {
                 userId
             });
 
-            res.status(201).json(animal);
+            res.status(201).json({ message: "Successfuly added a animal", body: animal });
         } catch (error) {
-            ErrorHandler.handleDatabaseError(res, error);
+            next(error)
         }
     }
 
-    updateAnimal = async (req: Request, res: Response) => {
+    updateAnimal = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const id = parseInt(req.params.id, 10);
-            const animalInput = this.extractAnimalInput(req.body);
-
             const existingAnimal = await this.animalModel.getById(id);
-
+            const animalInput = this.extractAnimalInput(req.body);
             const files = req.files as Express.Multer.File[];
             const newImageUrls = files?.map(file => file.filename);
             const imageUrls = newImageUrls?.length ? newImageUrls : existingAnimal.image_url;
@@ -82,44 +82,71 @@ export class AnimalController {
             );
             res.status(200).json(updatedAnimal);
         } catch (error) {
+            next(error)
 
-            return ErrorHandler.handleDatabaseError(res, error);
         }
     }
 
-    getAllAnimals = async (req: Request, res: Response) => {
+    getAllAnimals = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const filters = this.extractFilters(req.query);
             const animals = await this.animalModel.getAll(filters);
 
+
             const animalsWithRecords = await Promise.all(animals.map(async (animal) => {
-                const records = await medicalRecordModel.getMedicalHistoryByAnimalId(animal.id);
+                const records: MedicalHistorySchema = await this.medicalHistoryModel.getMedicalHistoryByAnimalId(animal.id);
                 return { ...animal, medicalRecords: records };
             }));
 
-            res.json(animalsWithRecords);
+
+            res.json({ message: "Succesfuly found the animals", body: animalsWithRecords });
         } catch (error) {
-            ErrorHandler.handleDatabaseError(res, error);
+            next(error)
         }
     }
 
-    getAnimalById = async (req: Request, res: Response) => {
+    getAnimalById = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const id = parseInt(req.params.id, 10);
+            // if (isNaN(id)) {
+            //     throw ErrorHandler.createError(
+            //         'Invalid animal ID',
+            //         ErrorType.VALIDATION
+            //     );
+            // }
             const animal = await this.animalModel.getById(id);
-            res.json(animal);
+            // if (!animal) {
+            //     throw ErrorHandler.createError(
+            //         `Animal with ID ${id} not found`,
+            //         ErrorType.NOT_FOUND
+            //     );
+            // }
+            res.status(200).json({ message: 'Successfully Found the Animal with Id' + id, body: animal });
         } catch (error) {
-            ErrorHandler.handleDatabaseError(res, error);
+            next(error)
         }
     }
 
-    deleteAnimalById = async (req: Request, res: Response) => {
+    deleteAnimalById = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const id = parseInt(req.params.id, 10);
+            // if (isNaN(id)) {
+            //     throw ErrorHandler.createError(
+            //         'Invalid animal ID',
+            //         ErrorType.VALIDATION
+            //     );
+            // }
+            const animal = await this.animalModel.getById(id);
+            // if (!animal) {
+            //     throw ErrorHandler.createError(
+            //         `Animal with ID ${id} not found`,
+            //         ErrorType.NOT_FOUND
+            //     );
+            // }
             await this.animalModel.deleteAnimal(id);
             res.status(200).json({ message: 'Successfully deleted', id });
         } catch (error) {
-            ErrorHandler.handleDatabaseError(res, error);
+            next(error)
         }
     }
 }

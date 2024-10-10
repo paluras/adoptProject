@@ -1,6 +1,22 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+
+interface ApiError {
+    message: string;
+    type: string;
+    details?: unknown;
+}
+
+enum FrontendErrorType {
+    MULTER = 'MULTER',
+    DATABASE = 'DATABASE',
+    NOT_FOUND = 'NOT_FOUND',
+    VALIDATION = 'VALIDATION',
+    UNAUTHORIZED = 'UNAUTHORIZED',
+    UNKNOWN = 'UNKNOWN',
+}
 
 const RegisterPage: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -21,19 +37,29 @@ const RegisterPage: React.FC = () => {
                 withCredentials: true,
             });
 
-            if (response.status === 200) {
+            if (response.status === 201) {
                 navigate('/login')
             }
 
         } catch (err) {
-            if (AxiosError.ERR_BAD_REQUEST) {
-                setError("A user with that name aleardy exists")
+            if (axios.isAxiosError(err) && err.response) {
+                const errorData = err.response.data as ApiError;
+                switch (errorData.type) {
+                    case FrontendErrorType.VALIDATION:
+                        setError(`Validation error: ${errorData.message}`);
+                        break;
+                    case FrontendErrorType.UNAUTHORIZED:
+                        setError('Invalid credentials');
+                        break;
+                    default:
+                        setError(errorData.message || 'An unknown error occurred');
+                }
+
             } else {
-                setError("Something wrong happened" + err)
+                setError('An unexpected error occurred. Please try again later.');
             }
         } finally {
             setLoading(false);
-
         }
     };
 

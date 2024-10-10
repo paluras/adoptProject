@@ -1,8 +1,9 @@
 export interface MedicalHistory {
-    id?: number;
     animal_id: number;
-    vaccines: string;
+    created_at?: Date | undefined;
     dewormings: string;
-    treatments: string;
+    id: number | undefined;
     notes: string;
+    treatments: string;
+    vaccines: string;
 }

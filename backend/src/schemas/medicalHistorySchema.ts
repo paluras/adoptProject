@@ -7,3 +7,11 @@ export interface MedicalHistorySchema {
     treatments: string;
     vaccines: string;
 }
+
+export type MedicalHistoryInput = {
+    animal_id: number;
+    vaccines: string;
+    dewormings: string;
+    treatments: string;
+    notes: string
+}

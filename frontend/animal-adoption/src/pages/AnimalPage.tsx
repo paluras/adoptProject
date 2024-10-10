@@ -24,6 +24,7 @@ const AnimalDetails: React.FC = () => {
     const { data: medicalHistory,
         loading: medicalHistoryLoading,
         error: medicalHistoryError } = useFetch<MedicalHistory>(`/api/medical-history/${id}`);
+    console.log(medicalHistory);
 
     const isAdmin: boolean = useSelector((state: RootState) => state.user.isAdmin);
     const userId: number | null = useSelector((state: RootState) => state.user.userId);

@@ -1,5 +1,9 @@
-import pool from '../../db'; // Ensure this is connected to the correct database
-import { addMedicalHistory, getMedicalHistoryByAnimalId, updateMedicalHistory } from '../../models/medicalHistoryModel';
+import pool from '../../db';
+import { MedicalHistoryModel } from '../../models/medicalHistoryModel';
+import { MedicalHistoryInput } from '../../schemas/medicalHistorySchema';
+
+
+const medicalHistory = new MedicalHistoryModel();
 
 const createTestUser = async (): Promise<number> => {
     const { rows } = await pool.query(`INSERT INTO users (username, password, is_admin) VALUES ($1, $2, $3) RETURNING id`, ['testuser', 'hashedpassword', false]);
@@ -10,6 +14,29 @@ const createTestAnimal = async (userId: number): Promise<number> => {
     const { rows } = await pool.query(`INSERT INTO animals (name, species, age, breed, status, image_url, sex, description, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`, ['Luna', 'Cat', 2, 'Siamese', 'Available', ['url1', 'url2'], 'Female', 'Friendly cat', userId]);
     return rows[0].id;
 };
+
+const medicalHistoryInput = (animalId: number): MedicalHistoryInput => (
+    {
+        animal_id: animalId,
+        vaccines: 'Parvoviroza',
+        dewormings: 'Da',
+        treatments: 'Obez',
+        notes: 'Sanatos'
+    }
+)
+
+const medicalHistoryInputUpdated = (animalId: number): MedicalHistoryInput => (
+    {
+        animal_id: animalId,
+        vaccines: 'Parvoviroza2',
+        dewormings: 'Da2',
+        treatments: 'Obez2',
+        notes: 'Sanatos2'
+    }
+)
+
+
+
 
 describe("Medical History Model", () => {
     beforeEach(async () => {
@@ -40,36 +67,37 @@ describe("Medical History Model", () => {
         const userId = await createTestUser();
         const animalId = await createTestAnimal(userId);
 
-        const medicalHistory = await addMedicalHistory(animalId, 'Rabies', 'None', 'None', 'Healthy');
 
-        expect(medicalHistory).toBeDefined();
-        expect(medicalHistory.animal_id).toBe(animalId);
-        expect(medicalHistory.vaccines).toBe('Rabies');
+        const medicalHistoryResult = await medicalHistory.addMedicalHistory(medicalHistoryInput(animalId));
+
+        expect(medicalHistoryResult).toBeDefined();
+        expect(medicalHistoryResult.animal_id).toBe(animalId);
+        expect(medicalHistoryResult.vaccines).toBe('Parvoviroza');
     });
 
     it('should update medical history', async () => {
         const userId = await createTestUser();
         const animalId = await createTestAnimal(userId);
-        const medicalHistory = await addMedicalHistory(animalId, 'Rabies', 'None', 'None', 'Healthy');
+        const medicalHistoryResult = await medicalHistory.addMedicalHistory(medicalHistoryInput(animalId));
 
-        expect(medicalHistory).toBeDefined();
+        expect(medicalHistoryResult).toBeDefined();
 
-        const updatedValues = await updateMedicalHistory(animalId, 'no', 'yes', 'no', 'yes')
+        const updatedValues = await medicalHistory.updateMedicalHistory(medicalHistoryInputUpdated(animalId))
 
-        expect(updatedValues.id === medicalHistory.id).toBeTruthy;
-        expect(updatedValues.vaccines).not.toEqual(medicalHistory.vaccines);
+        expect(updatedValues.id === medicalHistoryResult.id).toBeTruthy;
+        expect(updatedValues.vaccines).not.toEqual(medicalHistoryResult.vaccines);
     })
 
     it('should get medical history by id', async () => {
         const userId = await createTestUser();
         const animalId = await createTestAnimal(userId);
-        const medicalHistory = await addMedicalHistory(animalId, 'Rabies', 'None', 'None', 'Healthy');
+        const medicalHistoryResult = await medicalHistory.addMedicalHistory(medicalHistoryInput(animalId));
 
-        expect(medicalHistory).toBeDefined();
+        expect(medicalHistoryResult).toBeDefined();
 
-        const getMedicalById = await getMedicalHistoryByAnimalId(animalId)
+        const getMedicalById = await medicalHistory.getMedicalHistoryByAnimalId(animalId)
 
-        expect(getMedicalById).toStrictEqual(medicalHistory);
+        expect(getMedicalById).toStrictEqual(medicalHistoryResult);
 
     })
 });

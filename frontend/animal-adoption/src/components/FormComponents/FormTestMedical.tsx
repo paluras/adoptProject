@@ -25,7 +25,7 @@ const MedicalForm: React.FC<MedicalFormProps> = ({ animalId }) => {
         e.preventDefault();
         try {
             const response = await axios.post('/api/medical-history', {
-                id: animalId,
+                animal_id: animalId,
                 ...formState
             });
             console.log(response);

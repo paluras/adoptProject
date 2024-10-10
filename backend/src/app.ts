@@ -5,6 +5,7 @@ import authRoutes from './routes/authRoutes'
 import cors from 'cors';
 import path from 'path';
 import cookieParser from "cookie-parser"
+import { ErrorHandler } from './utils/ErrorHandler';
 
 const app: Application = express();
 
@@ -22,6 +23,10 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/auth', authRoutes);
 app.use('/api/animals', animalRoutes);
 app.use('/api/medical-history', medicalHistoryRoutes);
+
+// Errors Handles
+
+app.use(ErrorHandler.handle);
 
 
 export default app;

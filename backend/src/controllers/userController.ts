@@ -1,79 +1,105 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
-import * as userModel from '../models/userModel';
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { User } from '../schemas/userSchema';
+import { UserModel } from '../models/userModel';
+import { ErrorHandler, ErrorType } from '../utils/ErrorHandler';
 
 dotenv.config();
 
-interface User {
-    id: number,
-    username: string,
-    password: string,
-    is_admin: boolean
-}
-
 const JWT_SECRET = process.env.JWT_SECRET!;
 
-export const registerUser = async (req: Request, res: Response) => {
-    const { username, password } = req.body;
+export class UserController {
+    private userModel: UserModel;
 
-    try {
-        const existingUser: User = await userModel.findUserByUsername(username);
-        if (existingUser) {
-            return res.status(400).json({ message: "User already exists" })
-        }
-
-        const hashedPassword: string = await bcrypt.hash(password, 10);
-        const newUser: User = await userModel.createUser(username, hashedPassword, false);
-
-        res.status(200).json({ message: "Succesfully created a new user", user: newUser })
-    } catch (error) {
-        res.status(500).json({ message: "Something went wrong creatign the user", error });
+    constructor() {
+        this.userModel = new UserModel();
     }
-}
 
-export const loginUser = async (req: Request, res: Response) => {
-    const { username, password, } = req.body;
-    try {
-        const user: User = await userModel.findUserByUsername(username);
-        if (!user) {
-            return res.status(400).json({ message: "No username, invalid credentials" })
+    registerUser = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { username, password } = req.body;
+
+            const existingUser: User = await this.userModel.findUserByUsername(username);
+
+            const hashedPassword: string = await bcrypt.hash(password, 10);
+            const newUser: User = await this.userModel.createUser(username, hashedPassword, false);
+
+            return res.status(201).json({
+                message: "Successfully created a new user",
+                user: {
+                    id: newUser.id,
+                    username: newUser.username,
+                    isAdmin: newUser.is_admin
+                }
+            });
+        } catch (error) {
+            next(error)
         }
-        const isMatch: boolean = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid credentials' });
+    };
+
+    loginUser = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { username, password } = req.body;
+
+            const user: User = await this.userModel.findUserByUsername(username);
+            const isMatch: boolean = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                throw new Error("Invalid credentials , not a macth")
+
+            }
+
+            const token = jwt.sign(
+                { id: user.id, is_admin: user.is_admin },
+                JWT_SECRET,
+                { expiresIn: '1h' }
+            );
+
+            res.cookie('token', token, {
+                httpOnly: true,
+                maxAge: 60 * 60 * 1000,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict'
+            });
+
+            return res.status(200).json({
+                username: user.username,
+                isAdmin: user.is_admin,
+                id: user.id
+            });
+        } catch (error) {
+            next(error)
         }
+    };
 
-        const token = jwt.sign({ id: user.id, is_admin: user.is_admin }, JWT_SECRET, { expiresIn: '1h' });
-
-        res.cookie('token', token, {
-            httpOnly: true,
-            maxAge: 60 * 60 * 1000,
-
-        });
-
-        res.status(200).json({ username: user.username, isAdmin: user.is_admin, id: user.id });
-
-
-    } catch (error) {
-        res.status(500).json({ message: "womething wrong loggin", error });
+    logoutUser = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            res.clearCookie('token', {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict'
+            });
+            return res.status(200).json({ message: 'Logged out successfully' });
+        } catch (error) {
+            next(error)
+        }
     }
-};
 
-export const logoutUser = async (req: Request, res: Response) => {
-    res.clearCookie('token',
-        {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'strict'
-        });
-    return res.status(200).json({ message: 'Logged out successfully' });
-}
+    getUser = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { username, isAdmin } = req.body;
 
-export const getUser = async (req: Request, res: Response) => {
-    const { username, isAdmin } = req.body;
-    console.log(req.body);
+            if (!username) {
+                throw ErrorHandler.createError(
+                    'Username is required',
+                    ErrorType.VALIDATION
+                );
+            }
 
-    res.status(200).json({ username, isAdmin });
+            return res.status(200).json({ username, isAdmin });
+        } catch (error) {
+            next(error)
+        }
+    }
 }
