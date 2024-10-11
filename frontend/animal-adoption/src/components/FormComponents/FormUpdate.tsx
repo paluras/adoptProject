@@ -5,6 +5,7 @@ import { useForm } from '../../hooks/useForm';
 import ImageUpload from './ImageUpload';
 import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from 'rehype-sanitize';
+import { handleAxiosError } from '../../utils/handleAxiosError';
 
 const FormUpdate: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -32,9 +33,12 @@ const FormUpdate: React.FC = () => {
         const fetchAnimal = async () => {
             try {
                 const response = await axios.get(`/api/animals/${id}`);
-                const animal = response.data;
+                const animal = response.data.body;
+
                 const responseHistory = await axios.get(`/api/medical-history/${id}`);
-                const animalHistory = responseHistory.data;
+                const animalHistory = responseHistory.data.body;
+
+
 
                 setBasicInfo({
                     name: animal.name,
@@ -49,18 +53,19 @@ const FormUpdate: React.FC = () => {
                 });
 
                 setMedicalInfo({
-                    vaccines: animalHistory.vaccines,
-                    treatments: animalHistory.treatments,
-                    notes: animalHistory.notes,
-                    dewormings: animalHistory.dewormings,
+                    vaccines: animalHistory?.vaccines || '',
+                    treatments: animalHistory?.treatments || '',
+                    notes: animalHistory?.notes || '',
+                    dewormings: animalHistory?.dewormings || '',
                 });
             } catch (error) {
-                console.error('Error fetching animal:', error);
+                console.error(handleAxiosError(error));
             }
         };
         fetchAnimal();
 
     }, [id, setBasicInfo, setMedicalInfo]);
+
 
     const handleSubmitBasicInfo = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -100,20 +105,26 @@ const FormUpdate: React.FC = () => {
             );
 
         } catch (error) {
-            console.error('Error updating animal:', error);
+            alert(handleAxiosError(error))
 
         }
     };
 
     const handleSubmitMedicalInfo = async (e: React.FormEvent) => {
         e.preventDefault();
+        console.log(medicalInfo, id);
+
         try {
-            const response = await axios.put(`/api/medical-history/${id}`, medicalInfo, {
-                headers: { 'Content-Type': 'application/json' },
-            });
-            console.log(response.data);
+            await axios.put(`/api/medical-history/${id}`,
+                {
+                    animal_id: parseInt(id!, 10),
+                    ...medicalInfo
+                });
         } catch (error) {
-            console.error('Error updating medical history:', error);
+            alert(handleAxiosError(error))
+
+            console.log(handleAxiosError(error));
+            handleAxiosError(error)
         }
     };
 
@@ -126,10 +137,9 @@ const FormUpdate: React.FC = () => {
 
     return (
         <>
-            <form onSubmit={handleSubmitBasicInfo} className="space-y-4 max-w-lg mx-auto mt-4 bg-white p-6 rounded-lg shadow-lg">
+            <form onSubmit={handleSubmitBasicInfo} className="space-y-4 max-w-lg mx-auto mt-4 bg-white p-6 rounded-t-lg shadow-lg">
                 <div>
                     <label htmlFor="name">Nume</label>
-
                     <input
                         type="text"
                         name="name"
@@ -142,7 +152,6 @@ const FormUpdate: React.FC = () => {
 
                 <div>
                     <label htmlFor="age">Varsta</label>
-
                     <input
                         type="number"
                         name="age"
@@ -155,7 +164,6 @@ const FormUpdate: React.FC = () => {
 
                 <div>
                     <label htmlFor="specie">Specie</label>
-
                     <select
                         name="species"
                         value={basicInfo.species}
@@ -170,7 +178,6 @@ const FormUpdate: React.FC = () => {
 
                 <div>
                     <label htmlFor="rasa">Rasa</label>
-
                     <input
                         type="text"
                         name="breed"
@@ -215,9 +222,7 @@ const FormUpdate: React.FC = () => {
                     previewOptions={{
                         rehypePlugins: [[rehypeSanitize]],
                     }}
-
                 />
-
                 <div>
                     <ImageUpload onFileChange={(files) => handleFileChange(files, 'imageFiles')} />
                 </div>
@@ -230,59 +235,33 @@ const FormUpdate: React.FC = () => {
                 </button>
             </form>
 
-            <form onSubmit={handleSubmitMedicalInfo} className="space-y-4 max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">
-                <div>
-                    <label htmlFor="vaccines">Vaccinuri</label>
+            <form onSubmit={handleSubmitMedicalInfo} className="space-y-4 max-w-lg mx-auto bg-white p-6  shadow-lg">
+                {[
+                    ["vaccines", "vaccinuri"],
+                    ["notes", 'note'],
+                    ["dewormings", 'deparazitari'],
+                    ["treatments", 'tratamente']].map((field, index) => (
+                        <div key={index}>
+                            <label className="block text-gray-700 font-semibold mb-1">
+                                {field[1].charAt(0).toUpperCase() + field[1].slice(1) + ":"}
+                            </label>
+                            <input
+                                type="text"
+                                name={field[0]}
+                                value={medicalInfo[field[0] as keyof typeof medicalInfo]} // Access value dynamically
+                                onChange={handleMedicalInfoChange}
+                                placeholder={field[1].charAt(0).toUpperCase() + field[1].slice(1)}
+                                required
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
+                            />
+                        </div>
+                    ))}
 
-                    <input
-                        type="text"
-                        name="vaccines"
-                        value={medicalInfo.vaccines}
-                        onChange={handleMedicalInfoChange}
-                        placeholder="Vaccines"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
-                    />
-                </div>
-                <div>
-                    <label htmlFor="dewormings">Deparazitare</label>
-
-                    <input
-                        type="text"
-                        name="dewormings"
-                        value={medicalInfo.dewormings}
-                        onChange={handleMedicalInfoChange}
-                        placeholder="dewormings"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
-                    />
-                </div>
-                <div>
-                    <label htmlFor="notes">Note</label>
-
-                    <input
-                        type="text"
-                        name="notes"
-                        value={medicalInfo.notes}
-                        onChange={handleMedicalInfoChange}
-                        placeholder="notes"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
-                    />
-                </div>
-                <div>
-                    <label htmlFor="treatments">Tratamente</label>
-                    <input
-                        type="text"
-                        name="treatments"
-                        value={medicalInfo.treatments}
-                        onChange={handleMedicalInfoChange}
-                        placeholder="treatments"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
-                    />
-                </div>
                 <button
                     type="submit"
                     className="w-full bg-rose-500 text-white py-2 rounded-md hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-400"
                 >
-                    Submit
+                    Add Medical Treatments
                 </button>
             </form>
 

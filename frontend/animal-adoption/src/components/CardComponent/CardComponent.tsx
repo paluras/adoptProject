@@ -5,13 +5,13 @@ interface CardProps {
     title: string;
     description: string;
     imageUrl?: string;
-    buttonText?: string;
     onButtonClick?: () => void;
 }
 
-const Card: React.FC<CardProps> = ({ id, title, imageUrl, onButtonClick }) => {
+const Card: React.FC<CardProps> = ({ title, imageUrl, onButtonClick }) => {
     return (
-        <div key={id} onClick={onButtonClick}
+        <div onClick={onButtonClick}
+
             className="
             border-forth
             border-x-2

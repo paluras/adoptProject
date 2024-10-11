@@ -32,13 +32,13 @@ const LandingParallax: React.FC = () => {
     const grassStyle = createParallaxSpring(0.4, 0.4);
 
     const images = [
-        { imgSrc: '/cloud.svg', class: 'absolute z-10 left-[10%] top-[20%] overflow-hidden opacity-50', width: 100, alt: 'cloud', style: cloudStyle },
+        { imgSrc: '/cloud.svg', class: 'absolute z-10 left-1 lg:left-[10%] sm:top-[20%] overflow-hidden opacity-50', width: 100, alt: 'cloud', style: cloudStyle },
         { imgSrc: '/cloud2.svg', class: 'absolute z-10 right-10 top-[10%] overflow-hidden opacity-50', width: 200, alt: 'cloud2', style: cloud2Style },
-        { imgSrc: '/cat1.svg', class: 'absolute z-10 right-3/4 overflow-hidden', width: 200, alt: 'cat1', style: cat1Style },
-        { imgSrc: '/cat2.svg', class: 'absolute z-10 top-1/4 right-[20%] overflow-hidden', width: 200, alt: 'cat2', style: cat2Style },
-        { imgSrc: '/dog1.svg', class: 'absolute z-10 bottom-1/4 right-[15%] overflow-hidden', width: 200, alt: 'dog1', style: dog1Style },
+        { imgSrc: '/cat1.svg', class: 'absolute z-10 hidden sm:block right-3/4 overflow-hidden', width: 200, alt: 'cat1', style: cat1Style },
+        { imgSrc: '/cat2.svg', class: 'absolute z-10 hidden lg:right-[20%] md:right-1 md:block top-1/4   overflow-hidden', width: 200, alt: 'cat2', style: cat2Style },
+        { imgSrc: '/dog1.svg', class: 'absolute z-10 hidden sm:block bottom-1/4 sm:right-10 md:right-[15%] overflow-hidden', width: 200, alt: 'dog1', style: dog1Style },
         { imgSrc: '/clubmenu2.png', class: 'absolute z-10 bottom-3/4 right-3/2 overflow-hidden', width: 250, alt: 'clubmenu', style: clubMenuStyle },
-        { imgSrc: '/100Asset-18.png', class: 'absolute z-10 bottom-[10%] left-[24%] overflow-hidden', width: 150, alt: 'asset', style: ballStyle },
+        { imgSrc: '/100Asset-18.png', class: 'absolute z-10 bottom-1 lg:bottom-[10%] left-1 sm:left-[24%] overflow-hidden', width: 150, alt: 'asset', style: ballStyle },
         { imgSrc: '/ball.png', class: 'absolute z-10 bottom-[10%] left-[45%] overflow-hidden', width: 50, alt: 'ball', style: ballStyle },
         { imgSrc: '/100Asset-11.png', class: 'absolute z-0 bottom-20 -left-20 overflow-hidden', alt: 'asset11', style: grassStyle },
         { imgSrc: '/noise.png', class: 'absolute z-0 bottom-0 left-0 overflow-hidden opacity-25', alt: 'noise' },

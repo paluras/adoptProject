@@ -11,6 +11,7 @@ const InputForm: React.FC<InputFormProps> = ({ type, name, formValue, placeHolde
     return (
         <div>
             <input
+                required
                 type={type}
                 name={name}
                 value={formValue}

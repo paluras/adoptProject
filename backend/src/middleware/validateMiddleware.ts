@@ -1,51 +1,68 @@
 // middlewares/validateMiddleware.ts
 import { Request, Response, NextFunction } from 'express';
+import { body, validationResult } from 'express-validator';
+import { ErrorHandler, ErrorType } from '../utils/ErrorHandler';
+
+export const createAnimalValidation = [
+    body('name')
+        .trim()
+        .notEmpty().withMessage('Name is required')
+        .isLength({ min: 2, max: 50 }).withMessage('Name must be between 2 and 50 characters'),
+
+    body('species')
+        .trim()
+        .notEmpty().withMessage('Species is required')
+        .isLength({ min: 2, max: 50 }).withMessage('Species must be between 2 and 50 characters'),
+
+    body('age')
+        .isInt({ min: 0, max: 100 }).withMessage('Age must be a number between 0 and 100')
+        .toInt(), // This converts the value to an integer
+
+    body('breed')
+        .trim()
+        .notEmpty().withMessage('Breed is required')
+        .isLength({ min: 2, max: 50 }).withMessage('Breed must be between 2 and 50 characters'),
+
+    body('description')
+        .optional()
+        .trim()
+        .isLength({ max: 1000 }).withMessage('Description must not exceed 1000 characters'),
+]
+
+export const createMedicalHistoryValidation = [
+    body('vaccines')
+        .trim()
+        .notEmpty().withMessage('Vaccines is required')
+        .isLength({ min: 2, max: 50 }).withMessage('Vaccines must be between 2 and 50 characters'),
+
+    body('treatments')
+        .trim()
+        .notEmpty().withMessage('Treatments is required')
+        .isLength({ min: 2, max: 50 }).withMessage('Treatments must be between 2 and 50 characters'),
+
+    body('notes')
+        .notEmpty().withMessage('Notes is required')
+        .isLength({ min: 2, max: 50 }).withMessage('Notes must be between 2 and 50 characters'),
+
+    body('dewormings')
+        .trim()
+        .notEmpty().withMessage('Dewormings is required')
+        .isLength({ min: 2, max: 50 }).withMessage('Species must be between 2 and 50 characters'),
+
+    body('animal_id')
+        .notEmpty().withMessage('No animal id found')
+]
 
 
-export function validateAnimalInput(req: Request, res: Response, next: NextFunction) {
-    const { name, species, age, breed, status, sex, description } = req.body;
-    const errors: string[] = [];
 
-    // Name validation
-    if (!name || typeof name !== 'string' || name.trim().length < 2 || name.trim().length > 50) {
-        errors.push('Name must be between 2 and 50 characters');
+export const validateAnimal = (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    console.log(errors);
+
+    if (!errors.isEmpty()) {
+        const extractedErrors = errors.array().map(err => err.msg).join('\n');
+
+        return next(ErrorHandler.createError(extractedErrors, ErrorType.VALIDATION));
     }
-
-    // Age validation
-    const numAge = Number(age);
-    if (isNaN(numAge) || numAge < 0 || numAge > 100) {
-        errors.push('Age must be a number between 0 and 100');
-    }
-
-    // Species validation
-    if (!species || typeof species !== 'string' || species.trim().length < 2) {
-        errors.push('Species is required and must be at least 2 characters');
-    }
-
-    // Breed validation
-    if (!breed || typeof breed !== 'string' || breed.trim().length < 2) {
-        errors.push('Breed is required and must be at least 2 characters');
-    }
-
-    // Description validation (optional)
-    if (description && (typeof description !== 'string' || description.length > 1000)) {
-        errors.push('Description must not exceed 1000 characters');
-    }
-
-    if (errors.length > 0) {
-        return res.status(400).json({
-            status: 'error',
-            message: 'Validation failed',
-            errors
-        });
-    }
-
-    // If validation passes, modify req.body to ensure correct types
-    req.body.age = numAge;
-    req.body.name = name.trim();
-    req.body.species = species.trim();
-    req.body.breed = breed.trim();
-    if (description) req.body.description = description.trim();
-
-    next();
+    next()
 }

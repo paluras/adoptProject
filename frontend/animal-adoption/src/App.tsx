@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 const LoginPage = React.lazy(() => import('./pages/Login'));
 const RegisterPage = React.lazy(() => import('./pages/RegisterPage'));
@@ -28,8 +29,10 @@ function App() {
             <Route path='/update-form/:id' element={<FormUpdate />} />
 
           </Routes>
+          <Footer />
         </Suspense>
       </Router>
+
     </>
   );
 }

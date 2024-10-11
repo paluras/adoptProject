@@ -2,6 +2,7 @@ import React from "react";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from "../../hooks/useForm";
+import { handleAxiosError } from "../../utils/handleAxiosError";
 
 
 interface MedicalFormProps {
@@ -11,35 +12,31 @@ interface MedicalFormProps {
 const MedicalForm: React.FC<MedicalFormProps> = ({ animalId }) => {
     const navigate = useNavigate();
 
-    // Initialize the form state using the custom hook
     const { formState, handleInputChange } = useForm({
         vaccines: "",
         dewormings: "",
         treatments: "",
         notes: ""
     });
-    console.log(formState);
-
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/medical-history', {
+            await axios.post('/api/medical-history', {
                 animal_id: animalId,
                 ...formState
             });
-            console.log(response);
-
             navigate(`/${animalId}`);
         } catch (error) {
-            console.error('Error adding medical history:', error);
+            alert(handleAxiosError(error))
+            console.log(handleAxiosError(error));
+            handleAxiosError(error)
         }
     };
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             <h2 className="text-2xl font-semibold mb-4">Complete the Medical Form</h2>
-
             {[
                 ["vaccines", "vaccinuri"],
                 ["notes", 'note'],

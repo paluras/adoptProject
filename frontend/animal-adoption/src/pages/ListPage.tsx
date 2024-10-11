@@ -17,7 +17,6 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
     if (species) query.append('species', species);
     if (status) query.append('status', status);
     if (sex) query.append('sex', sex)
-    console.log(query.toString());
 
     const { data: animals,
         loading: loadingAnimals,
@@ -32,7 +31,6 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
         return (
             <div className="flex items-center justify-center h-screen">
                 <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-secondary" role="status">
-
                 </div>
             </div>
         );
@@ -96,7 +94,6 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
                             title={animal.name}
                             description={animal.species}
                             imageUrl={animal.image_url ? `http://localhost:5000/uploads/${animal.image_url[0]}` : undefined}
-                            buttonText={'Click'}
                             onButtonClick={() => navigate(`/${animal.id}`)}
                         />
                     ))

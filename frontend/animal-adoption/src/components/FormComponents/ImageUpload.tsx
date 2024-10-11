@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 
 interface ImageUploadProps {
-    onFileChange: (files: File[]) => void; // Change to accept an array of files
+    onFileChange: (files: File[]) => void;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({ onFileChange }) => {
-    const [preview, setPreview] = useState<string[]>([]); // Change to an array of strings for multiple previews
+    const [preview, setPreview] = useState<string[]>([]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -21,7 +21,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onFileChange }) => {
     return (
         <div>
             <label>Upload Images:</label>
-            <input type="file" onChange={handleFileChange} accept="image/*" multiple /> {/* Allow multiple uploads */}
+            <input type="file" onChange={handleFileChange} accept="image/*" multiple />
             {preview.map((url, index) => (
                 <img key={index} src={url} alt={`Preview ${index}`} width="100" />
             ))}

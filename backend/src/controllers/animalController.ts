@@ -42,8 +42,6 @@ export class AnimalController {
 
     addAnimal = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log(typeof (req.body.age));
-
             const userId: number = (req as any).user.id;
 
             const animalInput = this.extractAnimalInput(req.body);

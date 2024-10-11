@@ -61,8 +61,57 @@ export class AnimalModel {
         }
     }
 
+    // Helper method to validate the input
+    validateAnimalInput(input: AnimalInput): void {
+        const errors: string[] = [];
+
+
+        // Name validation
+        if (!input.name || typeof input.name !== 'string' || input.name.trim().length < 2 || input.name.trim().length > 50) {
+            errors.push('Name must be between 2 and 50 characters');
+        }
+
+        // Species validation
+        if (!input.species || typeof input.species !== 'string' || input.species.trim().length < 2) {
+            errors.push('Species is required and must be at least 2 characters');
+        }
+
+        // Age validation
+        if (typeof input.age !== 'number' || input.age < 0 || input.age > 100) {
+
+            errors.push('Age must be a number between 0 and 100');
+        }
+
+        // Breed validation
+        if (!input.breed || typeof input.breed !== 'string' || input.breed.trim().length < 2) {
+            errors.push('Breed is required and must be at least 2 characters');
+        }
+
+        // // Sex validation
+        if (!['Mascul', 'Femela'].includes(input.sex)) {
+            errors.push('Sex must be either "male" or "female"');
+        }
+
+        // // Status validation
+        if (!['Valabil', 'Adoptat'].includes(input.status)) {
+            errors.push('Status must be "available", "adopted", or "pending"');
+        }
+
+        // If validation fails, throw an error
+        if (errors.length > 0) {
+
+
+            throw ErrorHandler.createError(errors.join(', '), ErrorType.VALIDATION);
+        }
+
+
+    }
+
     async addAnimal(input: AnimalInput): Promise<Animal> {
         try {
+            // Validate input
+            this.validateAnimalInput(input);
+
             const result = await pool.query(
                 `INSERT INTO animals (name, species, age, breed, status, image_url, sex, description, user_id)
                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
@@ -75,13 +124,17 @@ export class AnimalModel {
             );
             return result.rows[0];
         } catch (err) {
-            throw ErrorHandler.createError('Failed to add new animal', ErrorType.DATABASE);
+
+            throw err;
+
         }
     }
 
     async updateAnimal(id: number, input: AnimalInput): Promise<Animal> {
-
         try {
+            // Validate input
+            this.validateAnimalInput(input);
+
             const result = await pool.query(
                 `UPDATE animals SET name = $1, species = $2, age = $3, breed = $4, status = $5, image_url = $6, sex = $7, description = $8
                  WHERE id = $9 RETURNING *`,

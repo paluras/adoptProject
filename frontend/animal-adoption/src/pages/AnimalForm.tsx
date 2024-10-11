@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { useForm } from '../hooks/useForm';
 import ImageUpload from '../components/FormComponents/ImageUpload';
 import InputForm from '../components/FormComponents/InputForm';
@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../store/userSlice';
 import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from 'rehype-sanitize';
+import { handleAxiosError } from '../utils/handleAxiosError';
 
 const AnimalForm: React.FC = () => {
     const dispatch = useDispatch();
@@ -49,33 +50,30 @@ const AnimalForm: React.FC = () => {
                     withCredentials: true,
                 },
             });
-            console.log(response);
-
             setAnimalId(response.data.body.id)
 
         } catch (error) {
+            if (handleAxiosError(error) === "Access denied, token missing") {
+                dispatch(logout())
+                alert('Login in order to add a animal')
 
-            if (axios.isAxiosError(error)) {
-                alert(error.response?.data.errors[0])
-                console.log('Error response:', error.response?.data.errors[0]);
-                console.log('Error status:', error.response?.status);
-                console.log('Error headers:', error.response?.headers);
+            } else {
+                alert(handleAxiosError(error))
             }
-            console.error('Error adding animal:', error);
         }
     };
 
     const handleEditorChange = (value?: string) => {
         setFormState((prevState) => ({
             ...prevState,
-            description: value || '',  // Ensures description is never undefined
+            description: value || '',
         }));
     };
     return (
         <>
-            <form onSubmit={handleSubmit} className="space-y-4 max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">
-
-                <InputForm type={'text'}
+            <form onSubmit={handleSubmit} className="space-y-4  max-w-lg mx-auto my-3 bg-white p-6 rounded-lg shadow-lg">
+                <InputForm
+                    type={'text'}
                     name={'name'}
                     formValue={formState.name}
                     onChange={handleInputChange}

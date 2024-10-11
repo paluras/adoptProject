@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { MedicalHistoryModel } from '../models/medicalHistoryModel';
 import { MedicalHistoryInput } from '../schemas/medicalHistorySchema';
 
@@ -19,41 +19,38 @@ export class MedicalHistoryController {
         };
     }
 
-    addMedicalHistory = async (req: Request, res: Response) => {
+    addMedicalHistory = async (req: Request, res: Response, next: NextFunction) => {
         const medicalInput = this.extractMedicalInput(req.body)
         try {
             const medicalHistory = await this.medicalHistoryModel.addMedicalHistory(medicalInput);
-            res.status(201).json(medicalHistory);
+            res.status(201).json({ message: "Successfuly added a medical history", body: medicalHistory });
         } catch (error) {
-            res.status(500).json({ message: 'Error adding medical history', error });
+            next(error)
         }
     };
 
-    updateMedicalHistory = async (req: Request, res: Response) => {
+    updateMedicalHistory = async (req: Request, res: Response, next: NextFunction) => {
         const medicalInput = this.extractMedicalInput(req.body)
+        console.log(medicalInput);
 
         try {
-            const medicalHistory = await this.medicalHistoryModel.updateMedicalHistory(
-                medicalInput
-            );
-
-            res.status(201).json(medicalHistory);
+            const medicalHistory = await this.medicalHistoryModel.updateMedicalHistory(medicalInput);
+            res.status(201).json({ message: "Successfuly updated a medical history", body: medicalHistory });
         } catch (error) {
-            console.error('Error updating medical history in the database:', error);
-            res.status(500).json({ message: 'Error updating medical history', error });
+            next(error)
         }
     };
 
-    getMedicalHistory = async (req: Request, res: Response) => {
+    getMedicalHistory = async (req: Request, res: Response, next: NextFunction) => {
         const { animalId } = req.params;
         try {
             const medicalHistory = await this.medicalHistoryModel.getMedicalHistoryByAnimalId(parseInt(animalId, 10));
-            if (medicalHistory.length === 0) {
+            if (!medicalHistory) {
                 return res.status(404).json({ message: 'No medical history found for this animal' });
             }
             res.json({ message: "Succesfuly fetched the medical data", body: medicalHistory });
         } catch (error) {
-            res.status(500).json({ message: 'Error fetching medical history', error });
+            next(error)
         }
     };
 

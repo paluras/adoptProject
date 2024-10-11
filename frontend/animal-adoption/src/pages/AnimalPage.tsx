@@ -28,6 +28,8 @@ const AnimalDetails: React.FC = () => {
 
     const isAdmin: boolean = useSelector((state: RootState) => state.user.isAdmin);
     const userId: number | null = useSelector((state: RootState) => state.user.userId);
+    console.log(isAdmin, userId);
+
 
     if (animalLoading || medicalHistoryLoading) return <>...Loading</>;
 

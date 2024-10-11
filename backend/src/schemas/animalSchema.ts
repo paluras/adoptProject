@@ -19,7 +19,7 @@ export type AnimalInput = {
     breed: string;
     status: 'Valabil' | 'Adoptat';
     imageUrls?: string[];
-    sex: string;
+    sex: "Mascul" | "Femela";
     description: string;
     userId?: number;
     id?: number;

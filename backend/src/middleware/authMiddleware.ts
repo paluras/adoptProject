@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { AnimalModel } from '../models/animalModel';
+import { ErrorHandler, ErrorType } from '../utils/ErrorHandler';
 
 dotenv.config()
 
@@ -13,17 +14,15 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
     console.log(token);
 
     if (!token) {
-        return res.status(401).json({ message: 'Access denied, token missing' });
+        return next(ErrorHandler.createError('Access denied, token missing', ErrorType.UNAUTHORIZED));
     }
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET) as { id: number, is_admin: boolean, };
-        console.log(decoded);
-
         (req as any).user = decoded;
         next();
     } catch (error) {
-        res.status(401).json({ message: 'Invalid token' });
+        return next(ErrorHandler.createError('Invalid token, access denied', ErrorType.UNAUTHORIZED));
     }
 };
 
@@ -36,14 +35,14 @@ export const verifyOwnership = async (req: Request, res: Response, next: NextFun
         const animal = await animalModel.getById(parseInt(animalId, 10));
 
         if (!animal) {
-            return res.status(404).json({ message: 'Animal not found' });
+            return next(ErrorHandler.createError('Animal not found', ErrorType.NOT_FOUND));
         }
         if (isAdmin) {
             console.log("Admin user, skipping ownership check");
 
             return next();
         } else if (animal.user_id !== userId) {
-            return res.status(403).json({ message: 'Not authorized to modify this animal' });
+            return next(ErrorHandler.createError('Forbiden to make changes', ErrorType.FORBIDDEN));
         }
         next();
     } catch (error) {

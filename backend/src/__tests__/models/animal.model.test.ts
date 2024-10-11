@@ -16,7 +16,7 @@ const testAnimalInput = (userId: number): AnimalInput => ({
     breed: 'Siamese',
     status: 'Valabil',
     imageUrls: ['url1', 'url2'],
-    sex: 'Female',
+    sex: 'Femela',
     description: 'Friendly cat',
     userId
 });
@@ -77,7 +77,7 @@ describe('Animal Model', () => {
     });
 
     it('should throw an error for non-existent animal id', async () => {
-        await expect(animalModel.getById(99999)).rejects.toThrow('Animal not found');
+        await expect(animalModel.getById(99999)).rejects.toThrow('Error fetching animal by id');
     });
     it('should insert a valid animal', async () => {
         const userId = await createTestUser();
@@ -89,7 +89,7 @@ describe('Animal Model', () => {
             breed: 'Siamese',
             status: 'Valabil',
             imageUrls: ['url1', 'url2'],
-            sex: 'Female',
+            sex: 'Femela',
             description: 'Friendly cat',
             userId
         };
@@ -108,13 +108,13 @@ describe('Animal Model', () => {
             breed: 'Siamese',
             status: 'Valabil',
             imageUrls: ['url1', 'url2'],
-            sex: 'Female',
+            sex: 'Femela',
             description: 'Friendly cat',
             userId
         };
 
         await expect(animalModel.addAnimal(animalInput))
-            .rejects.toThrow("Age must be a positive number")
+            .rejects.toThrow("Age must be a number between 0 and 100")
     })
 
 

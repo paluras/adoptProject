@@ -8,7 +8,6 @@ interface SelectFormProps {
     placeHolder: string;
 }
 
-
 const SelectForm: React.FC<SelectFormProps> = ({ name, value, onChange, selections, placeHolder }) => {
     return (
         <div>
