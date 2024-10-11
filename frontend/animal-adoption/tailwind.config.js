@@ -22,7 +22,7 @@ export default {
       },
 
       fontFamily: {
-        yeasty: ["Yeasty", 'sans-serif'],
+        yeasty: ["Yeasty Flavors", 'sans-serif'],
         poppins: ['Poppins', 'sans-serif'],
       }
     },

@@ -1,6 +1,11 @@
 @font-face {
-    font-family: Yeasty;
-    src: url('./fonts/Yeasty Flavors.ttf');
+    font-family: 'Yeasty Flavors';
+    src: url('/fonts/yeasty-flavors-webfont.woff2') format('woff2'),
+        url('/fonts/yeasty-flavors-webfont.woff') format('woff'),
+        url('/fonts/YeastyFlavors.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
 
 @tailwind base;
