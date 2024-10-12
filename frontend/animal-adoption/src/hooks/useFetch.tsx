@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { handleAxiosError } from '../utils/handleAxiosError';
 
 const useFetch = <T,>(url: string) => {
     const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<null | Error>(null);
+    const [error, setError] = useState<string>('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -16,7 +17,8 @@ const useFetch = <T,>(url: string) => {
                 setLoading(false);
 
             } catch (err) {
-                setError(err as Error);
+
+                setError(handleAxiosError(err));
                 setLoading(false);
             }
         };

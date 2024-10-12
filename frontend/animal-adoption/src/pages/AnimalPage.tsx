@@ -29,6 +29,7 @@ const AnimalDetails: React.FC = () => {
     const isAdmin: boolean = useSelector((state: RootState) => state.user.isAdmin);
     const userId: number | null = useSelector((state: RootState) => state.user.userId);
     console.log(isAdmin, userId);
+    console.log(medicalHistoryError, animalError);
 
 
     if (animalLoading || medicalHistoryLoading) return <>...Loading</>;
@@ -44,11 +45,7 @@ const AnimalDetails: React.FC = () => {
         { prefix: "Specie", value: animals?.species },
         { prefix: "Rasa", value: animals?.breed },
         { prefix: "Sex", value: animals?.sex },
-        {
-            prefix: "Varsta", value: animals?.age ?
-                animals.age === 1 ? animals.age + ' An' : animals.age + ' Ani' : ''
-            // Ew, change this into a if or switch
-        }
+        { prefix: "Varsta", value: animals?.age === 1 ? animals.age + ' An' : animals?.age + ' Ani' }
     ]
 
 

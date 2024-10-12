@@ -18,18 +18,18 @@ const Navbar: React.FC = () => {
                 <h1 className=" custom-font text-2xl">Big Bongos</h1>
 
                 <nav aria-label="Main navigation">
-                    <ul className="flex space-x-4">
+                    <ul className="flex space-x-4  items-center">
                         <li>
                             <Link
                                 to="/"
-                                className=" hover:underline focus:outline-none focus:ring-2 focus:ring-rose-400">
+                                className=" text-center hover:underline focus:outline-none focus:ring-2 focus:ring-rose-400">
                                 Home
                             </Link>
                         </li>
                         <li>
                             <Link
                                 to="/add-animal"
-                                className=" hover:underline focus:outline-none focus:ring-2 focus:ring-rose-400">
+                                className="text-center hover:underline focus:outline-none focus:ring-2 focus:ring-rose-400 inline-block">
                                 Add a Animal
                             </Link>
                         </li>

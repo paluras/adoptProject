@@ -35,7 +35,7 @@ const LandingParallax: React.FC = () => {
         { imgSrc: '/cloud.svg', class: 'absolute z-10 left-1 lg:left-[10%] sm:top-[20%] overflow-hidden opacity-50', width: 100, alt: 'cloud', style: cloudStyle },
         { imgSrc: '/cloud2.svg', class: 'absolute z-10 right-10 top-[10%] overflow-hidden opacity-50', width: 200, alt: 'cloud2', style: cloud2Style },
         { imgSrc: '/cat1.svg', class: 'absolute z-10 hidden sm:block right-3/4 overflow-hidden', width: 200, alt: 'cat1', style: cat1Style },
-        { imgSrc: '/cat2.svg', class: 'absolute z-10 hidden lg:right-[20%] md:right-1 md:block top-1/4   overflow-hidden', width: 200, alt: 'cat2', style: cat2Style },
+        { imgSrc: '/cat2.svg', class: 'absolute z-10 hidden lg:right-[20%] md:right-5 md:block top-1/4   overflow-hidden', width: 200, alt: 'cat2', style: cat2Style },
         { imgSrc: '/dog1.svg', class: 'absolute z-10 hidden sm:block bottom-1/4 sm:right-10 md:right-[15%] overflow-hidden', width: 200, alt: 'dog1', style: dog1Style },
         { imgSrc: '/clubmenu2.png', class: 'absolute z-10 bottom-3/4 right-3/2 overflow-hidden', width: 250, alt: 'clubmenu', style: clubMenuStyle },
         { imgSrc: '/100Asset-18.png', class: 'absolute z-10 bottom-1 lg:bottom-[10%] left-1 sm:left-[24%] overflow-hidden', width: 150, alt: 'asset', style: ballStyle },

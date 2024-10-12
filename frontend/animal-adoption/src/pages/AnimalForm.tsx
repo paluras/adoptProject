@@ -10,6 +10,7 @@ import { logout } from '../store/userSlice';
 import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from 'rehype-sanitize';
 import { handleAxiosError } from '../utils/handleAxiosError';
+import { appendImages } from '../utils/formUtils';
 
 const AnimalForm: React.FC = () => {
     const dispatch = useDispatch();
@@ -37,11 +38,7 @@ const AnimalForm: React.FC = () => {
         formData.append('sex', formState.sex);
         formData.append('description', formState.description);
 
-        if (Array.isArray(formState.imageFiles)) {
-            formState.imageFiles.forEach(file => {
-                formData.append('images', file);
-            });
-        }
+        appendImages(formData, formState);
 
         try {
             const response = await axios.post('/api/animals', formData, {

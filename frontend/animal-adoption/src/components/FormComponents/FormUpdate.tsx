@@ -6,6 +6,7 @@ import ImageUpload from './ImageUpload';
 import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from 'rehype-sanitize';
 import { handleAxiosError } from '../../utils/handleAxiosError';
+import { appendImages } from '../../utils/formUtils';
 
 const FormUpdate: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -37,8 +38,6 @@ const FormUpdate: React.FC = () => {
 
                 const responseHistory = await axios.get(`/api/medical-history/${id}`);
                 const animalHistory = responseHistory.data.body;
-
-
 
                 setBasicInfo({
                     name: animal.name,
@@ -78,21 +77,7 @@ const FormUpdate: React.FC = () => {
         formData.append('description', basicInfo.description);
         formData.append('sex', basicInfo.sex)
 
-        // Check if new images were uploaded
-        if (Array.isArray(basicInfo.imageFiles) && basicInfo.imageFiles.length > 0) {
-            // If new images are uploaded, append them
-            basicInfo.imageFiles.forEach(file => {
-                formData.append('images', file);
-            });
-        } else if (basicInfo.imageUrl) {
-            // No new images, append the existing image URL(s)
-            if (Array.isArray(basicInfo.imageUrl)) {
-                basicInfo.imageUrl.forEach(url => formData.append('imageUrl', url));
-            } else {
-                formData.append('imageUrl', basicInfo.imageUrl);
-            }
-        }
-
+        appendImages(formData, basicInfo)
 
         try {
             await axios.put(

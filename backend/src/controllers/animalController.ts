@@ -1,17 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { AnimalModel } from '../models/animalModel';
-import { MedicalHistoryModel } from '../models/medicalHistoryModel';
-import { ErrorHandler, ErrorType } from "../utils/ErrorHandler";
 import { AnimalInput, AnimalFilters } from "../schemas/animalSchema";
-import { MedicalHistorySchema } from "../schemas/medicalHistorySchema";
 
 export class AnimalController {
     private animalModel: AnimalModel;
-    private medicalHistoryModel: MedicalHistoryModel;
 
     constructor() {
         this.animalModel = new AnimalModel();
-        this.medicalHistoryModel = new MedicalHistoryModel();
     }
 
     private extractAnimalInput(body: any): AnimalInput {
@@ -45,7 +40,6 @@ export class AnimalController {
             const userId: number = (req as any).user.id;
 
             const animalInput = this.extractAnimalInput(req.body);
-            console.log(animalInput);
 
             const files = req.files as Express.Multer.File[];
             const imageUrls: string[] = files ? files.map(file => file.filename) : [];
@@ -55,8 +49,7 @@ export class AnimalController {
                 imageUrls,
                 userId
             });
-
-            res.status(201).json({ message: "Successfuly added a animal", body: animal });
+            res.status(201).json({ body: animal, message: "Successfully added an animal", });
         } catch (error) {
             next(error)
         }
@@ -89,15 +82,7 @@ export class AnimalController {
         try {
             const filters = this.extractFilters(req.query);
             const animals = await this.animalModel.getAll(filters);
-
-
-            const animalsWithRecords = await Promise.all(animals.map(async (animal) => {
-                const records: MedicalHistorySchema = await this.medicalHistoryModel.getMedicalHistoryByAnimalId(animal.id);
-                return { ...animal, medicalRecords: records };
-            }));
-
-
-            res.json({ message: "Succesfuly found the animals", body: animalsWithRecords });
+            res.json({ message: "Successfully found the animals", body: animals });
         } catch (error) {
             next(error)
         }
@@ -106,19 +91,7 @@ export class AnimalController {
     getAnimalById = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const id = parseInt(req.params.id, 10);
-            // if (isNaN(id)) {
-            //     throw ErrorHandler.createError(
-            //         'Invalid animal ID',
-            //         ErrorType.VALIDATION
-            //     );
-            // }
             const animal = await this.animalModel.getById(id);
-            // if (!animal) {
-            //     throw ErrorHandler.createError(
-            //         `Animal with ID ${id} not found`,
-            //         ErrorType.NOT_FOUND
-            //     );
-            // }
             res.status(200).json({ message: 'Successfully Found the Animal with Id' + id, body: animal });
         } catch (error) {
             next(error)
@@ -128,19 +101,6 @@ export class AnimalController {
     deleteAnimalById = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const id = parseInt(req.params.id, 10);
-            // if (isNaN(id)) {
-            //     throw ErrorHandler.createError(
-            //         'Invalid animal ID',
-            //         ErrorType.VALIDATION
-            //     );
-            // }
-            const animal = await this.animalModel.getById(id);
-            // if (!animal) {
-            //     throw ErrorHandler.createError(
-            //         `Animal with ID ${id} not found`,
-            //         ErrorType.NOT_FOUND
-            //     );
-            // }
             await this.animalModel.deleteAnimal(id);
             res.status(200).json({ message: 'Successfully deleted', id });
         } catch (error) {

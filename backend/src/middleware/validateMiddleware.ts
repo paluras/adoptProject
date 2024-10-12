@@ -57,7 +57,7 @@ export const createMedicalHistoryValidation = [
 
 export const validateAnimal = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
-    console.log(errors);
+
 
     if (!errors.isEmpty()) {
         const extractedErrors = errors.array().map(err => err.msg).join('\n');
