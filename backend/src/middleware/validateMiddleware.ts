@@ -53,7 +53,26 @@ export const createMedicalHistoryValidation = [
         .notEmpty().withMessage('No animal id found')
 ]
 
+export const createUser = [
+    body('password')
+        .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
 
+    body('username')
+        .trim()
+        .notEmpty().withMessage('Name is required')
+        .isLength({ min: 2, max: 50 }).withMessage('Name must be between 2 and 50 characters'),
+]
+
+export const validateUser = (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        const extractedErrors = errors.array().map(err => err.msg).join('\n');
+
+        return next(ErrorHandler.createError(extractedErrors, ErrorType.VALIDATION));
+    }
+    next()
+}
 
 export const validateAnimal = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
