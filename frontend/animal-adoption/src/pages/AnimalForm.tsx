@@ -51,7 +51,7 @@ const AnimalForm: React.FC = () => {
 
         } catch (error) {
             if (handleAxiosError(error) === "Access denied, token missing") {
-                dispatch(logout())
+                // dispatch(logout())
                 alert('Login in order to add a animal')
 
             } else {
