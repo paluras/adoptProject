@@ -31,7 +31,7 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
     if (status) query.append('status', status);
     if (sex) query.append('sex', sex);
 
-    const { data: animals, loading: loadingAnimals, error: errorsAnimals } = useFetch<Animal[]>(`/api/animals?${query.toString()}`);
+    const { data: animals, loading: loadingAnimals, error: errorsAnimals } = useFetch<Animal[]>(`https://adoptproject.onrender.com/api/animals?${query.toString()}`);
     const navigate = useNavigate();
 
     const handleFilterSubmit = (e: React.FormEvent) => {
@@ -81,7 +81,7 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
                             id={animal.id}
                             title={animal.name}
                             description={animal.species}
-                            imageUrl={animal.image_url ? `http://localhost:5000/uploads/${animal.image_url[0]}` : undefined}
+                            imageUrl={animal.image_url ? `https://adoptproject.onrender.com/uploads/${animal.image_url[0]}` : undefined}
                             onButtonClick={() => navigate(`/${animal.id}`)}
                         />
                     ))
