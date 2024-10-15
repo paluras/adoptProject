@@ -6,7 +6,7 @@
     "start": "ts-node src/server.ts",
     "dev": "nodemon src/server.ts",
     "test": "NODE_ENV=test jest ---runInBand --detectOpenHandles",
-    "test:watch": "jest --watch --runInBand --detectOpenHandles"
+    "test:watch": "jest --watch --runInBand --detectOpenHandles --verbose"
   },
   "keywords": [],
   "author": "",

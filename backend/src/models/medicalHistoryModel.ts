@@ -4,10 +4,12 @@ import { MedicalHistoryInput } from '../schemas/medicalHistorySchema';
 export class MedicalHistoryModel {
 
     addMedicalHistory = async (input: MedicalHistoryInput) => {
+
         const result = await pool.query(
             'INSERT INTO medical_history (animal_id, vaccines, dewormings, treatments, notes) VALUES ($1, $2, $3, $4, $5) RETURNING *',
             [input.animal_id, input.vaccines, input.dewormings, input.treatments, input.notes]
         );
+
         return result.rows[0];
     };
 

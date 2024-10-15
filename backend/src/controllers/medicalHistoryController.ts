@@ -23,6 +23,7 @@ export class MedicalHistoryController {
         const medicalInput = this.extractMedicalInput(req.body)
         try {
             const medicalHistory = await this.medicalHistoryModel.addMedicalHistory(medicalInput);
+
             res.status(201).json({ message: "Successfuly added a medical history", body: medicalHistory });
         } catch (error) {
             next(error)
@@ -31,7 +32,6 @@ export class MedicalHistoryController {
 
     updateMedicalHistory = async (req: Request, res: Response, next: NextFunction) => {
         const medicalInput = this.extractMedicalInput(req.body)
-        console.log(medicalInput);
 
         try {
             const medicalHistory = await this.medicalHistoryModel.updateMedicalHistory(medicalInput);

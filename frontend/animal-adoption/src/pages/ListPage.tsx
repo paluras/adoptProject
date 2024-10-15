@@ -3,28 +3,40 @@ import { Animal } from "../models/AnimalSchema";
 import { useNavigate } from "react-router";
 import Card from "../components/CardComponent/CardComponent";
 import useFetch from "../hooks/useFetch";
+import { useInView } from "react-intersection-observer";
+import Filter from "../components/Filter";
 
 interface ListPageProps {
-    children: ReactNode
+    children: ReactNode;
 }
 
 const ListPage: React.FC<ListPageProps> = ({ children }) => {
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [showFilterButton, setShowFilterButton] = useState(false);
     const [species, setSpecies] = useState<string>('');
     const [status, setStatus] = useState<string>('Valabil');
-    const [sex, setSex] = useState<string>('')
+    const [sex, setSex] = useState<string>('');
+
+    const { ref: mainContentRef, inView } = useInView({
+        threshold: 0.1,
+        onChange: (inView) => {
+            setShowFilterButton(inView);
+        }
+    });
+    console.log(inView);
+
 
     const query = new URLSearchParams();
     if (species) query.append('species', species);
     if (status) query.append('status', status);
-    if (sex) query.append('sex', sex)
+    if (sex) query.append('sex', sex);
 
-    const { data: animals,
-        loading: loadingAnimals,
-        error: errorsAnimals } = useFetch<Animal[]>(`/api/animals?${query.toString()}`);
+    const { data: animals, loading: loadingAnimals, error: errorsAnimals } = useFetch<Animal[]>(`/api/animals?${query.toString()}`);
     const navigate = useNavigate();
 
     const handleFilterSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        setIsFilterOpen(false);
     };
 
     if (animals === null || loadingAnimals === true) {
@@ -38,54 +50,30 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
 
     return (
         <div className="background-color text-main">
-
             {children}
 
             <h1 className="text-4xl text-center font-bold p-4">Available Animals</h1>
 
-            {/* create a filter component  */}
+            <Filter species={species}
+                setSpecies={setSpecies}
+                status={status}
+                setStatus={setStatus}
+                sex={sex}
+                setSex={setSex}
+                isFilterOpen={isFilterOpen}
+                setIsFilterOpen={setIsFilterOpen}
+                handleFilterSubmit={handleFilterSubmit} />
 
-            <form onSubmit={handleFilterSubmit} className="flex flex-wrap justify-center gap-4 p-4">
-                <select
-                    value={species}
-                    onChange={e => setSpecies(e.target.value)}
-                    className="border-2 w-1/6  text-secondary active:border-forth  border-forth p-2 rounded-md "
+            {showFilterButton && (
+                <button
+                    onClick={() => setIsFilterOpen(true)}
+                    className="lg:hidden fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-secondary text-white px-8 py-4 rounded-full shadow-lg z-10"
                 >
-                    <option value="">All</option>
-                    <option value="Caine">Caine</option>
-                    <option value="Pisica">Pisica</option>
-                </select>
+                    Filter
+                </button>
+            )}
 
-                {/* <input
-                    type="number"
-                    placeholder="Max Age"
-                    value={ageMax}
-                    onChange={e => setAgeMax(e.target.value)}
-                    className="border-2 w-1/6  border-forth p-2 rounded-md"
-                /> */}
-
-                <select
-                    value={status}
-                    onChange={e => setStatus(e.target.value)}
-                    className="border-2  w-1/6  border-forth p-2 rounded-md"
-                >
-                    <option value="">All</option>
-                    <option value="Valabil">Available</option>
-                    <option value="Adoptat">Adopted</option>
-                </select>
-                <select
-                    value={sex}
-                    onChange={e => setSex(e.target.value)}
-                    className="border-2 w-1/6   border-forth p-2 rounded-md"
-                >
-                    <option value="">Sex</option>
-                    <option value="Femela">Femela</option>
-                    <option value="Mascul">Mascul</option>
-                </select>
-                <button type="submit" className="bg-secondary px-4 rounded-md text-white p-2">Filter</button>
-            </form>
-
-            <div className="p-5 gap-4 flex flex-wrap justify-center">
+            <div id='main-content' ref={mainContentRef} className="p-5 gap-4 flex flex-wrap justify-center">
                 {animals.length > 0 && !errorsAnimals ? (
                     animals.map(animal => (
                         <Card
@@ -101,6 +89,8 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
                     <p>No animals available for adoption at this time.</p>
                 )}
             </div>
+
+
         </div>
     );
 };
