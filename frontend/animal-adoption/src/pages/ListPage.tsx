@@ -31,7 +31,7 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
     if (status) query.append('status', status);
     if (sex) query.append('sex', sex);
 
-    const { data: animals, loading: loadingAnimals, error: errorsAnimals } = useFetch<Animal[]>(`https://adoptproject.onrender.com/api/animals?${query.toString()}`);
+    const { data: animals, loading: loadingAnimals, error: errorsAnimals } = useFetch<Animal[]>(`/api/animals?${query.toString()}`);
     const navigate = useNavigate();
 
     const handleFilterSubmit = (e: React.FormEvent) => {
