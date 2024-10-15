@@ -33,7 +33,8 @@ const SwiperComponent: React.FC<SwipperProps> = ({ img }) => {
                         <SwiperSlide key={index}> <img width={300}
                             height={300}
                             className='object-cover aspect-[3/2] '
-                            src={`http://localhost:5000/uploads/${item}`}
+                            // NO GOOOD !!!!!!!!!!!
+                            src={`https://adoptproject.onrender.com/uploads/${item}`}
                             alt={item} /></SwiperSlide>
                     ))
                 }
