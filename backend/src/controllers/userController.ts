@@ -20,15 +20,12 @@ export class UserController {
     registerUser = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { username, password } = req.body;
-            console.log(req.body);
 
             // const existingUser: User = await this.userModel.findUserByUsername(username);
 
             const hashedPassword: string = await bcrypt.hash(password, 10);
-            console.log(hashedPassword);
 
             const newUser: User = await this.userModel.createUser(username, hashedPassword, false);
-            console.log(newUser);
 
             return res.status(201).json({
                 message: "Successfully created a new user",
@@ -47,15 +44,15 @@ export class UserController {
         try {
             const { username, password } = req.body;
 
-            const user: User | null = await this.userModel.findUserByUsername(username);
-            const isMatch: boolean = await bcrypt.compare(password, user!.password);
+            const user: User = await this.userModel.findUserByUsername(username);
+            const isMatch: boolean = await bcrypt.compare(password, user.password);
             if (!isMatch) {
                 throw new Error("Invalid credentials , not a macth")
 
             }
 
             const token = jwt.sign(
-                { id: user?.id, is_admin: user?.is_admin },
+                { id: user.id, is_admin: user.is_admin },
                 JWT_SECRET,
                 { expiresIn: '1h' }
             );
@@ -68,9 +65,9 @@ export class UserController {
             });
 
             return res.status(200).json({
-                username: user!.username,
-                isAdmin: user!.is_admin,
-                id: user!.id
+                username: user.username,
+                isAdmin: user.is_admin,
+                id: user.id
             });
         } catch (error) {
             next(error)

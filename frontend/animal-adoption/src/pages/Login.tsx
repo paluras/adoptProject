@@ -20,7 +20,10 @@ const LoginPage: React.FC = () => {
 
         try {
             const response = await axios.post('https://adoptproject.onrender.com/api/auth/login', { username, password }, { withCredentials: true });
+
             if (response.status === 200) {
+
+
                 dispatch(login({ username: response.data.username, isAdmin: response.data.isAdmin, userId: response.data.id }));
                 navigate('/');
             }
