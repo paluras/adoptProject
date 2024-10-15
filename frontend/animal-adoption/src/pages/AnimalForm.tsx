@@ -5,15 +5,15 @@ import ImageUpload from '../components/FormComponents/ImageUpload';
 import InputForm from '../components/FormComponents/InputForm';
 import SelectForm from '../components/FormComponents/SelectForm';
 import MedicalForm from '../components/FormComponents/FormTestMedical';
-import { useDispatch } from 'react-redux';
-import { logout } from '../store/userSlice';
+// import { useDispatch } from 'react-redux';
+// import { logout } from '../store/userSlice';
 import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from 'rehype-sanitize';
 import { handleAxiosError } from '../utils/handleAxiosError';
 import { appendImages } from '../utils/formUtils';
 
 const AnimalForm: React.FC = () => {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const [animalId, setAnimalId] = useState();
     const { formState, handleInputChange, handleFileChange, setFormState } = useForm({
         name: '',
