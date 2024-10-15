@@ -14,7 +14,7 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [showFilterButton, setShowFilterButton] = useState(false);
     const [species, setSpecies] = useState<string>('');
-    const [status, setStatus] = useState<string>('Valabil');
+    const [status, setStatus] = useState<string>('Available');
     const [sex, setSex] = useState<string>('');
 
     const { ref: mainContentRef, inView } = useInView({
