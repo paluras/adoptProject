@@ -61,6 +61,7 @@ export class UserController {
                 maxAge: 60 * 60 * 1000, // 1 hour
                 secure: true,
                 sameSite: 'none',
+                domain: 'adoptproject.onrender.com'
             });
             return res.status(200).json({
                 username: user.username,
