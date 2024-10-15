@@ -10,7 +10,7 @@ const DeleteAnimalPageButton: React.FC<DeleteAnimalPageButtonProps> = ({ animalI
     const navigate = useNavigate()
     const handleSubmit = async () => {
         try {
-            await axios.delete(`api/animals/${animalId}`)
+            await axios.delete(`https://adoptproject.onrender.com/api/animals/${animalId}`)
             alert("Deleted succesfully")
             navigate('/')
         } catch (error) {
