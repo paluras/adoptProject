@@ -6,11 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': {
-        target: 'https://adoptproject.onrender.com', // Your backend URL
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''), // Adjust if needed
-      },
-    },
+      '/api': 'http://localhost:5000'
+    }
   }
 });

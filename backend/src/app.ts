@@ -12,7 +12,7 @@ const app: Application = express();
 // Middleware
 app.use(cookieParser())
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://adoptproject-1.onrender.com/',
     credentials: true
 }));
 app.use(express.json());
