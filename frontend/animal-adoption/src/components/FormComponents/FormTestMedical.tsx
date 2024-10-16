@@ -25,7 +25,10 @@ const MedicalForm: React.FC<MedicalFormProps> = ({ animalId }) => {
             await axios.post('https://adoptproject.onrender.com/api/medical-history', {
                 animal_id: animalId,
                 ...formState
+            }, {
+                withCredentials: true
             });
+
             navigate(`/${animalId}`);
         } catch (error) {
             alert(handleAxiosError(error))

@@ -104,7 +104,9 @@ const FormUpdate: React.FC = () => {
                 {
                     animal_id: parseInt(id!, 10),
                     ...medicalInfo
-                });
+                }, {
+                withCredentials: true
+            });
         } catch (error) {
             alert(handleAxiosError(error))
 
