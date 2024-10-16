@@ -26,7 +26,7 @@ export const createAnimalValidation = [
     body('description')
         .optional()
         .trim()
-        .isLength({ max: 1000 }).withMessage('Description must not exceed 1000 characters'),
+        .isLength({ max: 5000 }).withMessage('Description must not exceed 5000 characters'),
 ]
 
 export const createMedicalHistoryValidation = [
