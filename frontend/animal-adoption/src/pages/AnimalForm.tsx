@@ -32,9 +32,6 @@ const AnimalForm: React.FC = () => {
         imageFiles: [] as File[],
     });
 
-
-
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
