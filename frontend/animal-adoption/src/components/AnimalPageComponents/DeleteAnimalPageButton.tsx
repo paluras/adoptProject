@@ -10,7 +10,9 @@ const DeleteAnimalPageButton: React.FC<DeleteAnimalPageButtonProps> = ({ animalI
     const navigate = useNavigate()
     const handleSubmit = async () => {
         try {
-            await axios.delete(`${import.meta.env.VITE_API_URL}/api/animals/${animalId}`)
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/animals/${animalId}`, {
+                withCredentials: true,
+            })
             alert("Deleted succesfully")
             navigate('/')
         } catch (error) {
