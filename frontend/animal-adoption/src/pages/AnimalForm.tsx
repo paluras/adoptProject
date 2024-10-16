@@ -50,8 +50,8 @@ const AnimalForm: React.FC = () => {
             const response = await axios.post('https://adoptproject.onrender.com/api/animals', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    withCredentials: true,
                 },
+                withCredentials: true,
             });
             setAnimalId(response.data.body.id)
 
