@@ -22,7 +22,7 @@ const MedicalForm: React.FC<MedicalFormProps> = ({ animalId }) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await axios.post('https://adoptproject.onrender.com/api/medical-history', {
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/medical-history`, {
                 animal_id: animalId,
                 ...formState
             }, {

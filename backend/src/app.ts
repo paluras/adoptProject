@@ -6,13 +6,15 @@ import cors from 'cors';
 import path from 'path';
 import cookieParser from "cookie-parser"
 import { ErrorHandler } from './utils/ErrorHandler';
+import dotenv from 'dotenv';
 
+dotenv.config();
 const app: Application = express();
 
 // Middleware
 app.use(cookieParser())
 app.use(cors({
-    origin: 'https://adoptproject-1.onrender.com',
+    origin: process.env.VITE_API_URL,
     credentials: true
 }));
 app.use(express.json());

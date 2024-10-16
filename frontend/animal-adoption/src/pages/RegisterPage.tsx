@@ -32,7 +32,7 @@ const RegisterPage: React.FC = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post('https://adoptproject.onrender.com/api/auth/register',
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`,
                 { username, password }, {
                 withCredentials: true,
             });

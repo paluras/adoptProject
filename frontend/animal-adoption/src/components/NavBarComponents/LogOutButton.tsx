@@ -8,7 +8,7 @@ const LogOutButton: React.FC = () => {
 
     const handleSubmit = async () => {
         try {
-            await axios.post('https://adoptproject.onrender.com/api/auth/logout')
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/logout`)
             dispatch(logout())
             console.log("succesfuly logged out")
         } catch (error) {

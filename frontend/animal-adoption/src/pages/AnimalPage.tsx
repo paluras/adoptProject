@@ -19,11 +19,11 @@ const AnimalDetails: React.FC = () => {
     const {
         data: animals,
         loading: animalLoading,
-        error: animalError } = useFetch<Animal>(`https://adoptproject.onrender.com/api/animals/${id}`);
+        error: animalError } = useFetch<Animal>(`${import.meta.env.VITE_API_URL}/api/animals/${id}`);
 
     const { data: medicalHistory,
         loading: medicalHistoryLoading,
-        error: medicalHistoryError } = useFetch<MedicalHistory>(`https://adoptproject.onrender.com/api/medical-history/${id}`);
+        error: medicalHistoryError } = useFetch<MedicalHistory>(`${import.meta.env.VITE_API_URL}/api/medical-history/${id}`);
     console.log(medicalHistory);
 
     const isAdmin: boolean = useSelector((state: RootState) => state.user.isAdmin);

@@ -33,10 +33,10 @@ const FormUpdate: React.FC = () => {
     useEffect(() => {
         const fetchAnimal = async () => {
             try {
-                const response = await axios.get(`https://adoptproject.onrender.com/api/animals/${id}`);
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/animals/${id}`);
                 const animal = response.data.body;
 
-                const responseHistory = await axios.get(`https://adoptproject.onrender.com/api/medical-history/${id}`);
+                const responseHistory = await axios.get(`${import.meta.env.VITE_API_URL}/api/medical-history/${id}`);
                 const animalHistory = responseHistory.data.body;
 
                 setBasicInfo({
@@ -81,7 +81,7 @@ const FormUpdate: React.FC = () => {
 
         try {
             await axios.put(
-                `https://adoptproject.onrender.com/api/animals/${id}`,
+                `${import.meta.env.VITE_API_URL}/api/animals/${id}`,
                 formData,
                 {
                     headers: { 'Content-Type': 'multipart/form-data' },
@@ -100,7 +100,7 @@ const FormUpdate: React.FC = () => {
         console.log(medicalInfo, id);
 
         try {
-            await axios.put(`https://adoptproject.onrender.com/api/medical-history/${id}`,
+            await axios.put(`${import.meta.env.VITE_API_URL}/api/medical-history/${id}`,
                 {
                     animal_id: parseInt(id!, 10),
                     ...medicalInfo
