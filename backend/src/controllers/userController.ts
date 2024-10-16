@@ -96,6 +96,8 @@ export class UserController {
                     ErrorType.VALIDATION
                 );
             }
+            console.log(username, isAdmin);
+
 
             return res.status(200).json({ username, isAdmin });
         } catch (error) {

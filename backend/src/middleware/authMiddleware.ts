@@ -11,6 +11,7 @@ const animalModel = new AnimalModel()
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     const token = req.cookies.token;
+    console.log(token);
 
     if (!token) {
         return next(ErrorHandler.createError('Access denied, token missing', ErrorType.UNAUTHORIZED));

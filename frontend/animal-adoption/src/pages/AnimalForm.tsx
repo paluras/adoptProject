@@ -11,10 +11,16 @@ import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from 'rehype-sanitize';
 import { handleAxiosError } from '../utils/handleAxiosError';
 import { appendImages } from '../utils/formUtils';
+import useFetch from '../hooks/useFetch';
 
 const AnimalForm: React.FC = () => {
     // const dispatch = useDispatch();
+
+
     const [animalId, setAnimalId] = useState();
+    const { data: user, loading: userLoading, error: userError } = useFetch(`https://adoptproject.onrender.com/api/auth/user}`);
+    console.log(user);
+
     const { formState, handleInputChange, handleFileChange, setFormState } = useForm({
         name: '',
         age: '',
@@ -25,6 +31,9 @@ const AnimalForm: React.FC = () => {
         description: '',
         imageFiles: [] as File[],
     });
+
+
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
