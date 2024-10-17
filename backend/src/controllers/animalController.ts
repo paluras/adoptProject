@@ -1,109 +1,110 @@
-import { Request, Response } from "express";
-import * as animalModel from '../models/animalModel'
-import * as medicalRecordModel from '../models/medicalHistoryModel'
-import multer from "multer";
-import { upload } from "../middleware/imgUpload";
+import { Request, Response, NextFunction } from "express";
+import { AnimalModel } from '../models/animalModel';
+import { AnimalInput, AnimalFilters } from "../schemas/animalSchema";
 
-export const addAnimal = async (req: Request, res: Response) => {
-    upload(req, res, async (err) => {
-        if (err instanceof multer.MulterError) {
-            console.error('Multer error:', err);
-            return res.status(500).json({ message: 'Error uploading file', error: err });
-        } else if (err) {
-            console.error('Unknown error during file upload:', err);
-            return res.status(500).json({ message: 'Unknown error occurred', error: err });
-        }
+export class AnimalController {
+    private animalModel: AnimalModel;
 
-        // Retrieve other data from the request body
-        const { name, species, age, breed, status } = req.body;
-
-        // Get the image file path if uploaded
-        const imageUrl = req.file ? req.file.filename : null;
-
-        try {
-            console.log('Animal data:', { name, species, age, breed, status, imageUrl });
-            const animal = await animalModel.addAnimal(name, species, age, breed, status, imageUrl!);
-            res.status(201).json(animal);
-        } catch (error) {
-            console.error('Error inserting animal into database:', error);
-            res.status(500).json({ message: 'Error creating the animal', error });
-        }
-    });
-};
-
-
-export const updateAnimal = async (req: Request, res: Response) => {
-    upload(req, res, async (err) => {
-        if (err instanceof multer.MulterError) {
-            console.error('Multer error:', err);
-            return res.status(500).json({ message: 'Error uploading file', error: err });
-        } else if (err) {
-            console.error('Unknown error during file upload:', err);
-            return res.status(500).json({ message: 'Unknown error occurred', error: err });
-        }
-
-        const { id } = req.params;
-        const { name, species, age, breed, status } = req.body;
-
-        const existingAnimal = await animalModel.getAnimalById(parseInt(id, 10));
-        if (!existingAnimal) {
-            return res.status(404).json({ message: 'Animal not found' });
-        }
-
-        const imageUrl = req.file ? req.file.filename : null;
-        const updatedImageUrl = imageUrl || existingAnimal.image_url;
-
-
-        try {
-            console.log('Updating animal data:', {
-                id,
-                name,
-                species,
-                age,
-                breed,
-                status,
-                imageUrl
-            });
-            const animal = await animalModel.updateAnimal(parseInt(id, 10),
-                name,
-                species,
-                parseInt(age, 10),
-                breed,
-                status,
-                updatedImageUrl);
-
-            if (!animal) {
-                return res.status(404).json({ message: 'Animal not found' });
-            }
-            res.status(200).json(animal);
-
-        } catch (error) {
-            console.error('Error updating animal in the database:', error);
-            res.status(500).json({ message: 'Error updating the animal', error });
-        }
-    });
-};
-
-
-export const getAllAnimals = async (req: Request, res: Response) => {
-    try {
-        const animals = await animalModel.getAllAnimals();
-        const animalsWithRecords = await Promise.all(animals.map(async (animal: any) => {
-            const records = await medicalRecordModel.getMedicalHistoryByAnimalId(animal.id);
-            return { ...animal, medicalRecords: records };
-        }));
-        res.json(animalsWithRecords);
-    } catch (error) {
-        res.status(500).json({ message: "error", error });
+    constructor() {
+        this.animalModel = new AnimalModel();
     }
-}
 
-export const getAnimalById = async (req: Request, res: Response) => {
-    const { id } = req.params
-    try {
-        const animal = await animalModel.getAnimalById(parseInt(id, 10))
-        res.json(animal)
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching the animal by id', error })
+    private extractAnimalInput(body: any): AnimalInput {
+
+        return {
+            name: body.name,
+            species: body.species,
+            age: Number(body.age),
+            breed: body.breed,
+            status: body.status,
+            sex: body.sex,
+            description: body.description
+        };
+    }
+
+    private extractFilters(query: any): AnimalFilters {
+        const filters: AnimalFilters = {};
+
+        if (query.species) filters.species = query.species;
+        if (query.sex) filters.sex = query.sex;
+        if (query.breed) filters.breed = query.breed;
+        if (query.status) filters.status = query.status;
+        if (query.ageMin) filters.ageMin = Number(query.ageMin);
+        if (query.ageMax) filters.ageMax = Number(query.ageMax);
+
+        return filters;
+    }
+
+    addAnimal = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const userId: number = (req as any).user.id;
+
+            const animalInput = this.extractAnimalInput(req.body);
+
+            const files = req.files as Express.Multer.File[];
+            const imageUrls: string[] = files ? files.map(file => file.filename) : [];
+
+            const animal = await this.animalModel.addAnimal({
+                ...animalInput,
+                imageUrls,
+                userId
+            });
+            res.status(201).json({ body: animal, message: "Successfully added an animal", });
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    updateAnimal = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = parseInt(req.params.id, 10);
+            const existingAnimal = await this.animalModel.getById(id);
+            const animalInput = this.extractAnimalInput(req.body);
+            const files = req.files as Express.Multer.File[];
+            const newImageUrls = files?.map(file => file.filename);
+            const imageUrls = newImageUrls?.length ? newImageUrls : existingAnimal.image_url;
+
+            const updatedAnimal = await this.animalModel.updateAnimal(
+                id,
+                {
+                    ...animalInput,
+                    imageUrls
+                }
+            );
+            res.status(200).json(updatedAnimal);
+        } catch (error) {
+            next(error)
+
+        }
+    }
+
+    getAllAnimals = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const filters = this.extractFilters(req.query);
+            const animals = await this.animalModel.getAll(filters);
+            res.json({ message: "Successfully found the animals", body: animals });
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    getAnimalById = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = parseInt(req.params.id, 10);
+            const animal = await this.animalModel.getById(id);
+            res.status(200).json({ message: 'Successfully Found the Animal with Id' + id, body: animal });
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    deleteAnimalById = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = parseInt(req.params.id, 10);
+            await this.animalModel.deleteAnimal(id);
+            res.status(200).json({ message: 'Successfully deleted', id });
+        } catch (error) {
+            next(error)
+        }
     }
 }

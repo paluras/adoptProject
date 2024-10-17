@@ -7,6 +7,9 @@ export interface Animal {
     age: number;
     breed: string;
     status: string;
-    image_url: string;
-    medicalRecords: MedicalHistory
+    image_url: string[];
+    medicalRecords: MedicalHistory;
+    description: string;
+    sex: string;
+    user_id: number;
 }

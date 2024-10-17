@@ -1,2 +1,12 @@
 /backend/node_modules
+/backend/src/uploads
+/backend/.env
+
+/backend/.env.test
+
+
 /frontend/animal-adoption/node_modules
+frontend/animal-adoption/tsconfig.app.tsbuildinfo
+frontend/animal-adoption/tsconfig.node.tsbuildinfo
+frontend/animal-adoption/.env
+frontend/animal-adoption/.env.production
