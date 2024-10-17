@@ -18,7 +18,7 @@ const AnimalForm: React.FC = () => {
 
 
     const [animalId, setAnimalId] = useState();
-    const { data: user, loading: userLoading, error: userError } = useFetch(`https://adoptproject.onrender.com/api/auth/user`);
+    const { data: user, loading: userLoading, error: userError } = useFetch(`${import.meta.env.VITE_API_URL}/api/auth/user`);
     console.log(user, userLoading, userError);
 
     const { formState, handleInputChange, handleFileChange, setFormState } = useForm({
