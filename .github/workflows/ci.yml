@@ -52,29 +52,22 @@ jobs:
   # Deploy to Ubuntu server
   deploy:
     runs-on: ubuntu-latest
-    needs: [backend, frontend] # Deploy after both frontend and backend are built
+    needs: [backend, frontend] # Ensure both backend and frontend are built
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-      - name: Deploy to server via SSH
-        uses: appleboy/ssh-action@v0.1.7
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          host: paluraandrei.tplinkdns.com
-          username: paluras
-          port: 5000
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            # Backend deploy
-            cd /var/www/adoptProject/backend
-            git pull origin master
-            /home/paluras/.nvm/versions/node/v22.2.0/bin/npm install
-            /home/paluras/.nvm/versions/node/v22.2.0/bin/npm run build
-            /home/paluras/.nvm/versions/node/v22.2.0/bin/pm2 restart adopt-backend
+          node-version: '22.2.0'
 
-            # Frontend deploy
-            cd /var/www/adoptProject/frontend/animal-adoption
-            git pull origin master
-            /home/paluras/.nvm/versions/node/v22.2.0/bin/npm install
-            /home/paluras/.nvm/versions/node/v22.2.0/bin/npm run build
+      - name: Install Dependencies
+        working-directory: ./backend
+        run: npm install
+
+      - name: Run Deployment Script
+        run: |
+          chmod +x deploy.sh
+          ./deploy.sh
