@@ -25,7 +25,7 @@ jobs:
 
       - name: Build backend
         working-directory: ./backend
-        run: npm run build
+        run: npm run start
 
   # Build the frontend
   frontend:
