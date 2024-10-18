@@ -61,7 +61,7 @@ jobs:
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@v0.1.7
         with:
-          host: 192.168.0.101
+          host: paluraandrei.tplinkdns.com
           username: paluras
           port: 5000
           key: ${{ secrets.SSH_PRIVATE_KEY }}
