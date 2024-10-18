@@ -49,3 +49,5 @@ Indexes:
 "users_username_key" UNIQUE CONSTRAINT, btree (username)
 Referenced by:
 TABLE "animals" CONSTRAINT "animals_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id)
+
+asdasd
