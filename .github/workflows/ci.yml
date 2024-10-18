@@ -23,9 +23,9 @@ jobs:
         working-directory: ./backend
         run: npm install
 
-      - name: Build backend
+      - name: Start backend
         working-directory: ./backend
-        run: npm run start
+        run: nohup npm run start &
 
   # Build the frontend
   frontend:
