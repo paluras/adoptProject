@@ -66,15 +66,26 @@ jobs:
           port: 5000
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            # Load nvm
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+            # Set the Node.js version you need
+            nvm use 22.2.0
+
             # Backend deploy
-            cd /var/www/adoptProject/backend
+            echo "Deploying backend..."
+            cd /var/www/adoptProject/backend || exit
             git pull origin master
             npm install
             npm run build
             pm2 restart adopt-backend
 
             # Frontend deploy
-            cd /var/www/adoptProject/frontend/animal-adoption
+            echo "Deploying frontend..."
+            cd /var/www/adoptProject/frontend/animal-adoption || exit
             git pull origin master
             npm install
             npm run build
+
+            echo "Deployment complete!"
