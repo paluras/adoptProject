@@ -1,0 +1,18 @@
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Face -->
+  <circle cx="100" cy="100" r="90" fill="#FFD699"/>
+
+  <!-- Eyes -->
+  <circle cx="70" cy="80" r="12" fill="#4A4A4A"/>
+  <circle cx="130" cy="80" r="12" fill="#4A4A4A"/>
+
+  <!-- Nose -->
+  <circle cx="100" cy="110" r="10" fill="#FF9999"/>
+
+  <!-- Smile -->
+  <path d="M70 130 Q100 150 130 130" stroke="#4A4A4A" stroke-width="4" fill="none"/>
+
+  <!-- Ears -->
+  <path d="M30 70 Q10 40 40 20" stroke="#FFD699" stroke-width="20" fill="none"/>
+  <path d="M170 70 Q190 40 160 20" stroke="#FFD699" stroke-width="20" fill="none"/>
+</svg>

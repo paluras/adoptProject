@@ -1,27 +1,40 @@
-// src/App.tsx or wherever you define your routes
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import AnimalForm from './Components/FormTest';
-import MedicalForm from './Components/FormTestMedical';
-import AnimalDetails from './Components/AnimalPage';
-import AnimalsList from './Components/List';
-import FormUpdate from './Components/FormUpdate';
-import Navbar from './Components/Navbar';
+import React, { Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
-const App = () => (
-  <>
+const LoginPage = React.lazy(() => import('./pages/Login'));
+const RegisterPage = React.lazy(() => import('./pages/RegisterPage'));
+const AnimalForm = React.lazy(() => import('./pages/AnimalForm'));
+const ListPage = React.lazy(() => import('./pages/ListPage'));
+const AnimalDetails = React.lazy(() => import('./pages/AnimalPage'));
+const FormUpdate = React.lazy(() => import('./components/FormComponents/FormUpdate'));
+const LandingParallax = React.lazy(() => import('./components/Landing'))
 
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/add-animal" element={<AnimalForm onSuccess={() => console.log("Success")} />} />
-        <Route path="/animals/:id" element={<MedicalForm onSuccess={() => console.log("Success Medical")} />} />
-        <Route path="/" element={<AnimalsList />} />
-        <Route path='/:id' element={<AnimalDetails />} />
-        <Route path='/update-form/:id' element={<FormUpdate onSuccess={() => console.log("Success Update")} />} />
-        {/* Other routes */}
-      </Routes>
-    </Router>
-  </>
-);
+function App() {
+  return (
+    <>
+      <Router>
+        <Navbar />
+        <Suspense fallback={<span />}>
+          <Routes>
+            <Route path='/login' element={<LoginPage />} />
+            <Route path='/register' element={<RegisterPage />} />
+            <Route path="/add-animal" element={<AnimalForm />} />
+            <Route path="/" element={
+              <ListPage>
+                <LandingParallax />
+              </ListPage>} />
+            <Route path='/:id' element={<AnimalDetails />} />
+            <Route path='/update-form/:id' element={<FormUpdate />} />
 
-export default App
+          </Routes>
+          <Footer />
+        </Suspense>
+      </Router>
+
+    </>
+  );
+}
+
+export default App;

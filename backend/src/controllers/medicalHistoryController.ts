@@ -1,47 +1,58 @@
-import { Request, Response } from 'express';
-import * as medicalHistoryModel from '../models/medicalHistoryModel';
+import { NextFunction, Request, Response } from 'express';
+import { MedicalHistoryModel } from '../models/medicalHistoryModel';
+import { MedicalHistoryInput } from '../schemas/medicalHistorySchema';
 
-export const addMedicalHistory = async (req: Request, res: Response) => {
-    const { id, vaccines, dewormings, treatments, notes } = req.body;
+export class MedicalHistoryController {
 
-    try {
-        const medicalHistory = await medicalHistoryModel.addMedicalHistory(id, vaccines, dewormings, treatments, notes);
-        res.status(201).json(medicalHistory);
-    } catch (error) {
-        res.status(500).json({ message: 'Error adding medical history', error });
+    private medicalHistoryModel: MedicalHistoryModel;
+
+    constructor() {
+        this.medicalHistoryModel = new MedicalHistoryModel();
     }
-};
-
-export const updateMedicalHistory = async (req: Request, res: Response) => {
-    const { id } = req.params; // Get the id from params
-    const { vaccines, dewormings, treatments, notes } = req.body; // Use 'notes' instead of 'note'
-
-    try {
-        const medicalHistory = await medicalHistoryModel.updateMedicalHistory(
-            parseInt(id, 10), // Ensure id is parsed correctly
-            vaccines,
-            dewormings,
-            treatments,
-            notes
-        );
-
-        console.log('Updated medical history:', { id, vaccines, dewormings, treatments, notes });
-        res.status(201).json(medicalHistory);
-    } catch (error) {
-        console.error('Error updating medical history in the database:', error);
-        res.status(500).json({ message: 'Error updating medical history', error });
+    private extractMedicalInput(body: any): MedicalHistoryInput {
+        return {
+            animal_id: body.animal_id,
+            vaccines: body.vaccines,
+            dewormings: body.dewormings,
+            treatments: body.treatments,
+            notes: body.notes,
+        };
     }
-};
 
-export const getMedicalHistory = async (req: Request, res: Response) => {
-    const { animalId } = req.params;
-    try {
-        const medicalHistory = await medicalHistoryModel.getMedicalHistoryByAnimalId(parseInt(animalId, 10));
-        if (medicalHistory.length === 0) {
-            return res.status(404).json({ message: 'No medical history found for this animal' });
+    addMedicalHistory = async (req: Request, res: Response, next: NextFunction) => {
+        const medicalInput = this.extractMedicalInput(req.body)
+        try {
+            const medicalHistory = await this.medicalHistoryModel.addMedicalHistory(medicalInput);
+
+            res.status(201).json({ message: "Successfuly added a medical history", body: medicalHistory });
+        } catch (error) {
+            next(error)
         }
-        res.json(medicalHistory);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching medical history', error });
-    }
-};
+    };
+
+    updateMedicalHistory = async (req: Request, res: Response, next: NextFunction) => {
+        const medicalInput = this.extractMedicalInput(req.body)
+
+        try {
+            const medicalHistory = await this.medicalHistoryModel.updateMedicalHistory(medicalInput);
+            res.status(201).json({ message: "Successfuly updated a medical history", body: medicalHistory });
+        } catch (error) {
+            next(error)
+        }
+    };
+
+    getMedicalHistory = async (req: Request, res: Response, next: NextFunction) => {
+        const { animalId } = req.params;
+        try {
+            const medicalHistory = await this.medicalHistoryModel.getMedicalHistoryByAnimalId(parseInt(animalId, 10));
+            if (!medicalHistory) {
+                return res.status(404).json({ message: 'No medical history found for this animal' });
+            }
+            res.json({ message: "Succesfuly fetched the medical data", body: medicalHistory });
+        } catch (error) {
+            next(error)
+        }
+    };
+
+
+}

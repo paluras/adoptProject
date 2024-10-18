@@ -1,37 +1,8 @@
 /backend/node_modules
+/backend/src/uploads
+/backend/.env
+
+/backend/.env.test
+
+
 /frontend/animal-adoption/node_modules
-backend/src/uploads/1728309154697-WhatsApp Image 2024-09-19 at 01.57.19.jpeg
-backend/src/uploads/1728379486510-IMG20240804102019.jpg
-backend/src/uploads/1728381368029-Screenshot 2024-10-08 125539.png
-backend/src/uploads/1728383763242-IMG20240626154928.jpg
-backend/src/uploads/1728383763245-IMG20240630222514.jpg
-backend/src/uploads/1728383763248-IMG20240715083258.jpg
-backend/src/uploads/1728407902623-WhatsApp Image 2024-09-13 at 21.18.01.jpeg
-backend/src/uploads/1728407902626-WhatsApp Image 2024-09-19 at 01.57.19.jpeg
-backend/src/uploads/1728407902628-WhatsApp Image 2024-09-26 at 19.08.40.jpeg
-backend/src/uploads/1728465317868-WhatsApp Image 2024-09-13 at 21.18.01.jpeg
-backend/src/uploads/1728465317872-WhatsApp Image 2024-09-19 at 01.57.19.jpeg
-backend/src/uploads/1728465317874-WhatsApp Image 2024-09-26 at 19.08.40.jpeg
-backend/src/uploads/1728466081205-WhatsApp Image 2024-09-13 at 21.18.01.jpeg
-backend/src/uploads/1728466081208-WhatsApp Image 2024-09-19 at 01.57.19.jpeg
-backend/src/uploads/1728466081210-WhatsApp Image 2024-09-26 at 19.08.40.jpeg
-backend/src/uploads/1728478723351-WhatsApp Image 2024-09-13 at 21.18.01.jpeg
-backend/src/uploads/1728478723354-WhatsApp Image 2024-09-19 at 01.57.19.jpeg
-backend/src/uploads/1728478723356-WhatsApp Image 2024-09-26 at 19.08.40.jpeg
-backend/src/uploads/1728478854289-WhatsApp Image 2024-09-13 at 21.18.01.jpeg
-backend/src/uploads/1728478854291-WhatsApp Image 2024-09-19 at 01.57.19.jpeg
-backend/src/uploads/1728493899531-WhatsApp Image 2024-09-13 at 21.18.01.jpeg
-backend/src/uploads/1728493899539-WhatsApp Image 2024-09-19 at 01.57.19.jpeg
-backend/src/uploads/1728493899544-WhatsApp Image 2024-09-26 at 19.08.40.jpeg
-backend/src/uploads/1728545577215-WhatsApp Image 2024-09-19 at 01.57.19.jpeg
-backend/src/uploads/1728547853505-WhatsApp Image 2024-09-19 at 01.57.19.jpeg
-backend/src/uploads/1728571809994-cat.png
-backend/src/uploads/1728576996331-IMG20240626154928.jpg
-backend/src/uploads/1728576996335-IMG20240804102019.jpg
-backend/src/uploads/1728577004560-IMG20240626154928.jpg
-backend/src/uploads/1728577004561-IMG20240804102019.jpg
-backend/src/uploads/1728630293993-IMG20240626154928.jpg
-backend/src/uploads/1728630309140-IMG20240626154928.jpg
-backend/src/uploads/1728644875205-IMG20240626154928.jpg
-backend/src/uploads/1728713770548-Desktop - 1.png
-frontend/animal-adoption/.env
