@@ -69,12 +69,12 @@ jobs:
             # Backend deploy
             cd /var/www/adoptProject/backend
             git pull origin master
-            npm install
-            npm run build
-            pm2 restart adopt-backend
+            /home/paluras/.nvm/versions/node/v22.2.0/bin/npm install
+            /home/paluras/.nvm/versions/node/v22.2.0/bin/npm run build
+            /home/paluras/.nvm/versions/node/v22.2.0/bin/pm2 restart adopt-backend
 
             # Frontend deploy
             cd /var/www/adoptProject/frontend/animal-adoption
             git pull origin master
-            npm install
-            npm run build
+            /home/paluras/.nvm/versions/node/v22.2.0/bin/npm install
+            /home/paluras/.nvm/versions/node/v22.2.0/bin/npm run build
