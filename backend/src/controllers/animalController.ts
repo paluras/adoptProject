@@ -1,7 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import { AnimalModel } from '../models/animalModel';
 import { AnimalInput, AnimalFilters } from "../schemas/animalSchema";
+import { ParsedQs } from "qs";
 
+interface CustomRequest extends Request {
+    user: {
+        id: number;
+    };
+}
 export class AnimalController {
     private animalModel: AnimalModel;
 
@@ -9,7 +15,7 @@ export class AnimalController {
         this.animalModel = new AnimalModel();
     }
 
-    private extractAnimalInput(body: any): AnimalInput {
+    private extractAnimalInput(body: AnimalInput): AnimalInput {
 
         return {
             name: body.name,
@@ -22,22 +28,23 @@ export class AnimalController {
         };
     }
 
-    private extractFilters(query: any): AnimalFilters {
+    private extractFilters(query: ParsedQs): AnimalFilters {
         const filters: AnimalFilters = {};
 
-        if (query.species) filters.species = query.species;
-        if (query.sex) filters.sex = query.sex;
-        if (query.breed) filters.breed = query.breed;
-        if (query.status) filters.status = query.status;
-        if (query.ageMin) filters.ageMin = Number(query.ageMin);
-        if (query.ageMax) filters.ageMax = Number(query.ageMax);
+        if (typeof query.species === 'string') filters.species = query.species;
+        if (typeof query.sex === 'string') filters.sex = query.sex;
+        if (typeof query.breed === 'string') filters.breed = query.breed;
+        if (typeof query.status === 'string') filters.status = query.status;
+        if (typeof query.ageMin === 'string') filters.ageMin = Number(query.ageMin);
+        if (typeof query.ageMax === 'string') filters.ageMax = Number(query.ageMax);
 
         return filters;
     }
 
     addAnimal = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const userId: number = (req as any).user.id;
+
+            const userId: number = (req as CustomRequest).user.id;
 
             const animalInput = this.extractAnimalInput(req.body);
 

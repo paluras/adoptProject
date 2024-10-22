@@ -9,7 +9,7 @@ export class MedicalHistoryController {
     constructor() {
         this.medicalHistoryModel = new MedicalHistoryModel();
     }
-    private extractMedicalInput(body: any): MedicalHistoryInput {
+    private extractMedicalInput(body: MedicalHistoryInput): MedicalHistoryInput {
         return {
             animal_id: body.animal_id,
             vaccines: body.vaccines,

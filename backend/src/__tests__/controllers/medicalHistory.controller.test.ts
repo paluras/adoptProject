@@ -1,6 +1,6 @@
 import { MedicalHistoryController } from '../../controllers/medicalHistoryController';
 import { MedicalHistoryModel } from '../../models/medicalHistoryModel';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { AppError, ErrorHandler, ErrorType } from '../../utils/ErrorHandler';
 import { MedicalHistoryInput } from '../../schemas/medicalHistorySchema';
 

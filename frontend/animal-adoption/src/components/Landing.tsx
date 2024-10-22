@@ -13,6 +13,7 @@ const LandingParallax: React.FC = () => {
     };
 
     const createParallaxSpring = (xOffset: number, yOffset: number) => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         return useSpring({
             to: {
                 transform: `translate3d(${mousePosition.x * xOffset}px, ${mousePosition.y * yOffset}px, 0)`,

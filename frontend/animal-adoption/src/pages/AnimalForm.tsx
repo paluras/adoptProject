@@ -5,22 +5,14 @@ import ImageUpload from '../components/FormComponents/ImageUpload';
 import InputForm from '../components/FormComponents/InputForm';
 import SelectForm from '../components/FormComponents/SelectForm';
 import MedicalForm from '../components/FormComponents/FormTestMedical';
-// import { useDispatch } from 'react-redux';
-// import { logout } from '../store/userSlice';
 import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from 'rehype-sanitize';
 import { handleAxiosError } from '../utils/handleAxiosError';
 import { appendImages } from '../utils/formUtils';
-import useFetch from '../hooks/useFetch';
 
 const AnimalForm: React.FC = () => {
-    // const dispatch = useDispatch();
-
 
     const [animalId, setAnimalId] = useState();
-    const { data: user, loading: userLoading, error: userError } = useFetch(`${import.meta.env.VITE_API_URL}/api/auth/user`);
-    console.log(user, userLoading, userError);
-
     const { formState, handleInputChange, handleFileChange, setFormState } = useForm({
         name: '',
         age: '',
@@ -34,7 +26,6 @@ const AnimalForm: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
         const formData = new FormData();
         formData.append('name', formState.name);
         formData.append('age', formState.age.toString());
@@ -57,9 +48,7 @@ const AnimalForm: React.FC = () => {
 
         } catch (error) {
             if (handleAxiosError(error) === "Access denied, token missing") {
-                // dispatch(logout())
                 alert('Login in order to add a animal')
-
             } else {
                 alert(handleAxiosError(error))
             }

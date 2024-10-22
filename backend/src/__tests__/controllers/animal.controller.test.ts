@@ -1,21 +1,12 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { AnimalController } from '../../controllers/animalController';
 import { AnimalModel } from '../../models/animalModel';
 import { AppError, ErrorHandler, ErrorType } from '../../utils/ErrorHandler';
 import { createAnimalValidation, validateAnimal } from '../../middleware/validateMiddleware';
-import { Animal, AnimalInput } from '../../schemas/animalSchema';
-import { mock } from 'node:test';
-// import { MedicalHistoryModel } from '../../models/medicalHistoryModel';
-// import { ErrorHandler, ErrorType } from '../../utils/ErrorHandler';
-// import { AppError } from '../../utils/ErrorHandler';
-// import { Animal, AnimalInput } from '../../schemas/animalSchema';
-// import express from 'express';
-// import request from 'supertest';
+import { Animal } from '../../schemas/animalSchema';
 
 jest.mock('../../models/animalModel');
 const MockedAnimalModel = AnimalModel as jest.MockedClass<typeof AnimalModel>;
-
-
 
 type MockResponse = Partial<Response> & {
     json: jest.Mock;

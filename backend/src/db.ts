@@ -2,7 +2,7 @@ import { Pool } from 'pg';
 import dotenv from 'dotenv';
 
 
-dotenv.config(); // This loads .env by default
+dotenv.config();
 
 
 const pool = new Pool({

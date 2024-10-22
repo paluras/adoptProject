@@ -58,7 +58,7 @@ const FormUpdate: React.FC = () => {
                     dewormings: animalHistory?.dewormings || '',
                 });
             } catch (error) {
-                console.error(handleAxiosError(error));
+                handleAxiosError(error)
             }
         };
         fetchAnimal();
@@ -97,7 +97,7 @@ const FormUpdate: React.FC = () => {
 
     const handleSubmitMedicalInfo = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(medicalInfo, id);
+
 
         try {
             await axios.put(`${import.meta.env.VITE_API_URL}/api/medical-history/${id}`,
@@ -110,8 +110,8 @@ const FormUpdate: React.FC = () => {
         } catch (error) {
             alert(handleAxiosError(error))
 
-            console.log(handleAxiosError(error));
-            handleAxiosError(error)
+
+
         }
     };
 

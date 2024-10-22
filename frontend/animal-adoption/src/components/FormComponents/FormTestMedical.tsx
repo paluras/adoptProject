@@ -32,7 +32,7 @@ const MedicalForm: React.FC<MedicalFormProps> = ({ animalId }) => {
             navigate(`/${animalId}`);
         } catch (error) {
             alert(handleAxiosError(error))
-            console.log(handleAxiosError(error));
+
             handleAxiosError(error)
         }
     };

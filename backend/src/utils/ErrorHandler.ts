@@ -1,4 +1,4 @@
-import { NextFunction, Response, Request } from "express";
+import { Response, Request } from "express";
 
 export enum ErrorType {
     VALIDATION = 'VALIDATION',
@@ -34,7 +34,7 @@ export class ErrorHandler {
         return new AppError(message, type, statusCodes[type]);
     }
 
-    static handle(err: any, req: Request, res: Response, next: NextFunction) {
+    static handle(err: Error, req: Request, res: Response) {
         if (err instanceof AppError) {
             return res.status(err.statusCode).json({
                 status: 'error',

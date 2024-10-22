@@ -17,14 +17,12 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
     const [status, setStatus] = useState<string>('Valabil');
     const [sex, setSex] = useState<string>('');
 
-    const { ref: mainContentRef, inView } = useInView({
+    const { ref: mainContentRef } = useInView({
         threshold: 0.1,
         onChange: (inView) => {
             setShowFilterButton(inView);
         }
     });
-    console.log(inView);
-
 
     const query = new URLSearchParams();
     if (species) query.append('species', species);

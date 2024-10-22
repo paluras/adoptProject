@@ -96,7 +96,7 @@ describe('Animal Model', () => {
         const createAnimal = await animalModel.addAnimal(animalInput)
 
 
-        expect(createAnimal).toBeDefined;
+        expect(createAnimal).toBeDefined();
         expect(createAnimal.name).toBe('Test1');
     });
     it("should not insert a invalid animal - negative age", async () => {
@@ -142,7 +142,7 @@ describe('Animal Model', () => {
 
 
         expect(updatedAnimal.name).toBe('Nona')
-        expect(updatedAnimal == originalAnimal).toBeFalsy
+        expect(updatedAnimal == originalAnimal).toBeFalsy()
     })
 
     it('should delete a animal', async () => {

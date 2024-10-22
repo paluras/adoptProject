@@ -84,7 +84,7 @@ describe("Medical History Model", () => {
 
         const updatedValues = await medicalHistory.updateMedicalHistory(medicalHistoryInputUpdated(animalId))
 
-        expect(updatedValues.id === medicalHistoryResult.id).toBeTruthy;
+        expect(updatedValues.id === medicalHistoryResult.id).toBeTruthy();
         expect(updatedValues.vaccines).not.toEqual(medicalHistoryResult.vaccines);
     })
 
