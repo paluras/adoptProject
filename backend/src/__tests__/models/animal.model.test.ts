@@ -1,3 +1,6 @@
+/* eslint-disable max-lines-per-function */
+/* eslint-disable no-undef */
+/* eslint-disable sonarjs/no-duplicate-string */
 import pool from '../../db'; // Make sure this is connected to the test DB
 import { AnimalModel } from '../../models/animalModel';
 import { AnimalInput } from '../../schemas/animalSchema';
@@ -18,7 +21,10 @@ const testAnimalInput = (userId: number): AnimalInput => ({
     imageUrls: ['url1', 'url2'],
     sex: 'Femela',
     description: 'Friendly cat',
-    userId
+    userId,
+    country: '',
+    city: '',
+    weight: 0
 });
 
 const createTestAnimal = async (userId: number): Promise<number> => {
@@ -91,7 +97,10 @@ describe('Animal Model', () => {
             imageUrls: ['url1', 'url2'],
             sex: 'Femela',
             description: 'Friendly cat',
-            userId
+            userId,
+            country: '',
+            city: '',
+            weight: 0
         };
         const createAnimal = await animalModel.addAnimal(animalInput)
 
@@ -110,7 +119,10 @@ describe('Animal Model', () => {
             imageUrls: ['url1', 'url2'],
             sex: 'Femela',
             description: 'Friendly cat',
-            userId
+            userId,
+            country: '',
+            city: '',
+            weight: 0
         };
 
         await expect(animalModel.addAnimal(animalInput))
@@ -134,7 +146,10 @@ describe('Animal Model', () => {
             status: 'Valabil',
             imageUrls: ['url1', 'url2'],
             sex: 'Mascul',
-            description: 'Friendly cat'
+            description: 'Friendly cat',
+            country: '',
+            city: '',
+            weight: 0
         };
 
         const updatedAnimal = await animalModel.

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useForm } from '../../hooks/useForm';
@@ -7,9 +7,15 @@ import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from 'rehype-sanitize';
 import { handleAxiosError } from '../../utils/handleAxiosError';
 import { appendImages } from '../../utils/formUtils';
+import InputForm from './InputForm';
+import AutoCompleteSelect from './AutoCompleteSelect';
+import { countriesSet, countryMap } from '../../utils/locationData';
+
 
 const FormUpdate: React.FC = () => {
     const { id } = useParams<{ id: string }>();
+    const [availableCities, setAvailableCities] = useState<string[]>([]);
+
 
     const { formState: basicInfo, handleInputChange: handleBasicInfoChange, handleFileChange, setFormState: setBasicInfo } = useForm({
         name: '',
@@ -20,7 +26,10 @@ const FormUpdate: React.FC = () => {
         imageFiles: [] as File[],
         imageUrl: '',
         description: '',
-        sex: ''
+        sex: '',
+        country: '',
+        city: '',
+        weight: '',
     });
 
     const { formState: medicalInfo, handleInputChange: handleMedicalInfoChange, setFormState: setMedicalInfo } = useForm({
@@ -29,6 +38,31 @@ const FormUpdate: React.FC = () => {
         notes: '',
         treatments: '',
     });
+
+
+    // Refactor
+    const handleCountryChange = (value: string) => {
+
+        const isValidCountry = countriesSet.has(value);
+
+        setMedicalInfo(prev => ({
+            ...prev,
+            country: value,
+            city: '',
+            countryError: isValidCountry ? null : 'Invalid country selected.',
+        }));
+        const citiesForCountry = isValidCountry ? countryMap.get(value) || [] : [];
+        setAvailableCities(citiesForCountry);
+    };
+
+    // Refactor
+
+    const handleCityChange = (value: string) => {
+        setMedicalInfo(prev => ({
+            ...prev,
+            city: value,
+        }));
+    };
 
     useEffect(() => {
         const fetchAnimal = async () => {
@@ -49,6 +83,9 @@ const FormUpdate: React.FC = () => {
                     imageUrl: animal.image_url || null,
                     description: animal.description,
                     sex: animal.sex,
+                    country: animal.country,
+                    city: animal.city,
+                    weight: animal.weight,
                 });
 
                 setMedicalInfo({
@@ -68,6 +105,18 @@ const FormUpdate: React.FC = () => {
 
     const handleSubmitBasicInfo = async (e: React.FormEvent) => {
         e.preventDefault();
+
+
+        const isValidCountry = countriesSet.has(basicInfo.country);
+        const isValidCity =
+            isValidCountry && countryMap.get(basicInfo.country)?.includes(basicInfo.city);
+
+
+        if (!isValidCountry || !isValidCity) {
+            alert('You must choose a valid country-city pair.');
+            return;
+        }
+
         const formData = new FormData();
         formData.append('name', basicInfo.name);
         formData.append('age', basicInfo.age.toString());
@@ -75,7 +124,10 @@ const FormUpdate: React.FC = () => {
         formData.append('breed', basicInfo.breed);
         formData.append('status', basicInfo.status);
         formData.append('description', basicInfo.description);
-        formData.append('sex', basicInfo.sex)
+        formData.append('sex', basicInfo.sex);
+        formData.append('country', basicInfo.country);
+        formData.append('city', basicInfo.city);
+        formData.append('weight', Number(basicInfo.weight).toFixed(2));
 
         appendImages(formData, basicInfo)
 
@@ -88,6 +140,7 @@ const FormUpdate: React.FC = () => {
                     withCredentials: true,
                 }
             );
+            alert("Succesfully Updated the Animal");
 
         } catch (error) {
             alert(handleAxiosError(error))
@@ -98,7 +151,6 @@ const FormUpdate: React.FC = () => {
     const handleSubmitMedicalInfo = async (e: React.FormEvent) => {
         e.preventDefault();
 
-
         try {
             await axios.put(`${import.meta.env.VITE_API_URL}/api/medical-history/${id}`,
                 {
@@ -107,11 +159,10 @@ const FormUpdate: React.FC = () => {
                 }, {
                 withCredentials: true
             });
+
+            alert("Succesfully update the medical Form");
         } catch (error) {
             alert(handleAxiosError(error))
-
-
-
         }
     };
 
@@ -187,6 +238,34 @@ const FormUpdate: React.FC = () => {
                         <option value="Femela">Femela</option>
                     </select>
                 </div>
+
+                <InputForm
+                    labelName='Greutate'
+                    type={'number'}
+                    name={'weight'}
+                    formValue={basicInfo.weight}
+                    placeHolder={'Greutate'}
+                    onChange={handleBasicInfoChange} />
+
+                {basicInfo.city && (
+                    <AutoCompleteSelect
+                        options={Array.from(countriesSet)}
+                        value={basicInfo.country}
+                        onChange={handleCountryChange}
+                        placeholder="Select a country"
+                        label="Country"
+                    />
+                )}
+
+                {basicInfo.country && (
+                    <AutoCompleteSelect
+                        options={availableCities}
+                        value={basicInfo.city}
+                        onChange={handleCityChange}
+                        placeholder="Select a city"
+                        label="City"
+                    />
+                )}
                 <div>
                     <label htmlFor="status">Status</label>
                     <select
@@ -196,8 +275,8 @@ const FormUpdate: React.FC = () => {
                         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
                     >
                         <option value="">Select Status</option>
-                        <option value="available">Available</option>
-                        <option value="adopted">Adopted</option>
+                        <option value="Valabil">Available</option>
+                        <option value="Adoptat">Adopted</option>
                     </select>
                 </div>
 

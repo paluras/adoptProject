@@ -3,7 +3,7 @@ import { MedicalHistoryInput } from '../schemas/medicalHistorySchema';
 
 export class MedicalHistoryModel {
 
-    addMedicalHistory = async (input: MedicalHistoryInput) => {
+    addMedicalHistory = async (input: MedicalHistoryInput): Promise<MedicalHistoryModel> => {
 
         const result = await pool.query(
             'INSERT INTO medical_history (animal_id, vaccines, dewormings, treatments, notes) VALUES ($1, $2, $3, $4, $5) RETURNING *',
@@ -13,7 +13,7 @@ export class MedicalHistoryModel {
         return result.rows[0];
     };
 
-    updateMedicalHistory = async (input: MedicalHistoryInput) => {
+    updateMedicalHistory = async (input: MedicalHistoryInput): Promise<MedicalHistoryModel> => {
         const client = await pool.connect();
         try {
             await client.query('BEGIN');
@@ -50,12 +50,9 @@ export class MedicalHistoryModel {
             client.release();
         }
     }
-    getMedicalHistoryByAnimalId = async (animalId: number) => {
+    getMedicalHistoryByAnimalId = async (animalId: number): Promise<MedicalHistoryModel> => {
         const medicalHistoryResult = await pool.query('SELECT * FROM medical_history WHERE animal_id = $1', [animalId]);
         const medicalHistory = medicalHistoryResult.rows[0];
-        if (!medicalHistory) {
-            return null
-        }
         return medicalHistory;
 
     };

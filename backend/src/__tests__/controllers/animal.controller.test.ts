@@ -1,3 +1,5 @@
+/* eslint-disable max-lines-per-function */
+/* eslint-disable no-undef */
 import { Request, Response } from 'express';
 import { AnimalController } from '../../controllers/animalController';
 import { AnimalModel } from '../../models/animalModel';
@@ -5,6 +7,7 @@ import { AppError, ErrorHandler, ErrorType } from '../../utils/ErrorHandler';
 import { createAnimalValidation, validateAnimal } from '../../middleware/validateMiddleware';
 import { Animal } from '../../schemas/animalSchema';
 
+// eslint-disable-next-line no-undef
 jest.mock('../../models/animalModel');
 const MockedAnimalModel = AnimalModel as jest.MockedClass<typeof AnimalModel>;
 
@@ -30,7 +33,7 @@ describe('AnimalController', () => {
             updateAnimal: jest.fn(),
             deleteAnimal: jest.fn(),
             validateAnimalInput: jest.fn(),
-        } as jest.Mocked<AnimalModel>;
+        } as unknown as jest.Mocked<AnimalModel>;
 
         MockedAnimalModel.mockImplementation(() => mockAnimalModel);
 
@@ -50,6 +53,7 @@ describe('AnimalController', () => {
         mockNext = jest.fn();
     });
 
+    // eslint-disable-next-line max-lines-per-function
     describe('addAnimal', () => {
         it('should add an animal successfully', async () => {
 
@@ -92,6 +96,7 @@ describe('AnimalController', () => {
             mockRequest.files = [{ filename: 'image.jpg' }] as unknown as Express.Multer.File[];
 
             await Promise.all(createAnimalValidation
+                // eslint-disable-next-line max-nested-callbacks
                 .map(validation => validation(mockRequest as Request, mockResponse as Response, mockNext)));
             validateAnimal(mockRequest as Request, mockResponse as Response, mockNext);
 
@@ -130,8 +135,19 @@ describe('AnimalController', () => {
     describe('getAllAnimals', () => {
         it('should get all animals', async () => {
             const mockAnimals: Animal[] = [
-                { id: 1, name: 'Fluffy', species: 'Caine', age: 3, breed: 'Bulldog', status: 'Valabil', sex: 'Mascul', description: 'Friendly dog', image_url: ['image1.jpg'], user_id: 1 },
-                { id: 2, name: 'Buddy', species: 'Caine', age: 2, breed: 'Beagle', status: 'Valabil', sex: 'Mascul', description: 'Playful dog', image_url: ['image2.jpg'], user_id: 1 },
+                {
+                    // eslint-disable-next-line sonarjs/no-duplicate-string
+                    id: 1, name: 'Fluffy', species: 'Caine', age: 3, breed: 'Bulldog', status: 'Valabil', sex: 'Mascul', description: 'Friendly dog', image_url: ['image1.jpg'], user_id: 1,
+                    country: '',
+                    city: '',
+                    weight: 0
+                },
+                {
+                    id: 2, name: 'Buddy', species: 'Caine', age: 2, breed: 'Beagle', status: 'Valabil', sex: 'Mascul', description: 'Playful dog', image_url: ['image2.jpg'], user_id: 1,
+                    country: '',
+                    city: '',
+                    weight: 0
+                },
             ];
             mockAnimalModel.getAll.mockResolvedValue(mockAnimals);
             await animalController.getAllAnimals(
@@ -149,7 +165,12 @@ describe('AnimalController', () => {
 
     describe('getAnimalById', () => {
         it('should get an animal by id', async () => {
-            const mockAnimal: Animal = { id: 1, name: 'Fluffy', species: 'Caine', age: 3, breed: 'Bulldog', status: 'Valabil', sex: 'Mascul', description: 'Friendly dog', image_url: ['image1.jpg'], user_id: 1 }
+            const mockAnimal: Animal = {
+                id: 1, name: 'Fluffy', species: 'Caine', age: 3, breed: 'Bulldog', status: 'Valabil', sex: 'Mascul', description: 'Friendly dog', image_url: ['image1.jpg'], user_id: 1,
+                country: '',
+                city: '',
+                weight: 0
+            }
             mockRequest.params = { id: '1' };
             mockAnimalModel.getById.mockResolvedValue(mockAnimal);
             await animalController.getAnimalById(mockRequest as Request, mockResponse as Response, mockNext);
@@ -162,8 +183,10 @@ describe('AnimalController', () => {
 
 
         });
+        // eslint-disable-next-line sonarjs/no-duplicate-string
         it('should call next with not found error if animal does not exist', async () => {
             mockRequest.params = { id: '1' };
+            // eslint-disable-next-line sonarjs/no-duplicate-string
             mockAnimalModel.getById.mockRejectedValue(ErrorHandler.createError('Animal not found', ErrorType.NOT_FOUND));
             await animalController.getAnimalById(mockRequest as Request, mockResponse as Response, mockNext);
 
@@ -174,8 +197,18 @@ describe('AnimalController', () => {
 
     describe('updateAnimal', () => {
         it('should update an animal successfully', async () => {
-            const mockAnimal: Animal = { id: 1, name: 'Fluffy', species: 'Caine', age: 3, breed: 'Bulldog', status: 'Valabil', sex: 'Mascul', description: 'Friendly dog', image_url: ['image1.jpg'], user_id: 1 };
-            const updatedAnimal: Animal = { id: 1, name: 'Fluffy', species: 'Caine', age: 4, breed: 'Bulldog', status: 'Valabil', sex: 'Mascul', description: 'Friendly dog', image_url: ['image1.jpg'], user_id: 1 };
+            const mockAnimal: Animal = {
+                id: 1, name: 'Fluffy', species: 'Caine', age: 3, breed: 'Bulldog', status: 'Valabil', sex: 'Mascul', description: 'Friendly dog', image_url: ['image1.jpg'], user_id: 1,
+                country: '',
+                city: '',
+                weight: 0
+            };
+            const updatedAnimal: Animal = {
+                id: 1, name: 'Fluffy', species: 'Caine', age: 4, breed: 'Bulldog', status: 'Valabil', sex: 'Mascul', description: 'Friendly dog', image_url: ['image1.jpg'], user_id: 1,
+                country: '',
+                city: '',
+                weight: 0
+            };
             mockRequest.params = { id: '1' };
             mockRequest.body = { age: 4 };
 

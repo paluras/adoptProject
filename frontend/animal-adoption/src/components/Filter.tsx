@@ -1,7 +1,9 @@
 // src/components/Filter.tsx
 
-import React from 'react';
+import React, { useState } from 'react';
 import useWindowSize from '../hooks/useWindowSize';
+import AutoCompleteSelect from './FormComponents/AutoCompleteSelect';
+import { countriesSet, countryMap } from '../utils/locationData';
 
 interface FilterProps {
     species: string;
@@ -10,6 +12,10 @@ interface FilterProps {
     setStatus: React.Dispatch<React.SetStateAction<string>>;
     sex: string;
     setSex: React.Dispatch<React.SetStateAction<string>>;
+    country: string;
+    setCountry: React.Dispatch<React.SetStateAction<string>>;
+    city: string;
+    setCity: React.Dispatch<React.SetStateAction<string>>;
     isFilterOpen: boolean;
     setIsFilterOpen: React.Dispatch<React.SetStateAction<boolean>>;
     handleFilterSubmit: (e: React.FormEvent) => void;
@@ -22,11 +28,30 @@ const Filter: React.FC<FilterProps> = ({
     setStatus,
     sex,
     setSex,
+    country,
+    setCountry,
+    city,
+    setCity,
     isFilterOpen,
     setIsFilterOpen,
     handleFilterSubmit,
 }) => {
-    const { width } = useWindowSize(); // Get the current window size
+    const { width } = useWindowSize();
+    const [availableCities, setAvailableCities] = useState<string[]>([]);
+    const [countryError, setCountryError] = useState<string | null>(null);
+
+    const handleCountryChange = (value: string) => {
+        const isValidCountry = countriesSet.has(value);
+        setCountry(value);
+        setCity('');
+        setCountryError(isValidCountry ? null : 'Invalid country selected.');
+        const citiesForCountry = isValidCountry ? countryMap.get(value) || [] : [];
+        setAvailableCities(citiesForCountry);
+    };
+
+    const handleCityChange = (value: string) => {
+        setCity(value);
+    };
 
     return (
         <>
@@ -54,6 +79,28 @@ const Filter: React.FC<FilterProps> = ({
                             <option value="Adoptat">Adopted</option>
                         </select>
 
+                        <AutoCompleteSelect
+                            options={Array.from(countriesSet)}
+                            value={country}
+                            onChange={handleCountryChange}
+                            placeholder="Select a country"
+                            label="Country"
+                        />
+
+                        {countryError && (
+                            <span className="text-red-500">{countryError}</span>
+                        )}
+
+                        {country && !countryError && (
+                            <AutoCompleteSelect
+                                options={availableCities}
+                                value={city}
+                                onChange={handleCityChange}
+                                placeholder="Select a city"
+                                label="City"
+                            />
+                        )}
+
                         <select
                             value={sex}
                             onChange={(e) => setSex(e.target.value)}
@@ -74,12 +121,20 @@ const Filter: React.FC<FilterProps> = ({
                 </div>
             ) : (
                 // Mobile Filter
-                <div className={`lg:hidden fixed inset-x-0 bottom-0 z-50 transform ${isFilterOpen ? 'translate-y-0' : 'translate-y-full'} transition-transform duration-300 ease-in-out`}>
+                <div
+                    className={`lg:hidden fixed inset-x-0 bottom-0 z-50 transform ${isFilterOpen ? 'translate-y-0' : 'translate-y-full'
+                        } transition-transform duration-300 ease-in-out`}
+                >
                     <div className="bg-white rounded-t-3xl shadow-lg p-6">
                         <div className="flex justify-between items-center mb-4">
                             <h2 className="text-lg font-semibold">Filters</h2>
                             <button onClick={() => setIsFilterOpen(false)} className="text-gray-500">
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <svg
+                                    className="w-6 h-6"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </button>
@@ -104,6 +159,28 @@ const Filter: React.FC<FilterProps> = ({
                                 <option value="Valabil">Available</option>
                                 <option value="Adoptat">Adopted</option>
                             </select>
+
+                            <AutoCompleteSelect
+                                options={Array.from(countriesSet)}
+                                value={country}
+                                onChange={handleCountryChange}
+                                placeholder="Select a country"
+                                label="Country"
+                            />
+
+                            {countryError && (
+                                <span className="text-red-500">{countryError}</span>
+                            )}
+
+                            {country && !countryError && (
+                                <AutoCompleteSelect
+                                    options={availableCities}
+                                    value={city}
+                                    onChange={handleCityChange}
+                                    placeholder="Select a city"
+                                    label="City"
+                                />
+                            )}
 
                             <select
                                 value={sex}

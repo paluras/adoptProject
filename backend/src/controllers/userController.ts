@@ -5,19 +5,20 @@ import jwt from 'jsonwebtoken';
 import { User } from '../schemas/userSchema';
 import { UserModel } from '../models/userModel';
 import { ErrorHandler, ErrorType } from '../utils/ErrorHandler';
+import process = require('process');
 
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
 export class UserController {
-    private userModel: UserModel;
+    private readonly userModel: UserModel;
 
     constructor() {
         this.userModel = new UserModel();
     }
 
-    registerUser = async (req: Request, res: Response, next: NextFunction) => {
+    registerUser = async (req: Request, res: Response, next: NextFunction): Promise<Response | NextFunction | void> => {
         try {
             const { username, password } = req.body;
             const hashedPassword: string = await bcrypt.hash(password, 10);
@@ -32,11 +33,11 @@ export class UserController {
                 }
             });
         } catch (error) {
-            next(error)
+            return next(error)
         }
     };
 
-    loginUser = async (req: Request, res: Response, next: NextFunction) => {
+    loginUser = async (req: Request, res: Response, next: NextFunction): Promise<Response | NextFunction | void> => {
         try {
             const { username, password } = req.body;
 
@@ -65,11 +66,11 @@ export class UserController {
                 id: user.id
             });
         } catch (error) {
-            next(error)
+            return next(error);
         }
     };
 
-    logoutUser = async (req: Request, res: Response, next: NextFunction) => {
+    logoutUser = (req: Request, res: Response, next: NextFunction): Response | void => {
         try {
             res.clearCookie('token', {
                 httpOnly: true,
@@ -78,11 +79,11 @@ export class UserController {
             });
             return res.status(200).json({ message: 'Logged out successfully' });
         } catch (error) {
-            next(error)
+            return next(error);
         }
     }
 
-    getUser = async (req: Request, res: Response, next: NextFunction) => {
+    getUser = (req: Request, res: Response, next: NextFunction): Response | void => {
         try {
             const { username, isAdmin } = req.body;
 
@@ -94,7 +95,7 @@ export class UserController {
             }
             return res.status(200).json({ username, isAdmin });
         } catch (error) {
-            next(error)
+            return next(error)
         }
     }
 }

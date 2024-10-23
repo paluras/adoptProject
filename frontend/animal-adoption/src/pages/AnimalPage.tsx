@@ -15,7 +15,6 @@ import rehypeSanitize from "rehype-sanitize";
 const AnimalDetails: React.FC = () => {
 
     const { id } = useParams()
-
     const {
         data: animals,
         loading: animalLoading,
@@ -36,13 +35,17 @@ const AnimalDetails: React.FC = () => {
         { prefix: "Vaccinuri", value: medicalHistory?.vaccines },
         { prefix: "Note", value: medicalHistory?.notes },
         { prefix: "Deparazitare", value: medicalHistory?.dewormings },
-        { prefix: "Tratamente", value: medicalHistory?.treatments }
+        { prefix: "Tratamente", value: medicalHistory?.treatments },
     ];
     const infoData = [
         { prefix: "Specie", value: animals?.species },
         { prefix: "Rasa", value: animals?.breed },
         { prefix: "Sex", value: animals?.sex },
-        { prefix: "Varsta", value: animals?.age === 1 ? animals.age + ' An' : animals?.age + ' Ani' }
+        { prefix: "Varsta", value: animals?.age === 1 ? animals.age + ' An' : animals?.age + ' Ani' },
+        { prefix: "Greutate", value: animals?.weight + ' Kg' },
+        { prefix: "Oras", value: animals?.city },
+        { prefix: "Tara", value: animals?.country },
+        { prefix: "Status", value: animals?.status },
     ]
 
 
@@ -90,7 +93,7 @@ const AnimalDetails: React.FC = () => {
                 </div>
             </div>
             {(userId === animals?.user_id || isAdmin) && (
-                <div className="w-full gap-4 flex items-center justify-center p-10">
+                <div className="w-full flex-col sm:flex-row  gap-4 flex items-center justify-center p-10">
                     <Link to={`/update-form/${id}`}>
                         <button className="w-60 p-10 bg-rose-500 text-white py-2 rounded-md hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-400">
                             Update the form

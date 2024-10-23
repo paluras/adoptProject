@@ -9,10 +9,13 @@ export interface Animal {
     status: 'Valabil' | 'Adoptat';
     image_url: string[];
     user_id: number;
+    country: string;
+    city: string;
+    weight: number;
 }
 
 
-export type AnimalInput = {
+export interface AnimalInput {
     name: string;
     species: string;
     age: number;
@@ -23,9 +26,14 @@ export type AnimalInput = {
     description: string;
     userId?: number;
     id?: number;
+    country: string;
+    city: string;
+    weight: number;
 }
 
 export interface AnimalFilters {
+    country?: string;
+    city?: string;
     species?: string;
     ageMin?: number;
     ageMax?: number;

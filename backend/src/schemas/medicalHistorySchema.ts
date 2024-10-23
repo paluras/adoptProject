@@ -8,7 +8,8 @@ export interface MedicalHistorySchema {
     vaccines: string;
 }
 
-export type MedicalHistoryInput = {
+export interface MedicalHistoryInput {
+
     animal_id: number;
     vaccines: string;
     dewormings: string;

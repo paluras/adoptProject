@@ -16,6 +16,8 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
     const [species, setSpecies] = useState<string>('');
     const [status, setStatus] = useState<string>('Valabil');
     const [sex, setSex] = useState<string>('');
+    const [city, setCity] = useState<string>('');
+    const [country, setCountry] = useState<string>('');
 
     const { ref: mainContentRef } = useInView({
         threshold: 0.1,
@@ -28,6 +30,8 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
     if (species) query.append('species', species);
     if (status) query.append('status', status);
     if (sex) query.append('sex', sex);
+    if (city) query.append('city', city);
+    if (country) query.append('country', country);
 
     const { data: animals, loading: loadingAnimals, error: errorsAnimals } = useFetch<Animal[]>(`${import.meta.env.VITE_API_URL}/api/animals?${query.toString()}`);
     const navigate = useNavigate();
@@ -58,6 +62,10 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
                 setStatus={setStatus}
                 sex={sex}
                 setSex={setSex}
+                setCity={setCity}
+                setCountry={setCountry}
+                country={country}
+                city={city}
                 isFilterOpen={isFilterOpen}
                 setIsFilterOpen={setIsFilterOpen}
                 handleFilterSubmit={handleFilterSubmit} />
