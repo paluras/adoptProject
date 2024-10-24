@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+
 import { login } from '../store/userSlice';
 import { handleAxiosError } from '../utils/handleAxiosError';
 
@@ -13,7 +14,7 @@ const LoginPage: React.FC = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const handleLogin = async (event: React.FormEvent) => {
+    const handleLogin = async (event: React.FormEvent): Promise<void> => {
         event.preventDefault();
         setError('');
         setLoading(true);

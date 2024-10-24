@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import MDEditor from '@uiw/react-md-editor';
 import axios from 'axios';
-import { useForm } from '../hooks/useForm';
+import React, { useState } from 'react';
+import rehypeSanitize from 'rehype-sanitize';
+
+import AutoCompleteSelect from '../components/FormComponents/AutoCompleteSelect';
+import MedicalForm from '../components/FormComponents/FormTestMedical';
 import ImageUpload from '../components/FormComponents/ImageUpload';
 import InputForm from '../components/FormComponents/InputForm';
 import SelectForm from '../components/FormComponents/SelectForm';
-import MedicalForm from '../components/FormComponents/FormTestMedical';
-import MDEditor from '@uiw/react-md-editor';
-import rehypeSanitize from 'rehype-sanitize';
-import { handleAxiosError } from '../utils/handleAxiosError';
+import { useForm } from '../hooks/useForm';
 import { appendImages } from '../utils/formUtils';
-import AutoCompleteSelect from '../components/FormComponents/AutoCompleteSelect';
+import { handleAxiosError } from '../utils/handleAxiosError';
 import { countryMap, countriesSet } from '../utils/locationData';
 
 const AnimalForm: React.FC = () => {
@@ -31,7 +32,7 @@ const AnimalForm: React.FC = () => {
     });
 
     // Refactor
-    const handleCountryChange = (value: string) => {
+    const handleCountryChange = (value: string): void => {
 
         const isValidCountry = countriesSet.has(value);
 
@@ -47,13 +48,13 @@ const AnimalForm: React.FC = () => {
 
     // Refactor
 
-    const handleCityChange = (value: string) => {
+    const handleCityChange = (value: string): void => {
         setFormState(prev => ({
             ...prev,
             city: value,
         }));
     };
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent): Promise<void> => {
         e.preventDefault();
 
         const isValidCountry = countriesSet.has(formState.country);
@@ -99,7 +100,7 @@ const AnimalForm: React.FC = () => {
         }
     };
 
-    const handleEditorChange = (value?: string) => {
+    const handleEditorChange = (value?: string): void => {
         setFormState((prevState) => ({
             ...prevState,
             description: value || '',

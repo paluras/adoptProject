@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+
 import { RootState } from "../store/index";
 import LogOutButton from "./NavBarComponents/LogOutButton";
 
@@ -8,25 +9,24 @@ const Navbar: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const username: string | null = useSelector((state: RootState) => state.user.username);
     const navRef = useRef<HTMLDivElement>(null);
-    // const navigate = useNavigate();
 
-    const toggleMenu = () => {
+    const toggleMenu = (): void => {
         setIsMenuOpen(!isMenuOpen);
     };
 
-    const closeMenu = () => {
+    const closeMenu = (): void => {
         setIsMenuOpen(false);
     };
 
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
+        const handleClickOutside = (event: MouseEvent): void => {
             if (navRef.current && !navRef.current.contains(event.target as Node)) {
                 setIsMenuOpen(false);
             }
         };
 
         document.addEventListener("mousedown", handleClickOutside);
-        return () => {
+        return (): void => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);

@@ -4,7 +4,7 @@ interface UseImageLoaderOptions {
     minLoadingTime?: number;
 }
 
-export const useImageLoader = (options: UseImageLoaderOptions = {}) => {
+export const useImageLoader = (options: UseImageLoaderOptions = {}): { imagesLoaded: boolean; loadingProgress: number } => {
     const [imagesLoaded, setImagesLoaded] = useState(false);
     const [loadingProgress, setLoadingProgress] = useState(0);
     const minLoadingTime = options.minLoadingTime || 500;
@@ -28,7 +28,7 @@ export const useImageLoader = (options: UseImageLoaderOptions = {}) => {
             subtree: true
         });
 
-        function checkImagesLoaded() {
+        function checkImagesLoaded(): void {
             const totalImages = imageElements.length;
             if (totalImages === 0) return;
 
@@ -54,7 +54,7 @@ export const useImageLoader = (options: UseImageLoaderOptions = {}) => {
         imageElements = Array.from(existingImages);
         checkImagesLoaded();
 
-        return () => observer.disconnect();
+        return (): void => observer.disconnect();
     }, [minLoadingTime]);
 
     return { imagesLoaded, loadingProgress };

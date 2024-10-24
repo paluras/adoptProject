@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface AutoCompleteSelectProps {
     options: string[];
@@ -18,10 +18,21 @@ const AutoCompleteSelect: React.FC<AutoCompleteSelectProps> = ({
     const [isOpen, setIsOpen] = useState(false);
     const [filteredOptions, setFilteredOptions] = useState<string[]>(options);
     const [inputValue, setInputValue] = useState(value);
+    const wrapperRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     useEffect(() => {
         const debounceTimeout = setTimeout(() => {
-
             if (!options) return null;
             const newFilteredOptions = options
                 .filter((option) =>
@@ -46,7 +57,7 @@ const AutoCompleteSelect: React.FC<AutoCompleteSelectProps> = ({
     };
 
     return (
-        <div className="relative">
+        <div className="relative" ref={wrapperRef}>
             <label className="block text-sm font-medium text-gray-700 mb-1">
                 {label}
             </label>

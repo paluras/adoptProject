@@ -1,6 +1,6 @@
 export interface MedicalHistorySchema {
     animal_id: number;
-    created_at?: Date | undefined;
+    created_at: Date | undefined;
     dewormings: string;
     id: number | undefined;
     notes: string;
@@ -9,7 +9,7 @@ export interface MedicalHistorySchema {
 }
 
 export interface MedicalHistoryInput {
-
+    id?: number;
     animal_id: number;
     vaccines: string;
     dewormings: string;

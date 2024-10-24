@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { useSpring, animated } from '@react-spring/web';
+import React, { useState } from 'react';
 
 const LandingParallax: React.FC = () => {
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });

@@ -1,31 +1,80 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
+import typescriptParser from '@typescript-eslint/parser';
+import typescriptPlugin from '@typescript-eslint/eslint-plugin';
+import reactPlugin from 'eslint-plugin-react';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import sonarjsPlugin from 'eslint-plugin-sonarjs';
+import importPlugin from 'eslint-plugin-import';
 
-export default tseslint.config(
-  { ignores: ['dist'] },
+export default [
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+      parser: typescriptParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true
+        }
+      }
     },
     plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      '@typescript-eslint': typescriptPlugin,
+      'react': reactPlugin,
+      'react-hooks': reactHooksPlugin,
+      'sonarjs': sonarjsPlugin,
+      'import': importPlugin
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
+      // TypeScript
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/explicit-function-return-type': 'warn',
+      '@typescript-eslint/no-unused-vars': 'error',
 
+      // React
+      'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off',
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
 
-      ],
-      "no-console": 1,
+      // Code Quality (SonarJS)
+      'sonarjs/cognitive-complexity': ['error', 15],
+      'sonarjs/no-duplicate-string': 'warn',
+      'sonarjs/no-identical-functions': 'error',
+
+      // Import Organization
+      'import/order': ['error', {
+        'groups': ['builtin', 'external', 'internal'],
+        'pathGroups': [{
+          'pattern': 'react',
+          'group': 'external',
+          'position': 'before'
+        }],
+        'newlines-between': 'always',
+        'alphabetize': {
+          'order': 'asc',
+          'caseInsensitive': true
+        }
+      }],
+
+      // General
+      'complexity': ['warn', 10],
+      'max-lines': ['warn', 300],
+      'no-console': 'warn',
+      'no-duplicate-imports': 'error',
     },
+    settings: {
+      react: {
+        version: 'detect'
+      }
+    }
   },
-)
+  {
+    // Specific rules for test files
+    files: ['**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}'],
+    rules: {
+      'max-lines': 'off',
+      'sonarjs/no-duplicate-string': 'off'
+    }
+  }
+];

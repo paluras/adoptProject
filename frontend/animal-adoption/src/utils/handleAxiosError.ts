@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import axios, { AxiosError } from 'axios';
 
 interface ErrorResponse {

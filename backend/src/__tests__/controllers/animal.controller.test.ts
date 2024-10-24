@@ -7,7 +7,7 @@ import { AppError, ErrorHandler, ErrorType } from '../../utils/ErrorHandler';
 import { createAnimalValidation, validateAnimal } from '../../middleware/validateMiddleware';
 import { Animal } from '../../schemas/animalSchema';
 
-// eslint-disable-next-line no-undef
+ 
 jest.mock('../../models/animalModel');
 const MockedAnimalModel = AnimalModel as jest.MockedClass<typeof AnimalModel>;
 
@@ -53,7 +53,7 @@ describe('AnimalController', () => {
         mockNext = jest.fn();
     });
 
-    // eslint-disable-next-line max-lines-per-function
+     
     describe('addAnimal', () => {
         it('should add an animal successfully', async () => {
 
