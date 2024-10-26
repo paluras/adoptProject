@@ -55,7 +55,7 @@ export const createMedicalHistoryValidation = [
 
 
 
-export const validateAnimal = (req: Request, res: Response, next: NextFunction) => {
+export const validateAnimal = (req: Request, res: Response, next: NextFunction): void => {
     const errors = validationResult(req);
 
 
@@ -64,5 +64,5 @@ export const validateAnimal = (req: Request, res: Response, next: NextFunction) 
 
         return next(ErrorHandler.createError(extractedErrors, ErrorType.VALIDATION));
     }
-    next()
+    return next()
 }

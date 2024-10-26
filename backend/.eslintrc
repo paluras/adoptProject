@@ -1,5 +1,20 @@
 {
-  "extends": ["auto"],
+  "extends": [
+    "auto",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:sonarjs/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "sonarjs"],
+  "rules": {
+    "sonarjs/cognitive-complexity": ["error", 15],
+    "sonarjs/no-duplicate-string": "error",
+    "sonarjs/no-identical-functions": "error",
+    "sonarjs/no-collapsible-if": "error",
+    "sonarjs/no-redundant-jump": "error",
+    "sonarjs/no-small-switch": "error",
+    "sonarjs/no-unused-collection": "error"
+  },
   "scripts": {
     "eslint": "eslint --color --ext .html,.js,.json,.jsx,.md,.ts,.tsx *.* src",
     "eslint:fix": "npm run eslint -- --fix"

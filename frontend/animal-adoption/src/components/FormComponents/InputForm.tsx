@@ -3,13 +3,15 @@ import React from "react";
 interface InputFormProps {
     type: "text" | "number";
     name: string;
-    formValue: string;
+    formValue: string | number;
     placeHolder: string;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    labelName: string;
 }
-const InputForm: React.FC<InputFormProps> = ({ type, name, formValue, placeHolder, onChange }) => {
+const InputForm: React.FC<InputFormProps> = ({ type, name, formValue, placeHolder, onChange, labelName }) => {
     return (
         <div>
+            <label htmlFor={name}>{labelName}</label>
             <input
                 required
                 type={type}

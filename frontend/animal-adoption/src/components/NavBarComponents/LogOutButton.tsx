@@ -1,13 +1,14 @@
 import axios from "axios";
 import React from "react";
 import { useDispatch } from "react-redux";
+
 import { logout } from "../../store/userSlice";
 import { handleAxiosError } from "../../utils/handleAxiosError";
 
 const LogOutButton: React.FC = () => {
     const dispatch = useDispatch();
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (): Promise<void> => {
         try {
             await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/logout`)
             dispatch(logout())

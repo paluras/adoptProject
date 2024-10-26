@@ -1,4 +1,5 @@
 import { Response, Request } from "express";
+import console from "console";
 
 export enum ErrorType {
     VALIDATION = 'VALIDATION',
@@ -34,7 +35,7 @@ export class ErrorHandler {
         return new AppError(message, type, statusCodes[type]);
     }
 
-    static handle(err: Error, req: Request, res: Response) {
+    static handle(err: Error, req: Request, res: Response): Response {
         if (err instanceof AppError) {
             return res.status(err.statusCode).json({
                 status: 'error',
@@ -45,7 +46,7 @@ export class ErrorHandler {
 
 
         console.error('Unexpected error:', err);
-        res.status(500).json({
+        return res.status(500).json({
             status: 'error',
             type: ErrorType.INTERNAL,
             message: 'An unexpected error occurred',

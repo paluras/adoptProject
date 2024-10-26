@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs";
 
 // Define the upload directory
+// eslint-disable-next-line no-undef
 const uploadDir = path.join(__dirname, '..', 'uploads');
 
 // Create the upload directory if it doesn't exist
@@ -25,7 +26,8 @@ const storage = multer.diskStorage({
 export const upload = multer({
     storage,
     limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
-    fileFilter: (req, file, callback) => {
+    // eslint-disable-next-line consistent-return
+    fileFilter: (req, file, callback): void => {
         const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']; // Add any other types as needed
         if (!allowedTypes.includes(file.mimetype)) {
 

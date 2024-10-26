@@ -7,6 +7,7 @@ import path from 'path';
 import cookieParser from "cookie-parser"
 import { ErrorHandler } from './utils/ErrorHandler';
 import dotenv from 'dotenv';
+import process = require('process');
 
 dotenv.config();
 const app: Application = express();
@@ -18,6 +19,7 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
+// eslint-disable-next-line no-undef
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 

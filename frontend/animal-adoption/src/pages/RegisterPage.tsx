@@ -26,7 +26,7 @@ const RegisterPage: React.FC = () => {
 
     const navigate = useNavigate()
 
-    const handleLogin = async (event: React.FormEvent) => {
+    const handleLogin = async (event: React.FormEvent): Promise<void> => {
         event.preventDefault();
         setError('');
         setLoading(true);

@@ -12,4 +12,7 @@ export interface Animal {
     description: string;
     sex: string;
     user_id: number;
+    country: string;
+    city: string;
+    weight: number;
 }

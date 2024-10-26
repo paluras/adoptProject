@@ -6,11 +6,14 @@ interface SelectFormProps {
     onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
     selections: string[];
     placeHolder: string;
+    disabled?: boolean;
+    labelName?: string;
 }
 
-const SelectForm: React.FC<SelectFormProps> = ({ name, value, onChange, selections, placeHolder }) => {
+const SelectForm: React.FC<SelectFormProps> = ({ name, value, onChange, selections, placeHolder, labelName }) => {
     return (
         <div>
+            <label htmlFor={name}>{labelName}</label>
             <select
                 name={name}
                 value={value}

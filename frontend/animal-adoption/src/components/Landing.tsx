@@ -1,10 +1,10 @@
+import { useSpring, animated, SpringValue } from '@react-spring/web';
 import React, { useState } from 'react';
-import { useSpring, animated } from '@react-spring/web';
 
 const LandingParallax: React.FC = () => {
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-    const handleMouseMove = (event: React.MouseEvent) => {
+    const handleMouseMove = (event: React.MouseEvent): void => {
         const { innerWidth, innerHeight } = window;
         setMousePosition({
             x: (event.clientX - innerWidth / 2) / 50,
@@ -12,7 +12,7 @@ const LandingParallax: React.FC = () => {
         });
     };
 
-    const createParallaxSpring = (xOffset: number, yOffset: number) => {
+    const createParallaxSpring = (xOffset: number, yOffset: number): { [key: string]: SpringValue } => {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         return useSpring({
             to: {

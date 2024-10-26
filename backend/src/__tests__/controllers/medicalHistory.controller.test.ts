@@ -1,3 +1,5 @@
+/* eslint-disable max-lines-per-function */
+/* eslint-disable no-undef */
 import { MedicalHistoryController } from '../../controllers/medicalHistoryController';
 import { MedicalHistoryModel } from '../../models/medicalHistoryModel';
 import { Request, Response } from 'express';
@@ -51,25 +53,37 @@ describe('MedicalHistoryController', () => {
             const mockMedicalHistory: MedicalHistoryInput = {
                 animal_id: 1,
                 vaccines: 'Rabies',
-                dewormings: 'yes',
-                treatments: 'yes',
-                notes: 'yes'
+                dewormings: 'Yes',
+                treatments: 'Antibiotics',
+                notes: 'Regular check-ups'
+            };
+            const savedMedicalHistory = {
+                ...mockMedicalHistory,
+                id: 1,
+                created_at: new Date()
             };
             mockRequest.body = mockMedicalHistory;
 
-            mockMedicalHistoryModel.addMedicalHistory.mockResolvedValue(mockMedicalHistory);
+            mockMedicalHistoryModel.addMedicalHistory.mockResolvedValue(savedMedicalHistory as unknown as MedicalHistoryModel);
 
             await medicalHistoryController.addMedicalHistory(mockRequest as Request, mockResponse as Response, mockNext);
 
             expect(mockResponse.status).toHaveBeenCalledWith(201);
             expect(mockResponse.json).toHaveBeenCalledWith({
                 message: "Successfuly added a medical history",
-                body: mockMedicalHistory,
+                body: savedMedicalHistory,
             });
         });
 
         it('should call next with error if adding medical history fails', async () => {
-            mockRequest.body = { animal_id: 1, vaccines: ['Rabies'] };
+            const mockMedicalHistory: MedicalHistoryInput = {
+                animal_id: 1,
+                vaccines: 'Rabies',
+                dewormings: 'Yes',
+                treatments: 'Antibiotics',
+                notes: 'Regular check-up'
+            };
+            mockRequest.body = mockMedicalHistory;
             const error = ErrorHandler.createError('Failed to add medical history', ErrorType.DATABASE);
             mockMedicalHistoryModel.addMedicalHistory.mockRejectedValue(error);
 
@@ -86,35 +100,66 @@ describe('MedicalHistoryController', () => {
 
     describe('updateMedicalHistory', () => {
         it('should update a medical history successfully', async () => {
-            const mockMedicalHistory = { id: 1, animal_id: 1, vaccines: ['Rabies'], treatments: ['Antibiotics'] };
-            mockRequest.body = { animal_id: 1, vaccines: ['Rabies'], treatments: ['Antibiotics'] };
-            mockMedicalHistoryModel.updateMedicalHistory.mockResolvedValue(mockMedicalHistory);
+            const mockMedicalHistoryInput: MedicalHistoryInput = {
+                animal_id: 1,
+                vaccines: 'Rabies',
+                dewormings: 'Yes',
+                treatments: 'Antibiotics',
+                notes: 'Updated notes'
+            };
+            const updatedMedicalHistory = {
+                ...mockMedicalHistoryInput,
+                id: 1,
+                created_at: new Date()
+            };
+            mockRequest.body = mockMedicalHistoryInput;
+            mockMedicalHistoryModel.updateMedicalHistory.mockResolvedValue(updatedMedicalHistory as unknown as MedicalHistoryModel);
 
             await medicalHistoryController.updateMedicalHistory(mockRequest as Request, mockResponse as Response, mockNext);
 
             expect(mockResponse.status).toHaveBeenCalledWith(201);
             expect(mockResponse.json).toHaveBeenCalledWith({
                 message: "Successfuly updated a medical history",
-                body: mockMedicalHistory,
+                body: updatedMedicalHistory,
             });
         });
 
         it('should call next with error if updating medical history fails', async () => {
-            const error = new Error('Failed to update medical history');
-            mockRequest.body = { animal_id: 1, vaccines: ['Rabies'], treatments: ['Antibiotics'] };
+            const mockMedicalHistoryInput: MedicalHistoryInput = {
+                animal_id: 1,
+                vaccines: 'Rabies',
+                dewormings: 'Yes',
+                treatments: 'Antibiotics',
+                notes: 'Updated notes'
+            };
+            mockRequest.body = mockMedicalHistoryInput;
+            const error = ErrorHandler.createError('Failed to update medical history', ErrorType.DATABASE);
             mockMedicalHistoryModel.updateMedicalHistory.mockRejectedValue(error);
 
             await medicalHistoryController.updateMedicalHistory(mockRequest as Request, mockResponse as Response, mockNext);
 
-            expect(mockNext).toHaveBeenCalledWith(error);
+            expect(mockNext).toHaveBeenCalledWith(expect.any(AppError));
+            expect(mockNext).toHaveBeenCalledWith(expect.objectContaining({
+                message: 'Failed to update medical history',
+                type: ErrorType.DATABASE,
+                statusCode: 500
+            }));
         });
     });
 
     describe('getMedicalHistory', () => {
         it('should get medical history by animal id', async () => {
-            const mockMedicalHistory = { id: 1, animal_id: 1, vaccines: ['Rabies'] };
+            const mockMedicalHistory = {
+                id: 1,
+                animal_id: 1,
+                vaccines: 'Rabies',
+                dewormings: 'Yes',
+                treatments: 'Antibiotics',
+                notes: 'Regular check-up',
+                created_at: new Date()
+            };
             mockRequest.params = { animalId: '1' };
-            mockMedicalHistoryModel.getMedicalHistoryByAnimalId.mockResolvedValue(mockMedicalHistory);
+            mockMedicalHistoryModel.getMedicalHistoryByAnimalId.mockResolvedValue(mockMedicalHistory as unknown as MedicalHistoryModel);
 
             await medicalHistoryController.getMedicalHistory(mockRequest as Request, mockResponse as Response, mockNext);
 
@@ -126,7 +171,7 @@ describe('MedicalHistoryController', () => {
 
         it('should return 404 if no medical history found', async () => {
             mockRequest.params = { animalId: '1' };
-            mockMedicalHistoryModel.getMedicalHistoryByAnimalId.mockResolvedValue(null);
+            mockMedicalHistoryModel.getMedicalHistoryByAnimalId.mockResolvedValue(null as unknown as MedicalHistoryModel);
 
             await medicalHistoryController.getMedicalHistory(mockRequest as Request, mockResponse as Response, mockNext);
 
@@ -137,13 +182,18 @@ describe('MedicalHistoryController', () => {
         });
 
         it('should call next with error if getting medical history fails', async () => {
-            const error = new Error('Failed to get medical history');
             mockRequest.params = { animalId: '1' };
+            const error = ErrorHandler.createError('Failed to get medical history', ErrorType.DATABASE);
             mockMedicalHistoryModel.getMedicalHistoryByAnimalId.mockRejectedValue(error);
 
             await medicalHistoryController.getMedicalHistory(mockRequest as Request, mockResponse as Response, mockNext);
 
-            expect(mockNext).toHaveBeenCalledWith(error);
+            expect(mockNext).toHaveBeenCalledWith(expect.any(AppError));
+            expect(mockNext).toHaveBeenCalledWith(expect.objectContaining({
+                message: 'Failed to get medical history',
+                type: ErrorType.DATABASE,
+                statusCode: 500
+            }));
         });
     });
 });

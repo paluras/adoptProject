@@ -2,9 +2,11 @@ import { NextFunction, Request, Response } from 'express';
 import { MedicalHistoryModel } from '../models/medicalHistoryModel';
 import { MedicalHistoryInput } from '../schemas/medicalHistorySchema';
 
+type ControllerResponse = Response | void | NextFunction;
+
 export class MedicalHistoryController {
 
-    private medicalHistoryModel: MedicalHistoryModel;
+    private readonly medicalHistoryModel: MedicalHistoryModel;
 
     constructor() {
         this.medicalHistoryModel = new MedicalHistoryModel();
@@ -19,7 +21,7 @@ export class MedicalHistoryController {
         };
     }
 
-    addMedicalHistory = async (req: Request, res: Response, next: NextFunction) => {
+    addMedicalHistory = async (req: Request, res: Response, next: NextFunction): Promise<ControllerResponse> => {
         const medicalInput = this.extractMedicalInput(req.body)
         try {
             const medicalHistory = await this.medicalHistoryModel.addMedicalHistory(medicalInput);
@@ -30,7 +32,7 @@ export class MedicalHistoryController {
         }
     };
 
-    updateMedicalHistory = async (req: Request, res: Response, next: NextFunction) => {
+    updateMedicalHistory = async (req: Request, res: Response, next: NextFunction): Promise<ControllerResponse> => {
         const medicalInput = this.extractMedicalInput(req.body)
 
         try {
@@ -41,16 +43,16 @@ export class MedicalHistoryController {
         }
     };
 
-    getMedicalHistory = async (req: Request, res: Response, next: NextFunction) => {
+    getMedicalHistory = async (req: Request, res: Response, next: NextFunction): Promise<ControllerResponse> => {
         const { animalId } = req.params;
         try {
             const medicalHistory = await this.medicalHistoryModel.getMedicalHistoryByAnimalId(parseInt(animalId, 10));
             if (!medicalHistory) {
                 return res.status(404).json({ message: 'No medical history found for this animal' });
             }
-            res.json({ message: "Succesfuly fetched the medical data", body: medicalHistory });
+            return res.json({ message: "Succesfuly fetched the medical data", body: medicalHistory });
         } catch (error) {
-            next(error)
+            return next(error)
         }
     };
 

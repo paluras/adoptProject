@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, Express } from "express";
 import { AnimalModel } from '../models/animalModel';
 import { AnimalInput, AnimalFilters } from "../schemas/animalSchema";
 import { ParsedQs } from "qs";
@@ -8,8 +8,10 @@ interface CustomRequest extends Request {
         id: number;
     };
 }
+
+type ControllerResponse = Response | void | NextFunction;
 export class AnimalController {
-    private animalModel: AnimalModel;
+    private readonly animalModel: AnimalModel;
 
     constructor() {
         this.animalModel = new AnimalModel();
@@ -24,7 +26,10 @@ export class AnimalController {
             breed: body.breed,
             status: body.status,
             sex: body.sex,
-            description: body.description
+            description: body.description,
+            country: body.country,
+            city: body.city,
+            weight: Number(body.weight)
         };
     }
 
@@ -37,11 +42,14 @@ export class AnimalController {
         if (typeof query.status === 'string') filters.status = query.status;
         if (typeof query.ageMin === 'string') filters.ageMin = Number(query.ageMin);
         if (typeof query.ageMax === 'string') filters.ageMax = Number(query.ageMax);
+        if (typeof query.city === 'string') filters.city = query.city;
+        if (typeof query.country === 'string') filters.country = query.country;
+        // if (typeof query.weightMin === 'string') filters.weightMin = Number(query.weightMin);
 
         return filters;
     }
 
-    addAnimal = async (req: Request, res: Response, next: NextFunction) => {
+    addAnimal = async (req: Request, res: Response, next: NextFunction): Promise<ControllerResponse> => {
         try {
 
             const userId: number = (req as CustomRequest).user.id;
@@ -56,13 +64,13 @@ export class AnimalController {
                 imageUrls,
                 userId
             });
-            res.status(201).json({ body: animal, message: "Successfully added an animal", });
+            return res.status(201).json({ body: animal, message: "Successfully added an animal", });
         } catch (error) {
-            next(error)
+            return next(error)
         }
     }
 
-    updateAnimal = async (req: Request, res: Response, next: NextFunction) => {
+    updateAnimal = async (req: Request, res: Response, next: NextFunction): Promise<ControllerResponse> => {
         try {
             const id = parseInt(req.params.id, 10);
             const existingAnimal = await this.animalModel.getById(id);
@@ -85,17 +93,19 @@ export class AnimalController {
         }
     }
 
-    getAllAnimals = async (req: Request, res: Response, next: NextFunction) => {
+    getAllAnimals = async (req: Request, res: Response, next: NextFunction): Promise<ControllerResponse> => {
         try {
             const filters = this.extractFilters(req.query);
+
             const animals = await this.animalModel.getAll(filters);
+
             res.json({ message: "Successfully found the animals", body: animals });
         } catch (error) {
             next(error)
         }
     }
 
-    getAnimalById = async (req: Request, res: Response, next: NextFunction) => {
+    getAnimalById = async (req: Request, res: Response, next: NextFunction): Promise<ControllerResponse> => {
         try {
             const id = parseInt(req.params.id, 10);
             const animal = await this.animalModel.getById(id);
@@ -105,7 +115,7 @@ export class AnimalController {
         }
     }
 
-    deleteAnimalById = async (req: Request, res: Response, next: NextFunction) => {
+    deleteAnimalById = async (req: Request, res: Response, next: NextFunction): Promise<ControllerResponse> => {
         try {
             const id = parseInt(req.params.id, 10);
             await this.animalModel.deleteAnimal(id);

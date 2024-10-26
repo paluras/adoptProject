@@ -1,10 +1,13 @@
 import React, { ReactNode, useState } from "react";
-import { Animal } from "../models/AnimalSchema";
-import { useNavigate } from "react-router";
-import Card from "../components/CardComponent/CardComponent";
-import useFetch from "../hooks/useFetch";
 import { useInView } from "react-intersection-observer";
+import { useNavigate } from "react-router";
+
+import AnimalGrid from "../components/AnimalGrid";
 import Filter from "../components/Filter";
+import LoadingSpinner from "../components/LoadingSpinner";
+import { useAnimalFilter } from "../hooks/useAnimalFilter";
+import useFetch from "../hooks/useFetch";
+import { Animal } from "../models/AnimalSchema";
 
 interface ListPageProps {
     children: ReactNode;
@@ -13,54 +16,41 @@ interface ListPageProps {
 const ListPage: React.FC<ListPageProps> = ({ children }) => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [showFilterButton, setShowFilterButton] = useState(false);
-    const [species, setSpecies] = useState<string>('');
-    const [status, setStatus] = useState<string>('Valabil');
-    const [sex, setSex] = useState<string>('');
+    const navigate = useNavigate();
+
+    const { filters, setFilters, buildQueryString } = useAnimalFilter();
 
     const { ref: mainContentRef } = useInView({
         threshold: 0.1,
-        onChange: (inView) => {
-            setShowFilterButton(inView);
-        }
+        onChange: (inView) => setShowFilterButton(inView)
     });
 
-    const query = new URLSearchParams();
-    if (species) query.append('species', species);
-    if (status) query.append('status', status);
-    if (sex) query.append('sex', sex);
+    const { data: animals, loading: loadingAnimals } =
+        useFetch<Animal[]>(`${import.meta.env.VITE_API_URL}/api/animals?${buildQueryString()}`);
 
-    const { data: animals, loading: loadingAnimals, error: errorsAnimals } = useFetch<Animal[]>(`${import.meta.env.VITE_API_URL}/api/animals?${query.toString()}`);
-    const navigate = useNavigate();
-
-    const handleFilterSubmit = (e: React.FormEvent) => {
+    const handleFilterSubmit = (e: React.FormEvent): void => {
         e.preventDefault();
         setIsFilterOpen(false);
     };
 
-    if (animals === null || loadingAnimals === true) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-secondary" role="status">
-                </div>
-            </div>
-        );
-    }
+    if (loadingAnimals) return <LoadingSpinner />;
 
     return (
         <div className="background-color text-main">
             {children}
-
             <h1 className="text-4xl text-center font-bold p-4">Available Animals</h1>
 
-            <Filter species={species}
-                setSpecies={setSpecies}
-                status={status}
-                setStatus={setStatus}
-                sex={sex}
-                setSex={setSex}
+            <Filter
+                {...filters}
+                setSpecies={(species) => setFilters(prev => ({ ...prev, species }))}
+                setStatus={(status) => setFilters(prev => ({ ...prev, status }))}
+                setSex={(sex) => setFilters(prev => ({ ...prev, sex }))}
+                setCity={(city) => setFilters(prev => ({ ...prev, city }))}
+                setCountry={(country) => setFilters(prev => ({ ...prev, country }))}
                 isFilterOpen={isFilterOpen}
                 setIsFilterOpen={setIsFilterOpen}
-                handleFilterSubmit={handleFilterSubmit} />
+                handleFilterSubmit={handleFilterSubmit}
+            />
 
             {showFilterButton && (
                 <button
@@ -71,26 +61,13 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
                 </button>
             )}
 
-            <div id='main-content' ref={mainContentRef} className="p-5 gap-4 flex flex-wrap justify-center">
-                {animals.length > 0 && !errorsAnimals ? (
-                    animals.map(animal => (
-                        <Card
-                            key={animal.id}
-                            id={animal.id}
-                            title={animal.name}
-                            description={animal.species}
-                            imageUrl={animal.image_url ? `${import.meta.env.VITE_API_URL}/uploads/${animal.image_url[0]}` : undefined}
-                            onButtonClick={() => navigate(`/${animal.id}`)}
-                        />
-                    ))
-                ) : (
-                    <p>No animals available for adoption at this time.</p>
-                )}
+            <div id='main-content' ref={mainContentRef}>
+                <AnimalGrid
+                    animals={animals || []}
+                    onAnimalClick={(id) => navigate(`/${id}`)}
+                />
             </div>
-
-
         </div>
     );
 };
-
 export default ListPage;
