@@ -8,7 +8,7 @@ import { handleAxiosError } from "../../utils/handleAxiosError";
 const LogOutButton: React.FC = () => {
     const dispatch = useDispatch();
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (): Promise<void> => {
         try {
             await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/logout`)
             dispatch(logout())

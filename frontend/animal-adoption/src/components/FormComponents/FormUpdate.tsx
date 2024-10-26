@@ -46,7 +46,7 @@ const FormUpdate: React.FC = () => {
 
         const isValidCountry = countriesSet.has(value);
 
-        setMedicalInfo(prev => ({
+        setBasicInfo(prev => ({
             ...prev,
             country: value,
             city: '',
@@ -59,7 +59,7 @@ const FormUpdate: React.FC = () => {
     // Refactor
 
     const handleCityChange = (value: string) => {
-        setMedicalInfo(prev => ({
+        setBasicInfo(prev => ({
             ...prev,
             city: value,
         }));
@@ -104,6 +104,7 @@ const FormUpdate: React.FC = () => {
     }, [id, setBasicInfo, setMedicalInfo]);
 
 
+
     const handleSubmitBasicInfo = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -132,8 +133,10 @@ const FormUpdate: React.FC = () => {
 
         appendImages(formData, basicInfo)
 
+
+
         try {
-            await axios.put(
+            const response = await axios.put(
                 `${import.meta.env.VITE_API_URL}/api/animals/${id}`,
                 formData,
                 {
@@ -141,13 +144,15 @@ const FormUpdate: React.FC = () => {
                     withCredentials: true,
                 }
             );
-            alert("Succesfully Updated the Animal");
+
+            console.log('Response:', response);
+            alert("Successfully Updated the Animal");
 
         } catch (error) {
-            alert(handleAxiosError(error))
-
+            alert(handleAxiosError(error));
         }
     };
+    console.log(basicInfo);
 
     const handleSubmitMedicalInfo = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -248,7 +253,7 @@ const FormUpdate: React.FC = () => {
                     placeHolder={'Greutate'}
                     onChange={handleBasicInfoChange} />
 
-                {basicInfo.city && (
+                {basicInfo.country && (
                     <AutoCompleteSelect
                         options={Array.from(countriesSet)}
                         value={basicInfo.country}
