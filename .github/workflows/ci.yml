@@ -6,8 +6,7 @@ on:
       - master
 
 jobs:
-  # Build and test the backend
-  backend:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,45 +17,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "22.2.0"
+          cache: "npm" # Enables npm caching
 
-      - name: Install backend dependencies
-        working-directory: ./backend
-        run: npm install
-
-      - name: Start backend
-        working-directory: ./backend
-        run: nohup npm run start &
-
-  # Build the frontend
-  frontend:
-    runs-on: ubuntu-latest
-    needs: backend # Ensure the backend job finishes first
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "22.2.0"
-
-      - name: Install frontend dependencies
-        working-directory: ./frontend/animal-adoption
-        run: npm install
-
-      - name: Build frontend
-        working-directory: ./frontend/animal-adoption
-        run: npm run build
-
-  # Deploy to Ubuntu server
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [backend, frontend] # Deploy after both frontend and backend are built
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      # The local build and start steps aren't necessary since you're building on the server
+      # You can remove the separate backend and frontend jobs
 
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@v0.1.7
@@ -68,24 +32,24 @@ jobs:
           script: |
             # Load nvm
             export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-            # Set the Node.js version you need
+            # Set Node.js version
             nvm use 22.2.0
 
             # Backend deploy
             echo "Deploying backend..."
             cd /var/www/adoptProject/backend || exit
             git pull origin master
-            npm install
+            npm ci # Faster and more reliable than npm install
             npm run build
-            pm2 restart adopt-backend
+            pm2 restart adopt-backend || pm2 start npm --name "adopt-backend" -- run start
 
             # Frontend deploy
             echo "Deploying frontend..."
             cd /var/www/adoptProject/frontend/animal-adoption || exit
             git pull origin master
-            npm install
+            npm ci
             npm run build
 
             echo "Deployment complete!"
