@@ -17,10 +17,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "22.2.0"
-          cache: "npm" # Enables npm caching
-
-      # The local build and start steps aren't necessary since you're building on the server
-      # You can remove the separate backend and frontend jobs
 
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@v0.1.7
