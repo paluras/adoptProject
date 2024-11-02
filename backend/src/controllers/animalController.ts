@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-undef */
 import { Request, Response, NextFunction, Express } from "express";
 import { AnimalModel } from '../models/animalModel';
 import { AnimalInput, AnimalFilters } from "../schemas/animalSchema";
@@ -55,6 +57,8 @@ export class AnimalController {
             const userId: number = (req as CustomRequest).user.id;
 
             const animalInput = this.extractAnimalInput(req.body);
+
+            console.log(animalInput);
 
             const files = req.files as Express.Multer.File[];
             const imageUrls: string[] = files ? files.map(file => file.filename) : [];

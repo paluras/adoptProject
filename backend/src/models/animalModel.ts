@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-console */
 import pool from "../db";
 import { Animal, AnimalFilters, AnimalInput } from "../schemas/animalSchema";
 import { ErrorHandler, ErrorType } from "../utils/ErrorHandler";
@@ -134,6 +136,8 @@ export class AnimalModel {
 
     async addAnimal(input: AnimalInput): Promise<Animal> {
         this.validateAnimalInput(input);
+        console.log(input);
+
 
         const result = await pool.query(
             `INSERT INTO animals (name, species, age, breed, status, image_url, sex, description, user_id, country, city, weight)
