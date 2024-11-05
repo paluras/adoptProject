@@ -1,23 +1,34 @@
+import { useTranslation } from "react-i18next";
+
 import InfoBox from "../InfoBox";
 
 interface DetailsContainerProps {
     animalError: boolean;
-    infoData: { prefix: string; value: string | undefined }[];
+    infoData: { translationKey: string; value: string | undefined }[];
     medicalHistoryError: boolean;
-    medicalInfoData: { prefix: string; value: string | undefined }[];
+    medicalInfoData: { translationKey: string; value: string | undefined }[];
 }
 
-const DetailsContainer: React.FC<DetailsContainerProps> = ({ animalError, infoData, medicalHistoryError, medicalInfoData }) => {
+const DetailsContainer: React.FC<DetailsContainerProps> = ({
+    animalError,
+    infoData,
+    medicalHistoryError,
+    medicalInfoData
+}) => {
+    const { t } = useTranslation();
+
     return (
         <div className="details-container">
-            <h1 className="text-2xl font-bold py-4">Detali</h1>
+            <h1 className="text-2xl font-bold py-4">{t("animalPage.details")}</h1>
             <div className="grid gap-2 grid-cols-2 w-full">
-
                 {!animalError && infoData.map((info, index) => (
                     <InfoBox
                         key={index}
                         imgUrl="/icons/heart-solid.svg"
-                        title={{ prefix: info.prefix, value: info.value }}
+                        title={{
+                            prefix: t(info.translationKey),
+                            value: info.value
+                        }}
                     />
                 ))}
                 {!medicalHistoryError && (
@@ -25,14 +36,16 @@ const DetailsContainer: React.FC<DetailsContainerProps> = ({ animalError, infoDa
                         <InfoBox
                             key={index}
                             imgUrl="/icons/heart-solid.svg"
-                            title={{ prefix: info.prefix, value: info.value }}
+                            title={{
+                                prefix: t(info.translationKey),
+                                value: info.value
+                            }}
                         />
                     ))
                 )}
-
             </div>
         </div>
     )
 }
 
-export default DetailsContainer
+export default DetailsContainer;

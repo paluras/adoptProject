@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import useWindowSize from '../hooks/useWindowSize';
 
@@ -25,7 +26,7 @@ const MobileFilter: React.FC<FilterProps> = ({
     setIsFilterOpen,
     handleFilterSubmit,
 }) => {
-
+    const { t } = useTranslation();
     const { width } = useWindowSize();
 
 
@@ -48,7 +49,7 @@ const MobileFilter: React.FC<FilterProps> = ({
                             onChange={e => setSpecies(e.target.value)}
                             className="w-full border-2 text-secondary active:border-forth border-forth p-2 rounded-md"
                         >
-                            <option value="">All Species</option>
+                            <option value="">{t('species.all')}</option>
                             <option value="Caine">Caine</option>
                             <option value="Pisica">Pisica</option>
                         </select>

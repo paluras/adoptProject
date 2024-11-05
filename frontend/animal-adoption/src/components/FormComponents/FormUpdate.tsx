@@ -1,5 +1,6 @@
 import MDEditor from '@uiw/react-md-editor';
 import axios from 'axios';
+import { t } from 'i18next';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import rehypeSanitize from 'rehype-sanitize';
@@ -183,7 +184,7 @@ const FormUpdate: React.FC = () => {
         <>
             <form onSubmit={handleSubmitBasicInfo} className="space-y-4 max-w-lg mx-auto mt-4 bg-white p-6 rounded-t-lg shadow-lg">
                 <div>
-                    <label htmlFor="name">Nume</label>
+                    <label htmlFor="name">{t('pets.name')}</label>
                     <input
                         type="text"
                         name="name"
@@ -195,7 +196,7 @@ const FormUpdate: React.FC = () => {
                 </div>
 
                 <div>
-                    <label htmlFor="age">Varsta</label>
+                    <label htmlFor="age">{t('pets.age')}</label>
                     <input
                         type="number"
                         name="age"
@@ -207,27 +208,27 @@ const FormUpdate: React.FC = () => {
                 </div>
 
                 <div>
-                    <label htmlFor="specie">Specie</label>
+                    <label htmlFor="specie">{t('form.species')}</label>
                     <select
                         name="species"
                         value={basicInfo.species}
                         onChange={handleBasicInfoChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
                     >
-                        <option value="">Select species</option>
-                        <option value="cat">Cat</option>
-                        <option value="dog">Dog</option>
+                        <option value="">{t('form.speciesSelect')}</option>
+                        <option value="cat">{t('species.cat')}</option>
+                        <option value="dog">{t('species.dog')}</option>
                     </select>
                 </div>
 
                 <div>
-                    <label htmlFor="rasa">Rasa</label>
+                    <label htmlFor="rasa">{t('form.breed')}</label>
                     <input
                         type="text"
                         name="breed"
                         value={basicInfo.breed}
                         onChange={handleBasicInfoChange}
-                        placeholder="Breed"
+                        placeholder={t('form.breed')}
                         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
                     />
                 </div>
@@ -239,18 +240,18 @@ const FormUpdate: React.FC = () => {
                         onChange={handleBasicInfoChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
                     >
-                        <option value="">Select sex</option>
-                        <option value="Mascul">Mascul</option>
-                        <option value="Femela">Femela</option>
+                        <option value="">{t('form.sexSelect')}</option>
+                        <option value="Mascul">{t('sex.female')}</option>
+                        <option value="Femela">{t('sex.male')}</option>
                     </select>
                 </div>
 
                 <InputForm
-                    labelName='Greutate'
+                    labelName={t('form.weight')}
                     type={'number'}
                     name={'weight'}
                     formValue={basicInfo.weight}
-                    placeHolder={'Greutate'}
+                    placeHolder={t('form.weight')}
                     onChange={handleBasicInfoChange} />
 
                 {basicInfo.country && (
@@ -258,8 +259,8 @@ const FormUpdate: React.FC = () => {
                         options={Array.from(countriesSet)}
                         value={basicInfo.country}
                         onChange={handleCountryChange}
-                        placeholder="Select a country"
-                        label="Country"
+                        placeholder={t('form.countrySelect')}
+                        label={t('form.country')}
                     />
                 )}
 
@@ -268,21 +269,21 @@ const FormUpdate: React.FC = () => {
                         options={availableCities}
                         value={basicInfo.city}
                         onChange={handleCityChange}
-                        placeholder="Select a city"
-                        label="City"
+                        placeholder={t('form.citySelect')}
+                        label={t('form.city')}
                     />
                 )}
                 <div>
-                    <label htmlFor="status">Status</label>
+                    <label htmlFor="status">{t('form.status')}</label>
                     <select
                         name="status"
                         value={basicInfo.status}
                         onChange={handleBasicInfoChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-400"
                     >
-                        <option value="">Select Status</option>
-                        <option value="Valabil">Available</option>
-                        <option value="Adoptat">Adopted</option>
+                        <option value="">{t('form.statusSelect')}</option>
+                        <option value="Valabil">{t('status.available')}</option>
+                        <option value="Adoptat">{t('status.adopted')}</option>
                     </select>
                 </div>
 
@@ -303,16 +304,16 @@ const FormUpdate: React.FC = () => {
                     type="submit"
                     className="w-full bg-rose-500 text-white py-2 rounded-md hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-400"
                 >
-                    Submit
+                    {t('form.submit')}
                 </button>
             </form>
 
             <form onSubmit={handleSubmitMedicalInfo} className="space-y-4 max-w-lg mx-auto bg-white p-6  shadow-lg">
                 {[
-                    ["vaccines", "vaccinuri"],
-                    ["notes", 'note'],
-                    ["dewormings", 'deparazitari'],
-                    ["treatments", 'tratamente']].map((field, index) => (
+                    ["vaccines", t('formMedical.vaccines')],
+                    ["notes", t('formMedical.notes')],
+                    ["dewormings", t('formMedical.dewormings')],
+                    ["treatments", t('formMedical.treatments')]].map((field, index) => (
                         <div key={index}>
                             <label className="block text-gray-700 font-semibold mb-1">
                                 {field[1].charAt(0).toUpperCase() + field[1].slice(1) + ":"}
@@ -333,7 +334,7 @@ const FormUpdate: React.FC = () => {
                     type="submit"
                     className="w-full bg-rose-500 text-white py-2 rounded-md hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-400"
                 >
-                    Add Medical Treatments
+                    {t('formMedical.medicalSubmit')}
                 </button>
             </form>
 

@@ -1,0 +1,149 @@
+{
+  "common": {
+    "home": "Home",
+    "add": "Add an animal",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "register": "Register",
+    "login": "Login",
+    "cancel": "Cancel",
+    "logout": "Logout",
+    "availableAnimals": "Available Animals",
+    "filter": "Filter"
+  },
+  "landing": {
+    "title": "Adopt a friend",
+    "subtitle": "If you're thinking about getting a pet, remember to choose adoption and save a life!"
+  },
+  "pets": {
+    "name": "Name",
+    "age": "Age",
+    "species": "Species",
+    "description": "Description",
+    "adoptionStatus": "Adoption Status",
+    "addPet": "Add Pet",
+    "editPet": "Edit Pet",
+    "deletePet": "Delete Pet"
+  },
+  "animalGrid": {
+    "noPets": "No pets to display"
+  },
+  "filter": {
+    "filter": "Filter",
+    "species": "Species",
+    "country": "Country",
+    "city": "City",
+    "sex": "Sex",
+    "selectSex": "Select sex",
+    "adoptionStatus": "Status",
+    "selectCountry": "Select country",
+    "selectCity": "Select city"
+  },
+  "species": {
+    "all": "All species",
+    "dog": "Dog",
+    "cat": "Cat",
+    "rabbit": "Rabbit",
+    "hamster": "Hamster",
+    "guineaPig": "Guinea Pig",
+    "bird": "Bird",
+    "reptile": "Reptile",
+    "other": "Other"
+  },
+  "status": {
+    "all": "All",
+    "adopted": "Adopted",
+    "available": "Available",
+    "fostered": "Fostered"
+  },
+  "sex": {
+    "male": "Male",
+    "female": "Female",
+    "all": "All"
+  },
+  "loginPage": {
+    "login": "Login",
+    "email": "Email",
+    "password": "Password",
+    "noAccount": "Don't have an account?",
+    "register": "Register",
+    "invalidCredentials": "Invalid credentials",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "username": "Username",
+    "loggingIn": "Logging in..."
+  },
+  "registerPage": {
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "username": "Username",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "usernameRequired": "Username is required",
+    "invalidEmail": "Invalid email",
+    "registering": "Registering..."
+  },
+  "imageComponent": {
+    "upload": "Upload up to 5 images:"
+  },
+  "form": {
+    "name": "Name",
+    "age": "Age",
+    "species": "Species",
+    "speciesSelect": "Select species",
+    "description": "Description",
+    "sexSelect": "Select sex",
+    "breed": "Breed",
+    "weight": "Weight",
+    "status": "Status",
+    "statusSelect": "Select status",
+    "country": "Country",
+    "city": "City",
+    "countrySelect": "Select country",
+    "citySelect": "Select city",
+    "submit": "Submit"
+  },
+  "formMedical": {
+    "vaccines": "Vaccines",
+    "notes": "Notes",
+    "vaccinated": "Vaccinated",
+    "dewormings": "Dewormings",
+    "treatments": "Treatments",
+    "medicalSubmit": "Submit medical data"
+  },
+  "animalPage": {
+    "details": "Details",
+    "errorLoading": "Error loading animal",
+    "notFound": "Animal not found",
+    "medical": "Medical data",
+    "edit": "Edit",
+    "delete": "Delete",
+    "adopt": "Adopt",
+    "foster": "Foster",
+    "adopted": "Adopted",
+    "fostered": "Fostered",
+    "available": "Available",
+    "noMedical": "No medical data to display"
+  },
+  "animalInfo": {
+    "species": "Species",
+    "breed": "Breed",
+    "sex": "Sex",
+    "age": "Age",
+    "ageForm": {
+      "one": "Year",
+      "other": "Years"
+    },
+    "weight": "Weight",
+    "weightUnit": "Kg",
+    "city": "City",
+    "country": "Country",
+    "status": "Status"
+  },
+  "adminButtons": {
+    "edit": "Update the form",
+    "delete": "Delete form"
+  }
+}

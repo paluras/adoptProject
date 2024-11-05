@@ -1,4 +1,5 @@
 import React, { ReactNode, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useInView } from "react-intersection-observer";
 import { useNavigate } from "react-router";
 
@@ -17,6 +18,7 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [showFilterButton, setShowFilterButton] = useState(false);
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const { filters, setFilters, buildQueryString } = useAnimalFilter();
 
@@ -38,7 +40,7 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
     return (
         <div className="background-color text-main">
             {children}
-            <h1 className="text-4xl text-center font-bold p-4">Available Animals</h1>
+            <h1 className="text-4xl text-center font-bold p-4">{t('common.availableAnimals')}</h1>
 
             <Filter
                 {...filters}
@@ -57,7 +59,7 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
                     onClick={() => setIsFilterOpen(true)}
                     className="lg:hidden fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-secondary text-white px-8 py-4 rounded-full shadow-lg z-10"
                 >
-                    Filter
+                    {t('common.filter')}
                 </button>
             )}
 

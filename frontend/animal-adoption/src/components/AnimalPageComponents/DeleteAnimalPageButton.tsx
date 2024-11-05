@@ -1,4 +1,5 @@
 import axios from "axios";
+import { t } from "i18next";
 import React from "react";
 import { useNavigate } from "react-router";
 
@@ -24,7 +25,7 @@ const DeleteAnimalPageButton: React.FC<DeleteAnimalPageButtonProps> = ({ animalI
 
     return (
         <button onClick={handleSubmit} className="w-60 p-10 bg-rose-500 text-white py-2 rounded-md hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-400">
-            Delete form
+            {t('adminButtons.delete')}
         </button>
     )
 }

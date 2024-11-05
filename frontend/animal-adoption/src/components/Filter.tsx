@@ -1,5 +1,6 @@
 // src/components/Filter.tsx
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import useWindowSize from '../hooks/useWindowSize';
 import AutoCompleteSelect from './FormComponents/AutoCompleteSelect';
@@ -69,6 +70,7 @@ const Filter: React.FC<FilterProps> = ({
     handleFilterSubmit,
 }) => {
     const { width } = useWindowSize();
+    const { t } = useTranslation();
     const [availableCities, setAvailableCities] = useState<string[]>([]);
     const [countryError, setCountryError] = useState<string | null>(null);
 
@@ -92,17 +94,17 @@ const Filter: React.FC<FilterProps> = ({
                 <div className="hidden lg:block">
                     <form onSubmit={handleFilterSubmit} className="flex items-end  flex-wrap justify-center gap-4 p-4">
                         <SelectFormElement
-                            name="Specie"
+                            name={t('filter.species')}
                             value={species}
                             onChange={(e) => setSpecies(e.target.value)}
-                            selections={["Select a species", "Caine", "Pisica"]}
+                            selections={[t('species.all'), t('species.dog'), t('species.cat')]}
                             placeHolder="All Species"
                         />
                         <SelectFormElement
                             name='Status'
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
-                            selections={["Select a status", "Valabil", "Adoptat"]}
+                            selections={[t('status.all'), t('status.available'), t('status.adopted')]}
                             placeHolder='All Status'
                         />
 
@@ -110,8 +112,8 @@ const Filter: React.FC<FilterProps> = ({
                             options={Array.from(countriesSet)}
                             value={country}
                             onChange={handleCountryChange}
-                            placeholder="Select a country"
-                            label="Country"
+                            placeholder={t('filter.selectCountry')}
+                            label={t('filter.country')}
                         />
 
                         {countryError && (
@@ -123,15 +125,15 @@ const Filter: React.FC<FilterProps> = ({
                                 options={availableCities}
                                 value={city}
                                 onChange={handleCityChange}
-                                placeholder="Select a city"
-                                label="City"
+                                placeholder={t('filter.selectCity')}
+                                label={t('filter.city')}
                             />
                         )}
                         <SelectFormElement
                             name='Sex'
                             value={sex}
                             onChange={(e) => setSex(e.target.value)}
-                            selections={["Select a sex", "Femela", "Mascul"]}
+                            selections={[t('filter.selectSex'), t('sex.female'), t('sex.male')]}
                             placeHolder='Select a sex'
                         />
 
@@ -139,7 +141,7 @@ const Filter: React.FC<FilterProps> = ({
                             type="submit"
                             className="bg-secondary border-2 border-secondary  px-8 rounded-md h-[45px] text-white p-2 hover:bg-opacity-90 transition-colors duration-300"
                         >
-                            Filter
+                            {t('filter.filter')}
                         </button>
                     </form>
                 </div>
@@ -164,32 +166,33 @@ const Filter: React.FC<FilterProps> = ({
                             </button>
                         </div>
                         <form onSubmit={handleFilterSubmit} className="space-y-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Specie</label>
                             <select
                                 value={species}
                                 onChange={(e) => setSpecies(e.target.value)}
                                 className="w-full border-2 text-secondary active:border-forth border-forth p-2 rounded-md"
                             >
-                                <option value="">All Species</option>
-                                <option value="Caine">Caine</option>
-                                <option value="Pisica">Pisica</option>
+                                <option value="">{t('species.all')}</option>
+                                <option value="Caine">{t('species.dog')}</option>
+                                <option value="Pisica">{t('species.cat')}</option>
                             </select>
-
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                             <select
                                 value={status}
                                 onChange={(e) => setStatus(e.target.value)}
                                 className="w-full border-2 border-forth p-2 rounded-md"
                             >
-                                <option value="">All Status</option>
-                                <option value="Valabil">Available</option>
-                                <option value="Adoptat">Adopted</option>
+                                <option value="">{t('status.all')}</option>
+                                <option value="Valabil">{t('status.available')}</option>
+                                <option value="Adoptat">{t('status.adopted')}</option>
                             </select>
 
                             <AutoCompleteSelect
                                 options={Array.from(countriesSet)}
                                 value={country}
                                 onChange={handleCountryChange}
-                                placeholder="Select a country"
-                                label="Country"
+                                placeholder={t('filter.selectCountry')}
+                                label={t('filter.country')}
                             />
 
                             {countryError && (
@@ -201,25 +204,25 @@ const Filter: React.FC<FilterProps> = ({
                                     options={availableCities}
                                     value={city}
                                     onChange={handleCityChange}
-                                    placeholder="Select a city"
-                                    label="City"
+                                    placeholder={t('filter.selectCity')}
+                                    label={t('filter.city')}
                                 />
                             )}
-
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Sexul</label>
                             <select
                                 value={sex}
                                 onChange={(e) => setSex(e.target.value)}
                                 className="w-full border-2 border-forth p-2 rounded-md"
                             >
-                                <option value="">All Sex</option>
-                                <option value="Femela">Femela</option>
-                                <option value="Mascul">Mascul</option>
+                                <option value="">{t('sex.all')}</option>
+                                <option value="Femela">{t('sex.female')}</option>
+                                <option value="Mascul">{t('sex.male')}</option>
                             </select>
 
                             <button
                                 type="submit"
                             >
-                                Apply Filters
+                                {t('filter.filter')}
                             </button>
                         </form>
                     </div>

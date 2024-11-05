@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,10 +14,11 @@ const LoginPage: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const handleLogin = async (event: React.FormEvent): Promise<void> => {
         event.preventDefault();
-        setError('');
+
         setLoading(true);
 
         try {
@@ -35,7 +37,7 @@ const LoginPage: React.FC = () => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-primary">
             <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-                <h2 className="text-2xl text-secondary font-bold text-center mb-6">Login</h2>
+                <h2 className="text-2xl text-secondary font-bold text-center mb-6">{t('loginPage.login')}</h2>
 
                 {error && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -45,7 +47,7 @@ const LoginPage: React.FC = () => {
 
                 <form onSubmit={handleLogin}>
                     <div className="mb-4">
-                        <label className="block text-secondary">Username</label>
+                        <label className="block text-secondary">{t("loginPage.username")}</label>
                         <input
                             type="text"
                             value={username}
@@ -56,7 +58,7 @@ const LoginPage: React.FC = () => {
                     </div>
 
                     <div className="mb-6">
-                        <label className="block text-secondary">Password</label>
+                        <label className="block text-secondary">{t('loginPage.password')}</label>
                         <input
                             type="password"
                             value={password}
@@ -71,7 +73,7 @@ const LoginPage: React.FC = () => {
                         className={`w-full bg-secondary text-white py-2 rounded-md ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-indigo-700'}`}
                         disabled={loading}
                     >
-                        {loading ? 'Logging in...' : 'Login'}
+                        {loading ? t('loginPage.logginIn') : t('loginPage.login')}
                     </button>
                 </form>
             </div>

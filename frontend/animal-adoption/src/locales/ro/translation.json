@@ -1,0 +1,151 @@
+{
+  "common": {
+    "home": "Acasă",
+    "add": "Adaugă un animal",
+    "edit": "Editează",
+    "delete": "Șterge",
+    "save": "Salvează",
+    "register": "Înregistrează-te",
+    "login": "Conectează-te",
+    "cancel": "Anulează",
+    "logout": "Deconectează-te",
+    "availableAnimals": "Animale Disponibile",
+    "filter": "Filtru"
+  },
+
+  "landing": {
+    "title": "Adopta un prieten",
+    "subtitle": "Dacă te gândești să îți iei un animal de companie, amintește-ți să alegi adopția și să salvezi o viață!"
+  },
+  "pets": {
+    "name": "Nume",
+    "age": "Vârstă",
+    "species": "Specie",
+    "description": "Descriere",
+    "adoptionStatus": "Stare Adopție",
+    "addPet": "Adaugă Animal",
+    "editPet": "Editează Animal",
+    "deletePet": "Șterge Animal"
+  },
+  "animalGrid": {
+    "noPets": "Nu există animale de afișat"
+  },
+  "filter": {
+    "filter": "Filtrează",
+    "species": "Specie",
+    "country": "Țară",
+    "city": "Oraș",
+    "sex": "Sex",
+    "selectSex": "Selectează sexul",
+    "adoptionStatus": "Status",
+    "selectCountry": "Selectează țara",
+    "selectCity": "Selectează orașul"
+  },
+  "species": {
+    "all": "Toate speciile",
+    "dog": "Câine",
+    "cat": "Pisică",
+    "rabbit": "Iepure",
+    "hamster": "Hamster",
+    "guineaPig": "Porcușor de Guineea",
+    "bird": "Pasăre",
+    "reptile": "Reptilă",
+    "other": "Altele"
+  },
+  "status": {
+    "all": "Toate",
+    "adopted": "Adoptat",
+    "available": "Disponibil",
+    "fostered": "În plasament"
+  },
+  "sex": {
+    "male": "Mascul",
+    "female": "Femelă",
+    "all": "Toate"
+  },
+  "loginPage": {
+    "login": "Conectează-te",
+    "email": "Email",
+    "password": "Parolă",
+    "noAccount": "Nu ai un cont?",
+    "register": "Înregistrează-te",
+    "invalidCredentials": "Credențiale invalide",
+    "emailRequired": "Email-ul este obligatoriu",
+    "passwordRequired": "Parola este obligatorie",
+    "username": "Nume de utilizator",
+    "loggingIn": "Conectare..."
+  },
+  "registerPage": {
+    "register": "Înregistrează-te",
+    "email": "Email",
+    "password": "Parolă",
+    "username": "Nume de utilizator",
+    "emailRequired": "Email-ul este obligatoriu",
+    "passwordRequired": "Parola este obligatorie",
+    "usernameRequired": "Numele de utilizator este obligatoriu",
+    "invalidEmail": "Email invalid",
+    "registering": "Înregistrare..."
+  },
+  "imageComponent": {
+    "upload": "Încarcă maxim 5 imagini:"
+  },
+  "form": {
+    "name": "Nume",
+    "age": "Vârstă",
+    "species": "Specie",
+    "speciesSelect": "Selectează specia",
+    "description": "Descriere",
+    "sexSelect": "Selectează sexul",
+    "breed": "Rasă",
+    "weight": "Greutate",
+    "status": "Status",
+    "statusSelect": "Selectează statusul",
+    "country": "Țară",
+    "city": "Oraș",
+    "countrySelect": "Selectează țara",
+    "citySelect": "Selectează orașul",
+    "submit": "Trimite"
+  },
+  "formMedical": {
+    "vaccines": "Vaccinuri",
+    "notes": "Note",
+
+    "vaccinated": "Vaccinat",
+    "dewormings": "Deparazitari",
+    "treatments": "Tratamente",
+    "medicalSubmit": "Trimite datele medicale"
+  },
+  "animalPage": {
+    "details": "Detalii",
+    "errorLoading": "Eroare la încărcarea animalului",
+    "notFound": "Animalul nu a fost găsit",
+    "medical": "Date medicale",
+    "edit": "Editează",
+    "delete": "Șterge",
+    "adopt": "Adoptă",
+    "foster": "Plasează în plasament",
+    "adopted": "Adoptat",
+    "fostered": "În plasament",
+    "available": "Disponibil",
+    "noMedical": "Nu există date medicale de afișat"
+  },
+  "animalInfo": {
+    "species": "Specie",
+    "breed": "Rasă",
+    "sex": "Sex",
+    "age": "Vârstă",
+    "ageForm": {
+      "one": "An",
+      "other": "Ani"
+    },
+    "weight": "Greutate",
+    "weightUnit": "Kg",
+    "city": "Oraș",
+    "country": "Țară",
+    "status": "Status"
+  },
+  "adminButtons": {
+    "edit": "Actualizează formularul",
+    "delete": "Șterge formularul"
+  }
+}

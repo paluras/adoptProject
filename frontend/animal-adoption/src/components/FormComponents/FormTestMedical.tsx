@@ -1,9 +1,12 @@
 import axios from 'axios';
+import { t } from 'i18next';
 import React from "react";
 import { useNavigate } from 'react-router-dom';
 
 import { useForm } from "../../hooks/useForm";
 import { handleAxiosError } from "../../utils/handleAxiosError";
+
+
 
 
 interface MedicalFormProps {
@@ -42,10 +45,10 @@ const MedicalForm: React.FC<MedicalFormProps> = ({ animalId }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
             <h2 className="text-2xl font-semibold mb-4">Complete the Medical Form</h2>
             {[
-                ["vaccines", "vaccinuri"],
-                ["notes", 'note'],
-                ["dewormings", 'deparazitari'],
-                ["treatments", 'tratamente']].map((field, index) => (
+                ["vaccines", t('formMedical.vaccines')],
+                ["notes", t('formMedical.notes')],
+                ["dewormings", t('formMedical.dewormings')],
+                ["treatments", t('formMedical.treatments')]].map((field, index) => (
                     <div key={index}>
                         <label className="block text-gray-700 font-semibold mb-1">
                             {field[1].charAt(0).toUpperCase() + field[1].slice(1) + ":"}
@@ -53,7 +56,7 @@ const MedicalForm: React.FC<MedicalFormProps> = ({ animalId }) => {
                         <input
                             type="text"
                             name={field[0]}
-                            value={formState[field[0] as keyof typeof formState]} // Access value dynamically
+                            value={formState[field[0] as keyof typeof formState]}
                             onChange={handleInputChange}
                             placeholder={field[1].charAt(0).toUpperCase() + field[1].slice(1)}
                             required
@@ -66,7 +69,7 @@ const MedicalForm: React.FC<MedicalFormProps> = ({ animalId }) => {
                 type="submit"
                 className="w-full bg-rose-500 text-white py-2 rounded-md hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-400"
             >
-                Add Medical Treatments
+                {t('formMedical.medicalSubmit')}
             </button>
         </form>
     );

@@ -1,5 +1,3 @@
-
-
 import countryData from './locationData.json';
 
 interface CountryData {

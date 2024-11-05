@@ -1,7 +1,9 @@
 import { useSpring, animated, SpringValue } from '@react-spring/web';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const LandingParallax: React.FC = () => {
+    const { t } = useTranslation();
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
     const handleMouseMove = (event: React.MouseEvent): void => {
@@ -52,11 +54,12 @@ const LandingParallax: React.FC = () => {
             onMouseMove={handleMouseMove}
         >
             <h1 className="custom-font z-20 text-5xl sm:text-7xl md:text-9xl main text-wrap text-center px-4">
-                adopt a friend
+                {t('landing.title')}
             </h1>
             <p className="text-xl sm:text-2xl md:text-3xl z-20 w-11/12 sm:w-9/12 md:w-7/12 lg:w-5/12 text-center px-4">
-                if you're considering getting a pet, remember to choose adoption and save a life!
-            </p>
+                {
+                    t('landing.subtitle')
+                }            </p>
             {images.map((image, index) => (
                 <animated.img
                     key={index}

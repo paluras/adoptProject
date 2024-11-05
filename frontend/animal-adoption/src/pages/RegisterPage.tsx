@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -25,6 +26,8 @@ const RegisterPage: React.FC = () => {
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate()
+
+    const { t } = useTranslation();
 
     const handleLogin = async (event: React.FormEvent): Promise<void> => {
         event.preventDefault();
@@ -66,7 +69,7 @@ const RegisterPage: React.FC = () => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-primary">
             <div className="w-full text-secondary max-w-md bg-white p-8 rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold text-center mb-6">Register</h2>
+                <h2 className="text-2xl font-bold text-center mb-6">{t('registerPage.register')}</h2>
 
                 {error && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -76,7 +79,7 @@ const RegisterPage: React.FC = () => {
 
                 <form onSubmit={handleLogin}>
                     <div className="mb-4">
-                        <label className="block text-secondary">Username</label>
+                        <label className="block text-secondary">{t('registerPage.username')}</label>
                         <input
                             type="text"
                             value={username}
@@ -87,7 +90,7 @@ const RegisterPage: React.FC = () => {
                     </div>
 
                     <div className="mb-6">
-                        <label className="block text-secondary">Password</label>
+                        <label className="block text-secondary">{t('registerPage.password')}</label>
                         <input
                             type="password"
                             value={password}
@@ -103,7 +106,7 @@ const RegisterPage: React.FC = () => {
                             }`}
                         disabled={loading}
                     >
-                        {loading ? 'Logging in...' : 'Register'}
+                        {loading ? t('registerPage.registering') : t('registerPage.register')}
                     </button>
                 </form>
             </div>

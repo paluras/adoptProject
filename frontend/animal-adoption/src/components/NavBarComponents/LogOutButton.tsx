@@ -1,4 +1,5 @@
 import axios from "axios";
+import { t } from "i18next";
 import React from "react";
 import { useDispatch } from "react-redux";
 
@@ -19,7 +20,7 @@ const LogOutButton: React.FC = () => {
     }
     return (
         <li>
-            <button onClick={handleSubmit} className=" hover:underline focus:outline-none focus:ring-2 focus:ring-rose-400">Logout</button>
+            <button onClick={handleSubmit} className=" hover:underline focus:outline-none focus:ring-2 focus:ring-rose-400">{t('common.logout')}</button>
         </li>
     )
 }

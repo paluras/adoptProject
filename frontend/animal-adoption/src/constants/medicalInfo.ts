@@ -1,13 +1,13 @@
 import { MedicalHistory } from "../models/MedicalHistorySchema";
 
 interface MedicalInfoItem {
-    prefix: string;
+    translationKey: string;
     key: keyof MedicalHistory;
 }
 
 export const MEDICAL_INFO_FIELDS: MedicalInfoItem[] = [
-    { prefix: "Vaccinuri", key: "vaccines" },
-    { prefix: "Note", key: "notes" },
-    { prefix: "Deparazitare", key: "dewormings" },
-    { prefix: "Tratamente", key: "treatments" },
+    { translationKey: "formMedical.vaccines", key: "vaccines" },
+    { translationKey: "formMedical.notes", key: "notes" },
+    { translationKey: "formMedical.dewormings", key: "dewormings" },
+    { translationKey: "formMedical.treatments", key: "treatments" }
 ];

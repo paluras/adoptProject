@@ -1,23 +1,21 @@
+import { TFunction } from "i18next";
+
 import { Animal } from "../models/AnimalSchema";
 
+
 interface InfoItem {
-    prefix: string;
-    key: keyof Animal | ((animal: Animal) => string);
+    translationKey: string;
+    key: keyof Animal | ((animal: Animal, t: TFunction) => string);
     suffix?: string;
 }
 
 export const ANIMAL_INFO_FIELDS: InfoItem[] = [
-    { prefix: "Specie", key: "species" },
-    { prefix: "Rasa", key: "breed" },
-    { prefix: "Sex", key: "sex" },
-    {
-        prefix: "Varsta",
-        key: (animal: Animal) => animal.age === 1 ?
-            `${animal.age} An` :
-            `${animal.age} Ani`
-    },
-    { prefix: "Greutate", key: "weight", suffix: " Kg" },
-    { prefix: "Oras", key: "city" },
-    { prefix: "Tara", key: "country" },
-    { prefix: "Status", key: "status" },
+    { translationKey: "animalInfo.species", key: "species" },
+    { translationKey: "animalInfo.breed", key: "breed" },
+    { translationKey: "animalInfo.sex", key: "sex" },
+    { translationKey: "animalInfo.age", key: "age" },
+    { translationKey: "animalInfo.weight", key: "weight", suffix: "animalInfo.weightUnit" },
+    { translationKey: "animalInfo.city", key: "city" },
+    { translationKey: "animalInfo.country", key: "country" },
+    { translationKey: "animalInfo.status", key: "status" }
 ];

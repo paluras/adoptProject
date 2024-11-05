@@ -1,5 +1,6 @@
 import MDEditor from '@uiw/react-md-editor';
 import axios from 'axios';
+import { t } from 'i18next';
 import React, { useState } from 'react';
 import rehypeSanitize from 'rehype-sanitize';
 
@@ -110,7 +111,7 @@ const AnimalForm: React.FC = () => {
         <>
             <form onSubmit={handleSubmit} className="space-y-4  max-w-lg mx-auto my-3 bg-white p-6 rounded-lg shadow-lg">
                 <InputForm
-                    labelName='Nume'
+                    labelName={t('pets.name')}
                     type={'text'}
                     name={'name'}
                     formValue={formState.name}
@@ -118,58 +119,70 @@ const AnimalForm: React.FC = () => {
                     placeHolder={'Azorel'} />
 
                 <InputForm type={'number'}
-                    labelName='Varsta'
+                    labelName={t('pets.age')}
                     name={'age'}
                     formValue={formState.age}
                     onChange={handleInputChange}
                     placeHolder={'Varsta'} />
 
                 <SelectForm
-                    labelName='Specie'
+                    labelName={t('form.species')}
                     name={"species"}
                     value={formState.species}
                     onChange={handleInputChange}
-                    selections={["Pisica", "Caine"]}
-                    placeHolder={'Selecteaza Specie'} />
+                    selections={[
+                        { key: "Pisica", display: t('species.cat') },
+                        { key: "Caine", display: t('species.dog') }
+                    ]}
+                    placeHolder={t('form.speciesSelect')} />
 
                 <SelectForm
                     labelName='Sex'
                     name={"sex"}
                     value={formState.sex}
                     onChange={handleInputChange}
-                    selections={["Femela", "Mascul"]}
-                    placeHolder={'Selecteaza Sexul'} />
+                    selections={[{
+                        key: "Femela", display: t('sex.female'),
+                    },
+                    {
+                        key: "Mascul", display: t('sex.male')
+                    }]}
+                    placeHolder={t('form.sexSelect')} />
 
                 <InputForm
-                    labelName='Rasa'
+                    labelName={t('form.breed')}
                     type={'text'}
                     name={'breed'}
                     formValue={formState.breed}
-                    placeHolder={'Rasa'}
+                    placeHolder={t('form.breed')}
                     onChange={handleInputChange} />
 
                 <InputForm
-                    labelName='Greutate'
+                    labelName={t('form.weight')}
                     type={'number'}
                     name={'weight'}
                     formValue={formState.weight}
-                    placeHolder={'Greutate'}
+                    placeHolder={t('form.weight')}
                     onChange={handleInputChange} />
 
                 <SelectForm
-                    labelName='Status'
+                    labelName={t('form.status')}
                     name={"status"}
                     value={formState.status}
                     onChange={handleInputChange}
-                    selections={["Adoptat", "Valabil"]}
-                    placeHolder={'Selecteaza Statusul'} />
+                    selections={[
+                        { key: "Adoptat", display: t('status.adopted') },
+                        { key: "Valabil", display: t('status.available') },
+
+                    ]}
+                    placeHolder={t('form.statusSelect')} />
 
                 <AutoCompleteSelect
                     options={Array.from(countriesSet)}
                     value={formState.country}
                     onChange={handleCountryChange}
-                    placeholder="Select a country"
-                    label="Country"
+                    placeholder={t('form.countrySelect')}
+                    label={t('form.country')}
                 />
 
                 {formState.countryError && (
@@ -181,10 +194,11 @@ const AnimalForm: React.FC = () => {
                         options={availableCities}
                         value={formState.city}
                         onChange={handleCityChange}
-                        placeholder="Select a city"
-                        label="City"
+                        placeholder={t('form.citySelect')}
+                        label={t('form.city')}
                     />
                 )}
+
                 <MDEditor
                     data-color-mode="light"
                     value={formState.description}
@@ -202,7 +216,7 @@ const AnimalForm: React.FC = () => {
                     type="submit"
                     className="w-full bg-rose-500 text-white py-2 rounded-md hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-400"
                 >
-                    Submit
+                    {t('form.submit')}
                 </button>
 
             </form>

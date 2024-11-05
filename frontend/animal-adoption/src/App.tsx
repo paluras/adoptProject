@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './i18n';
 
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';

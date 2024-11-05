@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 
 import AdminButtons from "../components/AnimalPageComponents/AdminButtons";
@@ -10,6 +11,8 @@ import useAnimalDetails from "../hooks/useAnimalDetails";
 
 const AnimalDetails: React.FC = () => {
 
+    const { t } = useTranslation();
+
     const { id } = useParams()
     const {
         animal,
@@ -20,8 +23,10 @@ const AnimalDetails: React.FC = () => {
     } = useAnimalDetails(id!);
 
     if (loading) return <LoadingSpinner />;
-    if (error) return <div>Error loading animal details</div>;
-    if (!animal) return <div>Animal not found</div>;
+    if (error) return <div>{t('animalPage.errorLoading')}</div>;
+    if (!animal) return <div>{t('animapPage.notFound')}</div>;
+
+
 
     return (
         <section className=" flex flex-col background-color text-main">

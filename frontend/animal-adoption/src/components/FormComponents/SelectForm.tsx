@@ -1,10 +1,14 @@
 import React from "react";
+interface Selection {
+    key: string;
+    display: string;
+}
 
 interface SelectFormProps {
     name: string;
     value: string;
     onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-    selections: string[];
+    selections: Selection[];
     placeHolder: string;
     disabled?: boolean;
     labelName?: string;
@@ -22,7 +26,7 @@ const SelectForm: React.FC<SelectFormProps> = ({ name, value, onChange, selectio
             >
                 <option value="">{placeHolder}</option>
                 {selections.map((selection, index) => (
-                    <option key={index} value={selection}>{selection}</option>
+                    <option key={index} value={selection.key}>{selection.display}</option>
                 ))}
             </select>
         </div>

@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useTranslation } from 'react-i18next';
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { RootState } from "../store/index";
+import LanguageSwitcher from "./NavBarComponents/LanguageSwitcher";
 import LogOutButton from "./NavBarComponents/LogOutButton";
 
 const Navbar: React.FC = () => {
+    const { t } = useTranslation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const username: string | null = useSelector((state: RootState) => state.user.username);
     const navRef = useRef<HTMLDivElement>(null);
@@ -74,12 +77,12 @@ const Navbar: React.FC = () => {
                         <ul className="flex flex-col lg:flex-row lg:space-x-4 space-y-2 lg:space-y-0 items-center py-4 lg:py-0">
                             <li>
                                 <Link to="/" onClick={closeMenu} className="block text-center hover:underline focus:outline-none focus:ring-2 focus:ring-rose-400 px-4 py-2">
-                                    Home
+                                    {t('common.home')}
                                 </Link>
                             </li>
                             <li>
                                 <Link to="/add-animal" onClick={closeMenu} className="block text-center hover:underline focus:outline-none focus:ring-2 focus:ring-rose-400 px-4 py-2">
-                                    Add an Animal
+                                    {t('common.add')}
                                 </Link>
                             </li>
                             {username ? (
@@ -91,16 +94,17 @@ const Navbar: React.FC = () => {
                                 <>
                                     <li>
                                         <Link to="/login" onClick={closeMenu} className="block hover:underline focus:outline-none focus:ring-2 focus:ring-rose-400 px-4 py-2">
-                                            Login
+                                            {t('common.login')}
                                         </Link>
                                     </li>
                                     <li>
                                         <Link to="/register" onClick={closeMenu} className="block hover:underline focus:outline-none focus:ring-2 focus:ring-rose-400 px-4 py-2">
-                                            Register
+                                            {t('common.register')}
                                         </Link>
                                     </li>
                                 </>
                             )}
+                            <LanguageSwitcher />
                         </ul>
                     </nav>
                 </div>

@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import React, { useState } from 'react';
 
 interface ImageUploadProps {
@@ -20,7 +21,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onFileChange }) => {
 
     return (
         <div>
-            <label>Upload Images:</label>
+            <label>{t('imageComponent.upload')}</label>
             <input type="file" onChange={handleFileChange} accept="image/*" multiple />
             {preview.map((url, index) => (
                 <img key={index} src={url} alt={`Preview ${index}`} width="100" />
