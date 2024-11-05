@@ -6,11 +6,16 @@ import useWindowSize from '../hooks/useWindowSize';
 import AutoCompleteSelect from './FormComponents/AutoCompleteSelect';
 import { countriesSet, countryMap } from '../utils/locationData';
 
+interface Selection {
+    value: string;
+    key: string;
+}
+
 interface SelectFormProps {
     name: string;
     value: string;
     onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-    selections: string[];
+    selections: Selection[];
     placeHolder: string;
     disabled?: boolean;
     labelName?: string;
@@ -30,7 +35,7 @@ const SelectFormElement: React.FC<SelectFormProps> = ({ name, value, onChange, s
                 className="border-2 w-full  text-secondary active:border-forth border-forth p-2 rounded-md"
             >
                 {selections.map((selection, index) => (
-                    <option key={index} value={selection}>{selection}</option>
+                    <option key={index} value={selection.key}>{selection.value}</option>
                 ))}
 
             </select>
@@ -97,14 +102,14 @@ const Filter: React.FC<FilterProps> = ({
                             name={t('filter.species')}
                             value={species}
                             onChange={(e) => setSpecies(e.target.value)}
-                            selections={[t('species.all'), t('species.dog'), t('species.cat')]}
+                            selections={[{ key: '', value: t('species.all') }, { key: 'Caine', value: t('species.dog') }, { key: 'Pisica', value: t('species.cat') }]}
                             placeHolder="All Species"
                         />
                         <SelectFormElement
                             name='Status'
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
-                            selections={[t('status.all'), t('status.available'), t('status.adopted')]}
+                            selections={[{ key: '', value: t('status.all') }, { key: "Valabil", value: t('status.available') }, { key: 'Adoptat', value: t('status.adopted') }]}
                             placeHolder='All Status'
                         />
 
@@ -133,7 +138,7 @@ const Filter: React.FC<FilterProps> = ({
                             name='Sex'
                             value={sex}
                             onChange={(e) => setSex(e.target.value)}
-                            selections={[t('filter.selectSex'), t('sex.female'), t('sex.male')]}
+                            selections={[{ key: "", value: t('filter.selectSex') }, { key: "Femela", value: t('sex.female') }, { key: "Mascul", value: t('sex.male') }]}
                             placeHolder='Select a sex'
                         />
 

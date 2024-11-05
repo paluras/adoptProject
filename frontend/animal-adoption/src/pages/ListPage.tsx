@@ -21,6 +21,8 @@ const ListPage: React.FC<ListPageProps> = ({ children }) => {
     const { t } = useTranslation();
 
     const { filters, setFilters, buildQueryString } = useAnimalFilter();
+    console.log(filters);
+
 
     const { ref: mainContentRef } = useInView({
         threshold: 0.1,
